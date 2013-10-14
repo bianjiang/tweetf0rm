@@ -1,0 +1,8 @@
+{
+	"i0mf0rmer" :{
+		"app_key":"CONSUMER_KEY",
+		"app_secret":"CONSUMER_SECRET",
+		"oauth_token":"ACCESS_TOKEN",
+		"oauth_token_secret":"ACCESS_TOKEN_SECRET"
+	}
+}
