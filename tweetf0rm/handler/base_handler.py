@@ -50,8 +50,11 @@ class BaseHandler(object):
 				'count': len(self.buffer[data_type])
 			}
 
+			data = {}
 			for k in self.buffer[data_type]:
-				stat[data_type][k] = len(self.buffer[data_type][k])
+				data[k] = len(self.buffer[data_type][k])
+			
+			stat[data_type]["data"] = data
 		
 		return stat
 
