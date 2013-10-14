@@ -13,6 +13,5 @@ from .base_handler import BaseHandler
 
 class InMemoryHandler(BaseHandler):
 
-	def __init__(self, verbose=False, shared_buffer=None, manager=None):
-		super(InMemoryHandler, self).__init__(verbose=verbose, shared_buffer=shared_buffer, manager=manager)
-
+	def __init__(self, verbose=False):
+		super(InMemoryHandler, self).__init__(verbose=verbose)
