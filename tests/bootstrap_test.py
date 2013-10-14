@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 requests_log = logging.getLogger("requests")
-requests_log.setLevel(logging.WARNING)
+requests_log.setLevel(logging.INFO)
 
 from nose.tools import nottest
 
@@ -34,16 +34,23 @@ class TestBootstrap:
 	def teardown(self):
 		pass
 
+	@nottest
+	def test_get_user_id(self):
+		from tweetf0rm.twitterapi.users import User
+		from tweetf0rm.handler.inmemory_handler import InMemoryHandler
 
-	#@nottest
+		apikeys = self.config["apikeys"]["i0mf0rmer03"]
+		
+		#inmemoryhandler = InMemoryHandler()
+		user_api = User(apikeys=apikeys)
+		userIds = user_api.get_user_ids(["i0mf0rmer03"])
+		logger.info(userIds)
+
+
 	def test_bootstrap(self):
-		import multiprocessing as mp
-		q = mp.Queue()
-		logger.info(type(q))
-		logger.info(type(q) == mp.queues.Queue)
-		# quit()
-		# import tweetf0rm.bootstrap as bootstrap
-		# bootstrap.start_server() 
+		import tweetf0rm.bootstrap as bootstrap
+		apikeys = self.config["apikeys"]["i0mf0rmer03"]
+		bootstrap.start_server(apikeys) 
 		# pass
 
 	@nottest

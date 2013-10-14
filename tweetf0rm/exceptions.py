@@ -8,3 +8,6 @@ class NotImplemented(Exception):
 
 class MissingArgs(Exception):
 	pass
+
+class WrongArgs(Exception):
+	pass

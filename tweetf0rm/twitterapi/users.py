@@ -12,6 +12,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 import twython
 import json, os, time
+from tweetf0rm.exceptions import NotImplemented, MissingArgs, WrongArgs
 
 class User(twython.Twython):
 
@@ -25,11 +26,10 @@ class User(twython.Twython):
 		import copy
 
 		self.verbose = kwargs.pop('verbose', False)
-
 		apikeys = copy.copy(kwargs.pop('apikeys', None))
 		
 		if not apikeys:
-			raise Exception('apikeys is missing')
+			raise MissingArgs('apikeys is missing')
 
 		self.apikeys = copy.copy(apikeys) # keep a copy
 
@@ -50,25 +50,23 @@ class User(twython.Twython):
 	def find_all_followers(self, user_id=None, write_to_handlers = None):
 
 		if (not user_id):
-			raise Exception("find_all_friend_ids: user_id cannot be None")
+			raise MissingArgs("user_id cannot be None")
 
 		if (write_to_handlers == None):
-			raise Exception("come on, you gotta write the result to something...")
-
-		#follower_ids = []
+			raise MissingArgs("come on, you gotta write the result to something...")
 
 		cursor = -1
 		while cursor != 0:
 			try:
-				followers = self.get_followers_list(user_id=user_id, cursor=cursor)
-				
-				for follower in followers['users']:
-					follower_ids.append(follower['id'])
+				followers = self.get_followers_list(user_id=user_id, cursor=cursor, count=200)
 
 				for handler in write_to_handlers:
-					handler.append(key=user_id, json.dumps(followers))
+					handler.append(json.dumps(followers), data_type="followers", key=user_id) 
 
 				cursor = int(followers['next_cursor'])
+
+				if self.verbose:
+					logger.info("find #%d followers... NEXT_CURSOR: %d"%(len(followers), cursor))
 				time.sleep(5)
 			except twython.exceptions.TwythonRateLimitError:
 				rate_limits = self.get_application_rate_limit_status(resources=['users', 'followers'])
@@ -80,30 +78,34 @@ class User(twython.Twython):
 
 				time.sleep(wait_for)
 
-		#follower_ids = set(follower_ids)
-		logger.info("found %d followers..."%(len(follower_ids)))
-		#return follower_ids
+		if self.verbose:
+			logger.info("finished find_all_followers for %d..."%(user_id))
+			for handler in write_to_handlers:
+				logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("followers", user_id)), type(handler), "followers", user_id))
 
 
 	def find_all_friends(self, user_id=None, write_to_handlers=None):
 
-		if not user_id:
-			raise Exception("find_all_friend_ids: user_id cannot be None")
+		if (not user_id):
+			raise MissingArgs("user_id cannot be None")
 
-		if write_to_handler == None:
-			write_to_handler = self.write_to_handler
+		if (write_to_handlers == None):
+			raise MissingArgs("come on, you gotta write the result to something...")
 
-		friend_ids = []
 		cursor = -1
 		while cursor != 0:
 			try:
-				friends = self.get_friends_list(user_id=user_id, cursor=cursor)
+				friends = self.get_friends_list(user_id=user_id, cursor=cursor, count=200)
 
-				for friend in friends['users']:
-					friend_ids.append(friend['id'])
+				for handler in write_to_handlers:
+					handler.append(json.dumps(friends), data_type="friends", key=user_id) 
 
-				self.write_to_handler.append(json.dumps(friends), key=user_id)
+
 				cursor = int(friends['next_cursor'])
+
+				if self.verbose:
+					logger.info("find #%d friends... NEXT_CURSOR: %d"%(len(friends), cursor))
+
 				time.sleep(5)
 			except twython.exceptions.TwythonRateLimitError:
 				rate_limits = self.get_application_rate_limit_status(resources=['users', 'friends'])
@@ -115,11 +117,13 @@ class User(twython.Twython):
 
 				time.sleep(wait_for)
 
-		friend_ids = set(friend_ids)
-		logger.info("found %d friends..."%(len(friend_ids)))
-		return friend_ids
+		if self.verbose:
+			logger.info("finished find_all_friends for %d..."%(user_id))
+			for handler in write_to_handlers:
+				logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friends", user_id)), type(handler), "friends", user_id))
 
-	def user_timeline(self, user_id = None, write_to_handler=None):
+
+	def fetch_user_timeline(self, user_id = None, write_to_handler=None):
 
 		if not user_id:
 			raise Exception("user_timeline: user_id cannot be None")

@@ -9,7 +9,8 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
-import time, os, sys, threading, futures
+from tweetf0rm.exceptions import WrongArgs
+import json
 
 class BaseHandler(object):
 
@@ -23,12 +24,32 @@ class BaseHandler(object):
 			self.buffer[data_type] = {}
 		self.verbose = verbose
 
+	def append(self, data=None, data_type=None, key='current_timestampe'):
+		if (not data):
+			raise WrongArgs("what's the point? not data coming in...")
+
+		if (data_type not in self.data_types):
+			raise WrongArgs("%s is not a valid data_type..."%data_type)
+
+		if (self.verbose):
+			#logger.info("adding data -- [%s] into [%s][%s]"%(json.dumps(data), data_type, key))
+			logger.info("adding new data -- into [%s][%s]"%(data_type, key))
+
+		if (key not in self.buffer[data_type]):
+			self.buffer[data_type][key] = []
+			
+		self.buffer[data_type][key].append(data)
+
+	def get(self, data_type, key):
+		return self.buffer[data_type][key]
+
 	def stat(self):
 		stat = {}
 		for data_type in self.data_types:
 			stat[data_type] = {
 				'count': len(self.buffer[data_type])
 			}
+		
 		return stat
 
 	def remove_key(self, data_type = None, key = None):
@@ -42,10 +63,4 @@ class BaseHandler(object):
 			self.clear(data_type)
 
 	def flush(self, key):
-		pass
-
-	def close(self, key):
-		pass
-
-	def close(self):		
 		pass

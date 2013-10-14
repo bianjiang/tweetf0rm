@@ -16,16 +16,23 @@ def start_server(apikeys):
 	from utils import node_id, public_ip
 	logger.info(public_ip())
 
-	inmemoryhandler = InMemoryHandler()
-	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [inmemoryhandler])
+	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [InMemoryHandler(verbose=True)], verbose=True)
+
+	user_relationship_crawler.start()
 
 	cmd = {
-		user_id: 1,
-		network_type: "friends",
-		data_type: "object"
+		"cmd": "CRAWL_FRIENDS",
+		"user_id": 1948122342,
+		"data_type": "object"
 	}
 	user_relationship_crawler.enqueue(cmd)
-	
+	user_relationship_crawler.enqueue({"cmd":"TERMINATE"})
+
+	user_relationship_crawler.join()
+
+	for handler in user_relationship_crawler.get_handlers():
+		logger.info(handler.stat())
+
 	#r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 	#r.execute_command("AUTH", "wh0tever")

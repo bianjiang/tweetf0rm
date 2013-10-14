@@ -21,6 +21,6 @@ class WorkerProcess(mp.Process):
 		return  self.queue.get(block=True)
 
 
-	def start(self):
+	def run(self):
 		pass
 			
