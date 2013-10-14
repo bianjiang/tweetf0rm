@@ -14,15 +14,22 @@ import json
 
 class BaseHandler(object):
 
-	def __init__(self, verbose=False):
+	def __init__(self, verbose=False, shared_buffer=None, manager=None):
 		'''
 			data_type: defines the sub-structure of the buffer; either ["tweets", "followers", "friends", "timelines"]
 		'''
-		
-		self.buffer = {}
 		self.data_types = ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
-		for data_type in self.data_types:
-			self.buffer[data_type] = {}
+		self.manager = manager
+		if manager and shared_buffer:
+			self.buffer = shared_buffer
+			for data_type in self.data_types:
+				self.buffer[data_type] = manager.dict()
+		else:
+			self.buffer = {}
+			for data_type in self.data_types:
+				self.buffer[data_type] = {}
+		
+		
 		logger.info(self.buffer)
 		self.verbose = verbose
 
@@ -38,8 +45,11 @@ class BaseHandler(object):
 			logger.info("adding new data -- into [%s][%s]"%(data_type, key))
 
 		if (key not in self.buffer[data_type]):
-			self.buffer[data_type][key] = []
-			
+			if self.manager:
+				self.buffer[data_type][key] = self.manager.list()
+			else:
+				self.buffer[data_type][key] = []
+		
 		self.buffer[data_type][key].append(data)
 
 	def get(self, data_type, key):

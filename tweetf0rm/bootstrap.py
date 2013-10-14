@@ -20,10 +20,14 @@ def start_server(apikeys, verbose=False):
 
 	verbose = True
 
+	manager = mp.Manager()
+	shared_buffer = manager.dict()
 	inmemory_handler_config = {
 		"name": "InMemoryHandler",
 		"args": {
-			"verbose": verbose
+			"verbose": verbose,
+			"shared_buffer": shared_buffer,
+			"manager": manager
 		}
 	}
 	logger.info(inmemory_handler_config)
@@ -46,10 +50,7 @@ def start_server(apikeys, verbose=False):
 
 	user_relationship_crawler.join()
 
-	# import pickle
-	# picklestring = pickle.dumps(user_relationship_crawler.get_handlers())
-	# logger.info(picklestring)
-	
+	logger.info(shared_buffer)
 
 	# these will return nothing since user_relationship_crawler works on a different process
 	# for handler in user_relationship_crawler.get_handlers():
