@@ -92,6 +92,10 @@ class UserRelationshipCrawler(WorkerProcess):
 
 		if self.verbose:
 			logger.info("looks like i'm done...")
+			for handler in self.handlers:
+				logger.info(handler.stat())
+
+			
 		return True
 
 

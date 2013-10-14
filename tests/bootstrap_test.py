@@ -53,6 +53,10 @@ class TestBootstrap:
 		apikeys = self.config["apikeys"]["i0mf0rmer03"]
 		bootstrap.start_server(apikeys) 
 		# pass
+		#from tweetf0rm.handler.inmemory_handler import InMemoryHandler
+		#inmemory_handler = InMemoryHandler(verbose=False)
+
+
 	@nottest
 	def test_bootstrap_with_proxies(self):
 		pass

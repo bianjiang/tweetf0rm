@@ -13,23 +13,21 @@ from handler.inmemory_handler import InMemoryHandler
 
 import multiprocessing as mp
 
-def start_server(apikeys):
+def start_server(apikeys, verbose=False):
 	import copy
 	from utils import node_id, public_ip
 	logger.info(public_ip())
 
-	#manager = mp.Manager()
+	verbose = True
 
-	#handlers = manager.list()
-	#handlers.append(InMemoryHandler(verbose=True))
 	inmemory_handler_config = {
 		"name": "InMemoryHandler",
 		"args": {
-			"verbose": True
+			"verbose": verbose
 		}
 	}
 	logger.info(inmemory_handler_config)
-	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [inmemory_handler_config], verbose=True)
+	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [inmemory_handler_config], verbose=verbose)
 
 	user_relationship_crawler.start()
 
@@ -47,6 +45,11 @@ def start_server(apikeys):
 	user_relationship_crawler.enqueue({"cmd":"TERMINATE"})
 
 	user_relationship_crawler.join()
+
+	# import pickle
+	# picklestring = pickle.dumps(user_relationship_crawler.get_handlers())
+	# logger.info(picklestring)
+	
 
 	# these will return nothing since user_relationship_crawler works on a different process
 	# for handler in user_relationship_crawler.get_handlers():
