@@ -21,23 +21,30 @@ def start_server(apikeys):
 
 	#handlers = manager.list()
 	#handlers.append(InMemoryHandler(verbose=True))
-
-	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [InMemoryHandler(verbose=True)], verbose=True)
+	inmemory_handler_config = {
+		"name": "InMemoryHandler",
+		"args": {
+			"verbose": True
+		}
+	}
+	logger.info(inmemory_handler_config)
+	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [inmemory_handler_config], verbose=True)
 
 	user_relationship_crawler.start()
 
 	cmd = {
 		"cmd": "CRAWL_FRIENDS",
 		"user_id": 1948122342,
-		"data_type": "object"
+		"data_type": "id"
 	}
 	user_relationship_crawler.enqueue(cmd)
 	user_relationship_crawler.enqueue({"cmd":"TERMINATE"})
 
 	user_relationship_crawler.join()
 
-	for handler in handlers:
-		logger.info(handler.stat())
+	# these will return nothing since user_relationship_crawler works on a different process
+	# for handler in user_relationship_crawler.get_handlers():
+	# 	logger.info(handler.stat())
 
 	#r = redis.StrictRedis(host='localhost', port=6379, db=0)
 

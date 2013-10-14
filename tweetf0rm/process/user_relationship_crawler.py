@@ -14,17 +14,25 @@ import copy, json
 
 class UserRelationshipCrawler(WorkerProcess):
 
-	def __init__(self, apikeys, handlers = None, verbose = False):
-		if (handlers == None):
+	def __init__(self, apikeys, handler_configs = None, verbose = False):
+		if (handler_configs == None):
 			raise MissingArgs("you need a handler to write the data to...")
-		super(UserRelationshipCrawler, self).__init__()
+		super(UserRelationshipCrawler, self).__init__(handler_configs=handler_configs, verbose=verbose)
 		self.apikeys = copy.copy(apikeys)
-		self.handlers = handlers
-		self.verbose = verbose
 		self.user_api = User(apikeys=apikeys, verbose=verbose)
-		
 		if (self.verbose):
-			logger.info("# of handlers: %d"%(len(self.handlers)))
+			logger.info("# of handlers: %d"%(len(self.get_handlers())))
+		self.tasks = {
+			"TERMINATE": "TERMINATE", 
+			"CRAWL_FRIENDS" : {
+				"object": "find_all_friends",
+				"id": "find_all_friend_ids"
+			},
+			"CRAWL_FOLLOWERS" :{
+				"object": "find_all_followers",
+				"id": "find_all_follower_ids"
+			}
+		}
 
 	def get_handlers(self):
 		return self.handlers
@@ -50,28 +58,47 @@ class UserRelationshipCrawler(WorkerProcess):
 
 			command = cmd['cmd']
 
+			#maybe change this to a map will be less expressive, and easier to read... but well, not too many cases here yet...
 			if (command == 'TERMINATE'):
 				break
-
-			elif (command == 'CRAWL_FRIENDS'):
-				user_id = cmd['user_id']
+			else:
 				data_type = cmd['data_type']
-				if (data_type == 'object'):
-					self.user_api.find_all_friends(user_id=user_id, write_to_handlers=self.handlers)
+				args = {
+					"user_id": cmd['user_id'],
+					"write_to_handlers": self.handlers
+				}
+				
+				try:
+					func = getattr(self.user_api, self.tasks[command][data_type])
+				
+					func(**args)
 					for handler in self.get_handlers():
 						logger.info(handler.stat())
-				else:
-					raise NoImplemented("%s not implemented"%(command, json.dumps(cmd)))
-			elif (command == 'CRAWL_FOLLOWERS'):
-				user_id = cmd['user_id']
-				data_type = cmd['data_type']
+				except:
+					logger.error("either the function you are calling doesn't exist, or you are calling the function with the wrong args!")
+					raise
+			# elif (command == 'CRAWL_FRIENDS'):
+			# 	user_id = cmd['user_id']
+			# 	data_type = cmd['data_type']
+			# 	if (data_type == 'object'):
+			# 		self.user_api.find_all_friends(user_id=user_id, write_to_handlers=self.handlers)
+			# 		for handler in self.get_handlers():
+			# 			logger.info(handler.stat())
+			# 	else:
+			# 		self.user_api.find_all_friend_ids(user_id=user_id, write_to_handlers=self.handlers)
+			# 		for handler in self.get_handlers():
+			# 			logger.info(handler.stat())
 
-				if (data_type == 'object'):
-					self.user_api.find_all_followers(user_id=user_id, write_to_handlers=self.handlers)
-				else:
-					raise NoImplemented("%s not implemented"%(command, json.dumps(cmd)))
-			else:
-				raise NoImplemented("%s not implemented"%(command, json.dumps(cmd)))
+			# elif (command == 'CRAWL_FOLLOWERS'):
+			# 	user_id = cmd['user_id']
+			# 	data_type = cmd['data_type']
+
+			# 	if (data_type == 'object'):
+			# 		self.user_api.find_all_followers(user_id=user_id, write_to_handlers=self.handlers)
+			# 	else:
+			# 		raise NoImplemented("%s not implemented"%(command, json.dumps(cmd)))
+			# else:
+			# 	raise NoImplemented("%s not implemented"%(command, json.dumps(cmd)))
 
 		if self.verbose:
 			logger.info("looks like i'm done...")

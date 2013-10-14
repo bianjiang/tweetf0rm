@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
-write_to_handler.py: handler that's collects the data, and write to the disk on a separate thread; 
+file_handler.py: handler that's collects the data, and write to the disk on a separate thread; 
 
 '''
 
@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 import time, os, sys, threading, time
 
-class WriteToHandler(object):
+class FileHandler(object):
 
 	def __init__(self, output_folder, buffer_size=1024 * 1024, verbose=False):
 

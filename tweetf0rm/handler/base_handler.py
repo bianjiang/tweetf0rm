@@ -19,7 +19,7 @@ class BaseHandler(object):
 			data_type: defines the sub-structure of the buffer; either ["tweets", "followers", "friends", "timelines"]
 		'''
 		self.buffer = {}
-		self.data_types = ["tweets", "followers", "friends", "timelines"]
+		self.data_types = ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
 		for data_type in self.data_types:
 			self.buffer[data_type] = {}
 		self.verbose = verbose
