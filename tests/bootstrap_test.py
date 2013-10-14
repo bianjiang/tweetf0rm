@@ -10,7 +10,9 @@ requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.WARNING)
 
 from nose.tools import nottest
-import unittest
+
+import sys
+sys.path.append("..")
 
 class TestBootstrap:
 
@@ -32,14 +34,19 @@ class TestBootstrap:
 	def teardown(self):
 		pass
 
-	@nottest
-	def test_bootstrap(self):
-		import sys
-		sys.path.append("..")
-		import bootstrap
-		bootstrap.bootstrap() 
-		pass
 
+	#@nottest
+	def test_bootstrap(self):
+		import multiprocessing as mp
+		q = mp.Queue()
+		logger.info(type(q))
+		logger.info(type(q) == mp.queues.Queue)
+		# quit()
+		# import tweetf0rm.bootstrap as bootstrap
+		# bootstrap.start_server() 
+		# pass
+
+	@nottest
 	def test_proxy(self):
 		import requests
 		url = "http://google.com"

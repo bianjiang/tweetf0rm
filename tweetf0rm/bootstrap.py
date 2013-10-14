@@ -6,11 +6,17 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-import redis
+#import redis
+from process.user_relationship_crawler import UserRelationshipCrawler
+#from process.user_timeline_crawler import UserTimelineProcessCrawler
 
-def bootstrap():
+def start_server(apikeys):
+	import copy
 	from utils import node_id, public_ip
 	logger.info(public_ip())
+
+	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys))
+	
 	#r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 	#r.execute_command("AUTH", "wh0tever")
@@ -30,4 +36,4 @@ if __name__=="__main__":
 
 	with open(os.path.abspath(args.config), 'rb') as config_f:
 		import json, os
-		bootstrap()
+		start_server()

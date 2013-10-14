@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 import twython
 import json, os, time
 
-class UserFarm(twython.Twython):
+class User(twython.Twython):
 
 	def __init__(self, *args, **kwargs):
 		"""
@@ -21,13 +21,10 @@ class UserFarm(twython.Twython):
 
 		* verbose: be verbose about what we do. Defaults to False.
 		* apikeys: apikeys
-		* output_folder: output folder
 		"""
-		from write_to_handler import WriteToHandler
 		import copy
 
 		self.verbose = kwargs.pop('verbose', False)
-		self.write_to_handler = WriteToHandler(kwargs.pop('output_folder', '.'))
 
 		apikeys = copy.copy(kwargs.pop('apikeys', None))
 		
@@ -48,18 +45,15 @@ class UserFarm(twython.Twython):
 		
 		kwargs.update(apikeys)
 
-		super(UserFarm, self).__init__(*args, **kwargs)
+		super(User, self).__init__(*args, **kwargs)
 
-	def close(self):
-		self.write_to_handler.close()
-
-	def find_all_followers(self, user_id=None, write_to_handler=None):
+	def find_all_followers(self, user_id=None, write_to_handler = None):
 
 		if not user_id:
 			raise Exception("find_all_friend_ids: user_id cannot be None")
 
 		if write_to_handler == None:
-			write_to_handler = self.write_to_handler
+			raise Exception("come on, you gotta write the result to something...")
 
 
 		follower_ids = []
