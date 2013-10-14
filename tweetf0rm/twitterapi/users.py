@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
-UserFarm.py: all user related farming; friends, followers, user objects; etc.
+Users.py: all user related farming; friends, followers, user objects; etc.
 You can use this raw class, but normally you will use a script in the scripts folder
 '''
 
@@ -47,16 +47,15 @@ class User(twython.Twython):
 
 		super(User, self).__init__(*args, **kwargs)
 
-	def find_all_followers(self, user_id=None, write_to_handler = None):
+	def find_all_followers(self, user_id=None, write_to_handlers = None):
 
-		if not user_id:
+		if (not user_id):
 			raise Exception("find_all_friend_ids: user_id cannot be None")
 
-		if write_to_handler == None:
+		if (write_to_handlers == None):
 			raise Exception("come on, you gotta write the result to something...")
 
-
-		follower_ids = []
+		#follower_ids = []
 
 		cursor = -1
 		while cursor != 0:
@@ -66,7 +65,9 @@ class User(twython.Twython):
 				for follower in followers['users']:
 					follower_ids.append(follower['id'])
 
-				self.write_to_handler.append(json.dumps(followers), key=user_id)
+				for handler in write_to_handlers:
+					handler.append(key=user_id, json.dumps(followers))
+
 				cursor = int(followers['next_cursor'])
 				time.sleep(5)
 			except twython.exceptions.TwythonRateLimitError:
@@ -79,12 +80,12 @@ class User(twython.Twython):
 
 				time.sleep(wait_for)
 
-		follower_ids = set(follower_ids)
+		#follower_ids = set(follower_ids)
 		logger.info("found %d followers..."%(len(follower_ids)))
-		return follower_ids
+		#return follower_ids
 
 
-	def find_all_friends(self, user_id=None, write_to_handler=None):
+	def find_all_friends(self, user_id=None, write_to_handlers=None):
 
 		if not user_id:
 			raise Exception("find_all_friend_ids: user_id cannot be None")

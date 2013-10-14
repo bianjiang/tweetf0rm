@@ -9,13 +9,22 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 #import redis
 from process.user_relationship_crawler import UserRelationshipCrawler
 #from process.user_timeline_crawler import UserTimelineProcessCrawler
+from handler.inmemory_handler import InMemoryHandler
 
 def start_server(apikeys):
 	import copy
 	from utils import node_id, public_ip
 	logger.info(public_ip())
 
-	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys))
+	inmemoryhandler = InMemoryHandler()
+	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [inmemoryhandler])
+
+	cmd = {
+		user_id: 1,
+		network_type: "friends",
+		data_type: "object"
+	}
+	user_relationship_crawler.enqueue(cmd)
 	
 	#r = redis.StrictRedis(host='localhost', port=6379, db=0)
 

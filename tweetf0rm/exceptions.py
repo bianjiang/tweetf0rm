@@ -5,3 +5,6 @@
 
 class NotImplemented(Exception):
 	pass
+
+class MissingArgs(Exception):
+	pass
