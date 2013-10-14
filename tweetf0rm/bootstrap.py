@@ -32,11 +32,16 @@ def start_server(apikeys):
 
 	user_relationship_crawler.start()
 
+	# cmd = {
+	# 	"cmd": "CRAWL_FRIENDS",
+	# 	"user_id": 1948122342,
+	# 	"data_type": "id"
+	# }
 	cmd = {
-		"cmd": "CRAWL_FRIENDS",
-		"user_id": 1948122342,
-		"data_type": "id"
+		"cmd": "CRAWL_USER_TIMELINE",
+		"user_id": 53039176
 	}
+
 	user_relationship_crawler.enqueue(cmd)
 	user_relationship_crawler.enqueue({"cmd":"TERMINATE"})
 

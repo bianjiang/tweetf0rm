@@ -31,14 +31,15 @@ class UserRelationshipCrawler(WorkerProcess):
 			"CRAWL_FOLLOWERS" :{
 				"object": "find_all_followers",
 				"id": "find_all_follower_ids"
-			}
+			}, 
+			"CRAWL_USER_TIMELINE": "fetch_user_timeline"
 		}
 
 	def get_handlers(self):
 		return self.handlers
 
 	def avaliable_cmds(self):
-		return ["TERMINATE", "CRAWL_FRIENDS", "CRAWL_FOLLOWERS"]
+		return self.tasks.keys()
 
 	def create_cmd(self, command):
 		raise NoImplemented("not implemented, placeholder, tend to help user create cmds")
@@ -62,43 +63,27 @@ class UserRelationshipCrawler(WorkerProcess):
 			if (command == 'TERMINATE'):
 				break
 			else:
-				data_type = cmd['data_type']
+
 				args = {
 					"user_id": cmd['user_id'],
 					"write_to_handlers": self.handlers
 				}
 				
-				try:
+				func = None
+				if  (command == 'CRAWL_USER_TIMELINE'):
+					func = getattr(self.user_api, self.tasks[command])
+				elif (command in ['CRAWL_FRIENDS', 'CRAWL_FOLLOWERS']):
+					data_type = cmd['data_type']
 					func = getattr(self.user_api, self.tasks[command][data_type])
 				
-					func(**args)
-					for handler in self.get_handlers():
-						logger.info(handler.stat())
-				except:
-					logger.error("either the function you are calling doesn't exist, or you are calling the function with the wrong args!")
-					raise
-			# elif (command == 'CRAWL_FRIENDS'):
-			# 	user_id = cmd['user_id']
-			# 	data_type = cmd['data_type']
-			# 	if (data_type == 'object'):
-			# 		self.user_api.find_all_friends(user_id=user_id, write_to_handlers=self.handlers)
-			# 		for handler in self.get_handlers():
-			# 			logger.info(handler.stat())
-			# 	else:
-			# 		self.user_api.find_all_friend_ids(user_id=user_id, write_to_handlers=self.handlers)
-			# 		for handler in self.get_handlers():
-			# 			logger.info(handler.stat())
-
-			# elif (command == 'CRAWL_FOLLOWERS'):
-			# 	user_id = cmd['user_id']
-			# 	data_type = cmd['data_type']
-
-			# 	if (data_type == 'object'):
-			# 		self.user_api.find_all_followers(user_id=user_id, write_to_handlers=self.handlers)
-			# 	else:
-			# 		raise NoImplemented("%s not implemented"%(command, json.dumps(cmd)))
-			# else:
-			# 	raise NoImplemented("%s not implemented"%(command, json.dumps(cmd)))
+				if func:
+					try:
+						func(**args)
+					except:
+						logger.error("either the function you are calling doesn't exist, or you are calling the function with the wrong args!")
+						pass
+				else:
+					logger.warn("whatever are you trying to do?")
 
 		if self.verbose:
 			logger.info("looks like i'm done...")

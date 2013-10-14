@@ -34,6 +34,7 @@ class TestBootstrap:
 	def teardown(self):
 		pass
 
+
 	@nottest
 	def test_get_user_id(self):
 		from tweetf0rm.twitterapi.users import User
@@ -43,9 +44,8 @@ class TestBootstrap:
 		
 		#inmemoryhandler = InMemoryHandler()
 		user_api = User(apikeys=apikeys)
-		userIds = user_api.get_user_ids(["i0mf0rmer03"])
+		userIds = user_api.get_user_ids(["FDA_Drug_Info"])
 		logger.info(userIds)
-
 
 	def test_bootstrap(self):
 		import tweetf0rm.bootstrap as bootstrap

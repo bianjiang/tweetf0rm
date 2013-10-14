@@ -81,7 +81,9 @@ class User(twython.Twython):
 		if self.verbose:
 			logger.info("finished find_all_followers for %d..."%(user_id))
 			for handler in write_to_handlers:
-				logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("followers", user_id)), type(handler), "followers", user_id))
+				#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("followers", user_id)), type(handler), "followers", user_id))
+				logger.info(handler.stat())
+
 
 	def find_all_follower_ids(self, user_id=None, write_to_handlers = None):
 
@@ -117,7 +119,8 @@ class User(twython.Twython):
 		if self.verbose:
 			logger.info("finished find_all_follower_ids for %d..."%(user_id))
 			for handler in write_to_handlers:
-				logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("follower_ids", user_id)), type(handler), "follower_ids", user_id))
+				#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("follower_ids", user_id)), type(handler), "follower_ids", user_id))
+				logger.info(handler.stat())
 
 	def find_all_friends(self, user_id=None, write_to_handlers=None):
 
@@ -155,7 +158,8 @@ class User(twython.Twython):
 		if self.verbose:
 			logger.info("finished find_all_friends for %d..."%(user_id))
 			for handler in write_to_handlers:
-				logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friends", user_id)), type(handler), "friends", user_id))
+				#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friends", user_id)), type(handler), "friends", user_id))
+				logger.info(handler.stat())
 
 	def find_all_friend_ids(self, user_id=None, write_to_handlers=None):
 
@@ -193,22 +197,23 @@ class User(twython.Twython):
 		if self.verbose:
 			logger.info("finished find_all_friend_ids for %d..."%(user_id))
 			for handler in write_to_handlers:
-				logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friend_ids", user_id)), type(handler), "friend_ids", user_id))
+				#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friend_ids", user_id)), type(handler), "friend_ids", user_id))
+				logger.info(handler.stat())
 
-
-	def fetch_user_timeline(self, user_id = None, write_to_handler=None):
+	def fetch_user_timeline(self, user_id = None, write_to_handlers=None):
 
 		if not user_id:
 			raise Exception("user_timeline: user_id cannot be None")
 
-		if write_to_handler == None:
-			write_to_handler = self.write_to_handler
+		if (write_to_handlers == None):
+			raise MissingArgs("come on, you gotta write the result to something...")
 
 		prev_max_id = -1
 		current_max_id = 0
-
+		last_lowest_id = current_max_id # used to workaround users who has less than 200 tweets, 1 loop is enough...
 		cnt = 0
 		
+		timeline = [] # holder tweets in memory... you won't get more than 3,200 tweets per user, so I guess this is fine...
 		while current_max_id != prev_max_id:
 			try:
 				if current_max_id > 0:
@@ -219,15 +224,23 @@ class User(twython.Twython):
 				prev_max_id = current_max_id # if no new tweets are found, the prev_max_id will be the same as current_max_id
 
 				for tweet in tweets:
-					write_to_handler.append(json.dumps(tweet), key=user_id)
-
 					if current_max_id == 0 or current_max_id > int(tweet['id']):
 						current_max_id = int(tweet['id'])
 
+				#no new tweets found
+				if (prev_max_id == current_max_id):
+					break;
+
+				timeline.extend(tweets)
+
 				cnt += len(tweets)
-				logger.debug('%d > %d ? %s'%(prev_max_id, current_max_id, bool(prev_max_id > current_max_id)))
-				logger.info("fetched tweets: %d"%cnt)
+
+				if self.verbose:
+					logger.debug('%d > %d ? %s'%(prev_max_id, current_max_id, bool(prev_max_id > current_max_id)))
+					logger.info("fetched tweets: %d"%cnt)
+
 				time.sleep(1)
+
 			except twython.exceptions.TwythonRateLimitError:
 				rate_limits = self.get_application_rate_limit_status(resources=['statuses'])
 				wait_for = int(rate_limits['resources']['statuses']['/statuses/user_timeline']['reset']) - time.time() + 10
@@ -238,7 +251,16 @@ class User(twython.Twython):
 
 				time.sleep(wait_for)
 
-		logger.info("[%d] total tweets: %d "%(user_id, cnt))
+		for tweet in timeline:
+			for handler in write_to_handlers:
+				handler.append(json.dumps(tweet), data_type="timelines", key=user_id) 
+
+		if self.verbose:
+			logger.info("[%d] total tweets: %d "%(user_id, cnt))
+			for handler in write_to_handlers:
+				logger.info(handler.stat())
+				
+
 
 	def get_user_ids(self, seeds):
 		#get user id first
