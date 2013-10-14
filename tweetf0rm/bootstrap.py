@@ -10,11 +10,17 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 from process.user_relationship_crawler import UserRelationshipCrawler
 #from process.user_timeline_crawler import UserTimelineProcessCrawler
 from handler.inmemory_handler import InMemoryHandler
+import multiprocessing as mp
 
 def start_server(apikeys):
 	import copy
 	from utils import node_id, public_ip
 	logger.info(public_ip())
+
+	#manager = mp.Manager()
+
+	#handlers = manager.list()
+	#handlers.append(InMemoryHandler(verbose=True))
 
 	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [InMemoryHandler(verbose=True)], verbose=True)
 
@@ -30,7 +36,7 @@ def start_server(apikeys):
 
 	user_relationship_crawler.join()
 
-	for handler in user_relationship_crawler.get_handlers():
+	for handler in handlers:
 		logger.info(handler.stat())
 
 	#r = redis.StrictRedis(host='localhost', port=6379, db=0)
