@@ -33,3 +33,30 @@ def full_stack():
 	if not exc is None:
 		 stackstr += '  ' + traceback.format_exc().lstrip(trc)
 	return stackstr
+
+def check_proxies(proxies, proxy_type="http"):
+	url = "http://google.com"
+	headers = {
+		'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:23.0) Gecko/20100101 Firefox/23.0',
+		'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+		'Accept-Encoding': 'gzip, deflate',
+		'Accept-Language': 'en-US,en;q=0.5'
+	}
+
+	verified_proxies = []
+	for proxy in proxies:
+		try:			
+			proxy_dict = {proxy_type : '%s://%s'%(proxy_type, proxy)}
+
+			r = requests.get(url, headers=headers, proxies=proxy_dict)
+			if (r.status_code == requests.codes.ok):
+				verified_proxies.append(proxy)
+
+				logger.info('GOOD: [%s] - %d'%(proxy, r.elapsed.seconds))
+			else:
+				logger.warn('BROKEN: [%s] - %d'%(proxy, r.elapsed.seconds))
+		except:
+			logger.warn('BROKEN: [%s] - %d'%(proxy, r.elapsed.seconds))
+			pass
+
+	return verified_proxies

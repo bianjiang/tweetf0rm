@@ -10,14 +10,15 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 from process.user_relationship_crawler import UserRelationshipCrawler
 #from process.user_timeline_crawler import UserTimelineProcessCrawler
 from handler.inmemory_handler import InMemoryHandler
-
 import multiprocessing as mp
+from .utils import check_proxies
 
-def start_server(apikeys):
+def start_server(apikeys, proxies):
 	import copy
 	from utils import node_id, public_ip
 	logger.info(public_ip())
 
+	verified_proxies = check_proxies(proxies)
 	#manager = mp.Manager()
 
 	#handlers = manager.list()
@@ -28,10 +29,15 @@ def start_server(apikeys):
 			"verbose": True
 		}
 	}
-	logger.info(inmemory_handler_config)
-	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [inmemory_handler_config], verbose=True)
+	number_of_processes = min(len(apikeys), len(verified_proxies))
 
-	user_relationship_crawler.start()
+	user_relationship_crawlers = []
+
+	for i in range(number_of_processes):
+		apikey, proxy = apikeys[i], verified_proxies[i]
+		crawler = UserRelationshipCrawler(copy.copy(apikey), [inmemory_handler_config], verbose=True, proxy=proxy)
+		crawler.start()
+		user_relationship_crawlers.append(crawler)
 
 	# cmd = {
 	# 	"cmd": "CRAWL_FRIENDS",

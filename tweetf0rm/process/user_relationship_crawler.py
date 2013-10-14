@@ -14,12 +14,17 @@ import copy, json
 
 class UserRelationshipCrawler(WorkerProcess):
 
-	def __init__(self, apikeys, handler_configs = None, verbose = False):
+	def __init__(self, apikeys, handler_configs = None, verbose = False, proxy=None):
 		if (handler_configs == None):
 			raise MissingArgs("you need a handler to write the data to...")
 		super(UserRelationshipCrawler, self).__init__(handler_configs=handler_configs, verbose=verbose)
 		self.apikeys = copy.copy(apikeys)
-		self.user_api = User(apikeys=apikeys, verbose=verbose)
+		if (proxy):
+			client_args={'proxies':{'http':'http://%s'%proxy}}
+		else:
+			client_args = None
+		self.user_api = User(apikeys=apikeys, verbose=verbose, client_args=client_args)
+		self.proxy = proxy
 		if (self.verbose):
 			logger.info("# of handlers: %d"%(len(self.get_handlers())))
 		self.tasks = {

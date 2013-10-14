@@ -47,11 +47,15 @@ class TestBootstrap:
 		userIds = user_api.get_user_ids(["FDA_Drug_Info"])
 		logger.info(userIds)
 
+	#@nottest
 	def test_bootstrap(self):
 		import tweetf0rm.bootstrap as bootstrap
 		apikeys = self.config["apikeys"]["i0mf0rmer03"]
 		bootstrap.start_server(apikeys) 
 		# pass
+	@nottest
+	def test_bootstrap_with_proxies(self):
+		pass
 
 	@nottest
 	def test_proxy(self):
@@ -65,15 +69,18 @@ class TestBootstrap:
 		}
 
 		for proxy in self.proxies['proxies']:
-			
-			proxy_dict = {"http"  : 'http://%s'%proxy}
+			try:			
+				proxy_dict = {"http"  : 'http://%s'%proxy}
 
-			r = requests.get(url, headers=headers, proxies=proxy_dict)
-			if (r.status_code == requests.codes.ok):
-				logger.info('GOOD: [%s] - %d'%(proxy, r.elapsed.seconds))
-			else:
+				r = requests.get(url, headers=headers, proxies=proxy_dict)
+				if (r.status_code == requests.codes.ok):
+					logger.info('GOOD: [%s] - %d'%(proxy, r.elapsed.seconds))
+				else:
+					logger.warn('BROKEN: [%s] - %d'%(proxy, r.elapsed.seconds))
+			except:
 				logger.warn('BROKEN: [%s] - %d'%(proxy, r.elapsed.seconds))
-			quit()
+				pass
+
 
 if __name__=="__main__":
 	import nose
