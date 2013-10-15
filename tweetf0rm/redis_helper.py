@@ -11,14 +11,11 @@ requests_log.setLevel(logging.INFO)
 
 import redis
 
-def redis_pub():
-	# these will return nothing since user_relationship_crawler works on a different process
-	# for handler in user_relationship_crawler.get_handlers():
-	# 	logger.info(handler.stat())
+class RedisHelper(object):
 
-	#r = redis.StrictRedis(host='localhost', port=6379, db=0)
+	def __init__(self, redis_config):
+		self.redis_connection = redis.StrictRedis(host=redis_config['host'], port=redis_config['port'], db=0)
+		self.password = redis_config['password']
 
-	#r.execute_command("AUTH", "wh0tever")
-	#r.set('node_id', node_id())
-	#logger.info(r.get('node_id'))
-	#logger.info(node_id())
+	def __auth(self):
+		self.redis_connection.execute_command("AUTH", self.password)

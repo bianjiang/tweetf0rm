@@ -8,6 +8,8 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 from .worker_process import WorkerProcess
 from tweetf0rm.twitterapi.users import User
+from tweetf0rm.handler import create_handler
+from tweetf0rm.handler.inmemory_handler import RedisCommandHandler
 from tweetf0rm.exceptions import MissingArgs, NotImplemented
 import copy, json
 
@@ -30,12 +32,14 @@ class UserRelationshipCrawler(WorkerProcess):
 		self.tasks = {
 			"TERMINATE": "TERMINATE", 
 			"CRAWL_FRIENDS" : {
-				"object": "find_all_friends",
-				"id": "find_all_friend_ids"
+				"users": "find_all_friends",
+				"ids": "find_all_friend_ids",
+				"network_type": "friends"
 			},
 			"CRAWL_FOLLOWERS" :{
-				"object": "find_all_followers",
-				"id": "find_all_follower_ids"
+				"users": "find_all_followers",
+				"ids": "find_all_follower_ids",
+				"network_type": "followers"
 			}, 
 			"CRAWL_USER_TIMELINE": "fetch_user_timeline"
 		}
@@ -55,7 +59,7 @@ class UserRelationshipCrawler(WorkerProcess):
 			# cmd = {
 			#	network_type: "followers", # or friends
 			#	user_id: id,
-			#	data_type: 'id' # object
+			#	data_type: 'ids' # users
 			#}
 			cmd = self.get_cmd()
 
@@ -63,6 +67,8 @@ class UserRelationshipCrawler(WorkerProcess):
 				logger.info("new cmd: %s"%(cmd))
 
 			command = cmd['cmd']
+
+			redis_cmd_handler = None
 
 			#maybe change this to a map will be less expressive, and easier to read... but well, not too many cases here yet...
 			if (command == 'TERMINATE'):
@@ -79,11 +85,31 @@ class UserRelationshipCrawler(WorkerProcess):
 					func = getattr(self.user_api, self.tasks[command])
 				elif (command in ['CRAWL_FRIENDS', 'CRAWL_FOLLOWERS']):
 					data_type = cmd['data_type']
+					depth = cmd["depth"] if "depth" in cmd else None
+
+					# for handler in self.handlers:
+					# 	if isinstance(handler, InMemoryHandler):
+					# 		inmemory_handler = handler
+					if (depth > 0):
+						template = copy.copy(cmd)
+						# template = {
+						#	network_type: "followers", # or friends
+						#	user_id: id,
+						#	data_type: 'ids' # object
+						#	depth: depth
+						#}
+						args["write_to_handlers"].append(RedisCommandHandler(verbose=False, template={}))
+					
 					func = getattr(self.user_api, self.tasks[command][data_type])
 				
 				if func:
 					try:
 						func(**args)
+
+						#propagate and generate new tasks
+						if (depth > 0 and inmemory_handler != None and command in ['CRAWL_FRIENDS', 'CRAWL_FOLLOWERS']):
+							network_type = self.tasks[command]["network_type"]
+
 					except:
 						logger.error("either the function you are calling doesn't exist, or you are calling the function with the wrong args!")
 						pass

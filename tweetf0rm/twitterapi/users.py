@@ -62,7 +62,7 @@ class User(twython.Twython):
 
 				for handler in write_to_handlers:
 					handler.append(json.dumps(followers), data_type="followers", key=user_id) 
-
+					
 				cursor = int(followers['next_cursor'])
 
 				if self.verbose:

@@ -14,15 +14,11 @@ import json
 
 class BaseHandler(object):
 
-	def __init__(self, verbose=False, shared_buffer=None):
+	def __init__(self, verbose=False):
 		'''
 			data_type: defines the sub-structure of the buffer; either ["tweets", "followers", "friends", "timelines"]
 		'''
-		if shared_buffer:
-			logger.info("I got a buffer from parent process?: %s"%shared_buffer)
-			self.buffer = shared_buffer
-		else:
-			self.buffer = dict()
+		self.buffer = dict()
 		self.data_types = ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
 		for data_type in self.data_types:
 			self.buffer[data_type] = dict()
@@ -43,6 +39,10 @@ class BaseHandler(object):
 			self.buffer[data_type][key] = list()
 			
 		self.buffer[data_type][key].append(data)
+
+		if (self.check_flush()):
+			self.flush()
+
 
 	def get(self, data_type, key):
 		return self.buffer[data_type][key]
@@ -72,5 +72,11 @@ class BaseHandler(object):
 		for data_type in self.data_types:
 			self.clear(data_type)
 
-	def flush(self, key):
+	def check_flush(self):
+		'''
+		sub-class determine when to flush and what to flush
+		'''
+		pass
+
+	def flush(self):
 		pass
