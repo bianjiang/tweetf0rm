@@ -10,28 +10,27 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 from process.user_relationship_crawler import UserRelationshipCrawler
 #from process.user_timeline_crawler import UserTimelineProcessCrawler
 from handler.inmemory_handler import InMemoryHandler
-
+from handler import create_handler
 import multiprocessing as mp
+
+import redis
 
 def start_server(apikeys):
 	import copy
 	from utils import node_id, public_ip
 	logger.info(public_ip())
 
-	manager = mp.Manager()
 
-	shared_buffer = manager.dict()
-	#handlers = manager.list()
-	#handlers.append(InMemoryHandler(verbose=True))
 	inmemory_handler_config = {
 		"name": "InMemoryHandler",
 		"args": {
-			"verbose": True,
-			"shared_buffer": shared_buffer
+			"verbose": True
 		}
 	}
-	logger.info(inmemory_handler_config)
-	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), [inmemory_handler_config], verbose=True)
+
+	inmemory_handler = create_handler(inmemory_handler_config) #InMemoryHandler(verbose=False, shared_buffer=d)
+
+	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), handlers=[inmemory_handler], verbose=True)
 
 	user_relationship_crawler.start()
 
@@ -42,7 +41,7 @@ def start_server(apikeys):
 	# }
 	cmd = {
 		"cmd": "CRAWL_USER_TIMELINE",
-		"user_id": 53039176
+		"user_id": 1948122342#53039176
 	}
 
 	user_relationship_crawler.enqueue(cmd)
@@ -50,7 +49,6 @@ def start_server(apikeys):
 
 	user_relationship_crawler.join()
 
-	logger.info(shared_buffer)
 	# these will return nothing since user_relationship_crawler works on a different process
 	# for handler in user_relationship_crawler.get_handlers():
 	# 	logger.info(handler.stat())

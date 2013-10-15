@@ -19,14 +19,13 @@ class BaseHandler(object):
 			data_type: defines the sub-structure of the buffer; either ["tweets", "followers", "friends", "timelines"]
 		'''
 		if shared_buffer:
+			logger.info("I got a buffer from parent process?: %s"%shared_buffer)
 			self.buffer = shared_buffer
 		else:
-			self.buffer = {}
+			self.buffer = dict()
 		self.data_types = ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
 		for data_type in self.data_types:
-			self.buffer[data_type] = {}
-		if shared_buffer:
-			shared_buffer = self.buffer
+			self.buffer[data_type] = dict()
 		self.verbose = verbose
 
 	def append(self, data=None, data_type=None, key='current_timestampe'):
@@ -41,7 +40,7 @@ class BaseHandler(object):
 			logger.info("adding new data -- into [%s][%s]"%(data_type, key))
 
 		if (key not in self.buffer[data_type]):
-			self.buffer[data_type][key] = []
+			self.buffer[data_type][key] = list()
 			
 		self.buffer[data_type][key].append(data)
 

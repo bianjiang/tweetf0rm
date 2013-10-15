@@ -14,6 +14,8 @@ from nose.tools import nottest
 import sys
 sys.path.append("..")
 
+import multiprocessing as mp
+
 class TestBootstrap:
 
 	@classmethod
@@ -47,7 +49,7 @@ class TestBootstrap:
 		userIds = user_api.get_user_ids(["FDA_Drug_Info"])
 		logger.info(userIds)
 
-	#@nottest
+	
 	def test_bootstrap(self):
 		import tweetf0rm.bootstrap as bootstrap
 		apikeys = self.config["apikeys"]["i0mf0rmer03"]
