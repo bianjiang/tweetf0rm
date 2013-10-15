@@ -14,14 +14,19 @@ import json
 
 class BaseHandler(object):
 
-	def __init__(self, verbose=False):
+	def __init__(self, verbose=False, shared_buffer=None):
 		'''
 			data_type: defines the sub-structure of the buffer; either ["tweets", "followers", "friends", "timelines"]
 		'''
-		self.buffer = {}
+		if shared_buffer:
+			self.buffer = shared_buffer
+		else:
+			self.buffer = {}
 		self.data_types = ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
 		for data_type in self.data_types:
 			self.buffer[data_type] = {}
+		if shared_buffer:
+			shared_buffer = self.buffer
 		self.verbose = verbose
 
 	def append(self, data=None, data_type=None, key='current_timestampe'):
