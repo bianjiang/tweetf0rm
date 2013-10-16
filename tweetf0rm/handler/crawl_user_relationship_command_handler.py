@@ -29,7 +29,6 @@ def flush_cmd(bulk, data_type, template, redis_config):
 			t["user_id"] = user_id
 			t["depth"] -= 1
 
-			#logger.info(t)
 			redis_cmd_queue.put(t)
 	except:
 		logger.error(full_stack())

@@ -14,7 +14,7 @@ import multiprocessing as mp
 from exceptions import InvalidConfig
 from tweetf0rm.redis_helper import RedisQueue
 from tweetf0rm.utils import full_stack
-
+import time
 def check_config(config, crawler):
 	if ('apikeys' not in config or crawler not in config['apikeys'] or 'redis_config' not in config):
 		raise InvalidConfig("something is wrong with your config file... you have to have redis_config, apikeys, and crawler name specified... ")
@@ -43,6 +43,22 @@ def start_server(config, crawler):
 
 	user_relationship_crawler.start()
 
+	# the main event loop, actually we don't need one, since we can just join on the crawlers and don't stop until a terminate command to each crawler, but we need one to check on redis command queue ...
+	while True:
+		# block, the main process...for a command
+		logger.info("waiting for cmd...")
+		if(not user_relationship_crawler.is_alive()):
+			logger.info("no crawler is alive... i'm done too...")
+			break;
+
+		cmd = redis_cmd_queue.get(block=True, timeout=5)
+
+		logger.info(cmd)
+		if cmd:
+			user_relationship_crawler.enqueue(cmd)
+
+		
+
 	# cmd = {
 	# 	"cmd": "CRAWL_FRIENDS",
 	# 	"user_id": 1948122342,
@@ -50,20 +66,20 @@ def start_server(config, crawler):
 	# 	"depth": 2,
 	# 	"result_bucket":"friend_ids"
 	# }
-	cmd = {
-		"cmd": "CRAWL_FRIENDS",
-		"user_id": 1948122342,
-		"data_type": "users",
-		"depth": 2,
-		"result_bucket":"friends"
-	}
 	# cmd = {
-	# 	"cmd": "CRAWL_USER_TIMELINE",
-	# 	"user_id": 1948122342#53039176
+	# 	"cmd": "CRAWL_FRIENDS",
+	# 	"user_id": 1948122342,
+	# 	"data_type": "users",
+	# 	"depth": 2,
+	# 	"result_bucket":"friends"
 	# }
+	# # cmd = {
+	# # 	"cmd": "CRAWL_USER_TIMELINE",
+	# # 	"user_id": 1948122342#53039176
+	# # }
 
-	user_relationship_crawler.enqueue(cmd)
-	user_relationship_crawler.enqueue({"cmd":"TERMINATE"})
+	# user_relationship_crawler.enqueue(cmd)
+	#user_relationship_crawler.enqueue({"cmd":"TERMINATE"})
 
 	user_relationship_crawler.join()
 

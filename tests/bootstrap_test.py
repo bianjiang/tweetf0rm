@@ -14,6 +14,9 @@ from nose.tools import nottest
 import sys
 sys.path.append("..")
 
+from tweetf0rm.redis_helper import RedisQueue
+from tweetf0rm.utils import full_stack
+
 class TestBootstrap:
 
 	@classmethod
@@ -89,4 +92,4 @@ class TestBootstrap:
 if __name__=="__main__":
 	import nose
 	#nose.main()
-	result = nose.run()
+	result = nose.run(TestBootstrap)

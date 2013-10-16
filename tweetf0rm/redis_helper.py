@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.INFO)
 
-import redis
+import redis, json
 
 class RedisBase(object):
 
@@ -44,7 +44,7 @@ class RedisQueue(RedisBase):
 
 	def put(self, item):
 		"""Put item into the queue."""
-		self.conn().rpush(self.key, item)
+		self.conn().rpush(self.key, json.dumps(item))
 
 	def get(self, block=True, timeout=None):
 		"""Remove and return an item from the queue. 
@@ -57,7 +57,7 @@ class RedisQueue(RedisBase):
 			item = self.conn().lpop(self.key)
 
 		if item:
-			item = item[1]
+			item = json.loads(item[1])
 		return item
 
 	def get_nowait(self):

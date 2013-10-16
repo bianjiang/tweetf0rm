@@ -88,10 +88,11 @@ class UserRelationshipCrawler(WorkerProcess):
 					data_type = cmd['data_type']
 					depth = cmd["depth"] if "depth" in cmd else None
 
+					logger.info("depth: %d"%(depth))
 					# for handler in self.handlers:
 					# 	if isinstance(handler, InMemoryHandler):
 					# 		inmemory_handler = handler
-					if (depth > 0):
+					if (depth > 1):
 						template = copy.copy(cmd)
 						# template = {
 						#	network_type: "followers", # or friends
