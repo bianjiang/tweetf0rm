@@ -73,13 +73,21 @@ class UserRelationshipCrawler(WorkerProcess):
 
 			#maybe change this to a map will be less expressive, and easier to read... but well, not too many cases here yet...
 			if (command == 'TERMINATE'):
+				# make sure we need to flush all existing data in the handlers..
+				for handler in self.handlers:
+				 	handler.flush_all()
 				break
 			else:
 
 				args = {
 					"user_id": cmd['user_id'],
-					"write_to_handlers": self.handlers
+					"write_to_handlers": self.handlers,
 				}
+
+				bucket = cmd["bucket"] if "bucket" in cmd else None
+
+				if (bucket):
+					args["bucket"] = bucket
 				
 				func = None
 				if  (command == 'CRAWL_USER_TIMELINE'):

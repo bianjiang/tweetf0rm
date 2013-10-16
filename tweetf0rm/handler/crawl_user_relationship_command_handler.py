@@ -15,7 +15,7 @@ import futures, json, copy, time
 from tweetf0rm.redis_helper import RedisQueue
 from tweetf0rm.utils import full_stack
 
-def flush_cmd(bulk, data_type, template, redis_config):
+def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
 	try:
 		redis_cmd_queue = RedisQueue(name="cmd", redis_config=redis_config)
 
@@ -30,10 +30,12 @@ def flush_cmd(bulk, data_type, template, redis_config):
 			t["depth"] -= 1
 
 			redis_cmd_queue.put(t)
+
+		if verbose:
+			logger.info("number of command in queue: %d"%redis_cmd_queue.qsize())
+			
 	except:
 		logger.error(full_stack())
-
-	logger.info("number of command in queue: %d"%redis_cmd_queue.qsize())
 
 	return True
 		
@@ -48,31 +50,30 @@ class CrawlUserRelationshipCommandHandler(BaseHandler):
 		the follower lists, after it's done... when it flush, it flush the commands to the redis channel
 		'''
 		super(CrawlUserRelationshipCommandHandler, self).__init__(verbose=verbose)
-		self.result_bucket = template["result_bucket"]
 		self.data_type = template["data_type"]
 		self.template = template
 		self.redis_config = redis_config
 
-	def need_flush(self):
+	def need_flush(self, bucket):
+		# flush every time there is new data comes in
 		return True
 
-	def flush(self):
+	def flush(self, bucket):
 		logger.info("i'm getting flushed...")
 
 		with futures.ProcessPoolExecutor(max_workers=1) as executor:
-			for k, v in self.buffer[self.result_bucket].iteritems():
+			for k, v in self.buffer[bucket].iteritems():
 				for s in v:
 					o = json.loads(s)
 
-					f = executor.submit(flush_cmd, o[self.data_type], self.data_type, self.template, self.redis_config)
-					while (f.running()):
-						time.sleep(5)
-				# 
-				# 	o = json.loads(v)
-				# 	for user_ids in o[self.data_type]:
-				# 		if type(user_ids) == list:
-				# 			logger.info(user_ids)
-				#executor.submit(func, )
-				
-		pass
+					f = executor.submit(flush_cmd, o[self.data_type], self.data_type, self.template, self.redis_config, verbose=self.verbose)
+
+					self.futures.append(f)
+					# while (f.running()):
+					# 	time.sleep(5)
+			
+			# send to a different process to operate, clear the buffer
+			self.clear(bucket)
+
+		True
 

@@ -26,20 +26,30 @@ def start_server(config, crawler):
 	check_config(config, crawler)
 	config = copy.copy(config)
 	apikeys = copy.copy(config['apikeys'][crawler])
+	verbose = bool(config['verbose']) if config['verbose'] else False
 
 	redis_cmd_queue = RedisQueue(name="cmd", redis_config=config['redis_config'])
 	redis_cmd_queue.clear()
 
-	inmemory_handler_config = {
-		"name": "InMemoryHandler",
+	# inmemory_handler_config = {
+	# 	"name": "InMemoryHandler",
+	# 	"args": {
+	# 		"verbose": True
+	# 	}
+	# }
+
+	# inmemory_handler = create_handler(inmemory_handler_config) #InMemoryHandler(verbose=False, shared_buffer=d)
+	file_handler_config = {
+		"name": "FileHandler",
 		"args": {
-			"verbose": True
+			"verbose": True,
+			"output_folder" : "./data"
 		}
 	}
 
-	inmemory_handler = create_handler(inmemory_handler_config) #InMemoryHandler(verbose=False, shared_buffer=d)
+	file_handler = create_handler(file_handler_config)
 
-	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), handlers=[inmemory_handler], verbose=True, config=config)
+	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), handlers=[file_handler], verbose=verbose, config=config)
 
 	user_relationship_crawler.start()
 
@@ -53,9 +63,12 @@ def start_server(config, crawler):
 
 		cmd = redis_cmd_queue.get(block=True, timeout=5)
 
-		logger.info(cmd)
 		if cmd:
 			user_relationship_crawler.enqueue(cmd)
+
+		if (verbose):
+			logger.info("cmd: %s"%cmd)
+
 
 		
 
@@ -64,18 +77,19 @@ def start_server(config, crawler):
 	# 	"user_id": 1948122342,
 	# 	"data_type": "ids",
 	# 	"depth": 2,
-	# 	"result_bucket":"friend_ids"
+	# 	"bucket":"friend_ids"
 	# }
 	# cmd = {
 	# 	"cmd": "CRAWL_FRIENDS",
 	# 	"user_id": 1948122342,
 	# 	"data_type": "users",
 	# 	"depth": 2,
-	# 	"result_bucket":"friends"
+	# 	"bucket":"friends"
 	# }
 	# # cmd = {
 	# # 	"cmd": "CRAWL_USER_TIMELINE",
-	# # 	"user_id": 1948122342#53039176
+	# # 	"user_id": 1948122342#53039176,
+	##	"bucket": "timelines"
 	# # }
 
 	# user_relationship_crawler.enqueue(cmd)

@@ -47,7 +47,7 @@ class User(twython.Twython):
 
 		super(User, self).__init__(*args, **kwargs)
 
-	def find_all_followers(self, user_id=None, write_to_handlers = None):
+	def find_all_followers(self, user_id=None, write_to_handlers = None, bucket="followers"):
 
 		if (not user_id):
 			raise MissingArgs("user_id cannot be None")
@@ -61,13 +61,13 @@ class User(twython.Twython):
 				followers = self.get_followers_list(user_id=user_id, cursor=cursor, count=200)
 
 				for handler in write_to_handlers:
-					handler.append(json.dumps(followers), data_type="followers", key=user_id) 
+					handler.append(json.dumps(followers), bucket=bucket, key=user_id) 
 					
 				cursor = int(followers['next_cursor'])
 
 				if self.verbose:
 					logger.info("find #%d followers... NEXT_CURSOR: %d"%(len(followers["users"]), cursor))
-				time.sleep(5)
+				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				rate_limits = self.get_application_rate_limit_status(resources=['users', 'followers'])
 				wait_for = int(rate_limits['resources']['followers']['/followers/list']['reset']) - time.time() + 10
@@ -85,7 +85,7 @@ class User(twython.Twython):
 			# 	logger.info(handler.stat())
 
 
-	def find_all_follower_ids(self, user_id=None, write_to_handlers = None):
+	def find_all_follower_ids(self, user_id=None, write_to_handlers = None, bucket = "follower_ids"):
 
 		if (not user_id):
 			raise MissingArgs("user_id cannot be None")
@@ -99,13 +99,13 @@ class User(twython.Twython):
 				follower_ids = self.get_followers_ids(user_id=user_id, cursor=cursor, count=200)
 
 				for handler in write_to_handlers:
-					handler.append(json.dumps(follower_ids), data_type="follower_ids", key=user_id) 
+					handler.append(json.dumps(follower_ids), bucket=bucket, key=user_id) 
 
 				cursor = int(follower_ids['next_cursor'])
 
 				if self.verbose:
 					logger.info("find #%d followers... NEXT_CURSOR: %d"%(len(follower_ids["ids"]), cursor))
-				time.sleep(5)
+				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				rate_limits = self.get_application_rate_limit_status(resources=['users', 'followers'])
 				wait_for = int(rate_limits['resources']['followers']['/followers/ids']['reset']) - time.time() + 10
@@ -122,7 +122,7 @@ class User(twython.Twython):
 			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("follower_ids", user_id)), type(handler), "follower_ids", user_id))
 			# 	logger.info(handler.stat())
 
-	def find_all_friends(self, user_id=None, write_to_handlers=None):
+	def find_all_friends(self, user_id=None, write_to_handlers=None, bucket="friends"):
 
 		if (not user_id):
 			raise MissingArgs("user_id cannot be None")
@@ -136,7 +136,7 @@ class User(twython.Twython):
 				friends = self.get_friends_list(user_id=user_id, cursor=cursor, count=200)
 
 				for handler in write_to_handlers:
-					handler.append(json.dumps(friends), data_type="friends", key=user_id) 
+					handler.append(json.dumps(friends), bucket=bucket, key=user_id) 
 
 
 				cursor = int(friends['next_cursor'])
@@ -144,7 +144,7 @@ class User(twython.Twython):
 				if self.verbose:
 					logger.info("find #%d friends... NEXT_CURSOR: %d"%(len(friends["users"]), cursor))
 
-				time.sleep(5)
+				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				rate_limits = self.get_application_rate_limit_status(resources=['users', 'friends'])
 				wait_for = int(rate_limits['resources']['friends']['/friends/list']['reset']) - time.time() + 10
@@ -161,7 +161,7 @@ class User(twython.Twython):
 			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friends", user_id)), type(handler), "friends", user_id))
 			# 	logger.info(handler.stat())
 
-	def find_all_friend_ids(self, user_id=None, write_to_handlers=None):
+	def find_all_friend_ids(self, user_id=None, write_to_handlers=None, bucket="friend_ids"):
 
 		if (not user_id):
 			raise MissingArgs("user_id cannot be None")
@@ -175,7 +175,7 @@ class User(twython.Twython):
 				friend_ids = self.get_friends_ids(user_id=user_id, cursor=cursor, count=200)
 
 				for handler in write_to_handlers:
-					handler.append(json.dumps(friend_ids), data_type="friend_ids", key=user_id) 
+					handler.append(json.dumps(friend_ids), bucket=bucket, key=user_id) 
 
 
 				cursor = int(friend_ids['next_cursor'])
@@ -183,7 +183,7 @@ class User(twython.Twython):
 				if self.verbose:
 					logger.info("find #%d friend_ids... NEXT_CURSOR: %d"%(len(friend_ids["ids"]), cursor))
 
-				time.sleep(5)
+				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				rate_limits = self.get_application_rate_limit_status(resources=['users', 'friends'])
 				wait_for = int(rate_limits['resources']['friends']['/friends/ids']['reset']) - time.time() + 10
@@ -200,7 +200,7 @@ class User(twython.Twython):
 			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friend_ids", user_id)), type(handler), "friend_ids", user_id))
 			# 	logger.info(handler.stat())
 
-	def fetch_user_timeline(self, user_id = None, write_to_handlers=None):
+	def fetch_user_timeline(self, user_id = None, write_to_handlers=None, bucket="timelines"):
 
 		if not user_id:
 			raise Exception("user_timeline: user_id cannot be None")
@@ -253,7 +253,7 @@ class User(twython.Twython):
 
 		for tweet in timeline:
 			for handler in write_to_handlers:
-				handler.append(json.dumps(tweet), data_type="timelines", key=user_id) 
+				handler.append(json.dumps(tweet), bucket=bucket, key=user_id) 
 
 		if self.verbose:
 			logger.info("[%d] total tweets: %d "%(user_id, cnt))

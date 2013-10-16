@@ -10,87 +10,69 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
-import time, os, sys, threading, time
+from .base_handler import BaseHandler
+import futures, os
+from tweetf0rm.utils import full_stack
 
-class FileHandler(object):
+def flush_file(output_folder, bucket, items, verbose=False):
+	try:
+		bucket_folder = os.path.abspath('%s/%s'%(output_folder, bucket))
 
-	def __init__(self, output_folder, buffer_size=1024 * 1024, verbose=False):
+		for k, lines in items.iteritems():
+			filename = os.path.abspath('%s/%s'%(bucket_folder, k))
+			with open(filename, 'ab+') as f:
+				for line in lines:
+					f.write('%s\n'%line)
+		
+			if (verbose):
+				logger.info("flushed %d lines to %s"%(len(lines), filename))
 
-		import futures, os
+	except:
+		logger.error(full_stack())
+
+	return True
+
+FLUSH_SIZE = 100
+from threading import Timer
+
+class FileHandler(BaseHandler):
+
+	def __init__(self, output_folder='./data', verbose=False):
+		super(FileHandler, self).__init__(verbose=verbose)
 		self.output_folder = os.path.abspath(output_folder)
 		if not os.path.exists(self.output_folder):
 			os.makedirs(self.output_folder)
 
-		self.executor = futures.ThreadPoolExecutor(max_workers=1)
-		self.buffer = {}
-		self.buffer_size = buffer_size
-		self.verbose = verbose
-		self.last_rolling_timestamp = 0
-		self.cnt = 0
-		self.lock = threading.Lock()
+		for bucket in self.buckets:
+			bucket_folder = os.path.abspath('%s/%s'%(self.output_folder, bucket))
+			if not os.path.exists(bucket_folder):
+				os.makedirs(bucket_folder)
 
-	def append(self, data, key='current_timestampe'):
+	def need_flush(self, bucket):
+		if (len(self.buffer[bucket]) >  FLUSH_SIZE):
+			return True
+		else:
+			Timer(60,self.flush,args=[bucket, True])
 
-		self.lock.acquire()
-		if key not in self.buffer:
-			self.buffer[key] = []
+			return False
 
-		self.buffer[key].append(data)
+	def flush(self, bucket, from_timer=False):
 
-		csize = sys.getsizeof(self.buffer[key])
+		if (self.verbose and from_timer):
+			logger.info("I'm actually from the past...")
 
-		self.lock.release()
+		with futures.ProcessPoolExecutor(max_workers=1) as executor:
+			# for each bucket it's a dict, where the key needs to be the file name; and the value is a list of json encoded value
+			for bucket, items in self.buffer.iteritems():
 
-		# in memory buffer size, doesn't mean the file size... 
-		if csize > self.buffer_size:
-			self.flush(key)
+				if (len(items) > 0):
+					f = executor.submit(flush_file, self.output_folder, bucket, items, verbose=self.verbose)
+				
+					# send to a different process to operate, clear the buffer
+					self.clear(bucket)
 
-	def flush(self, key):
-
-		import copy
-		items = copy.copy(self.buffer[key])
-
-		del self.buffer[key][:]
-		del self.buffer[key]
-
-		future = self.executor.submit(self.__write_to, key, items)
-
-		return future
-
-	def close(self):		
-		logger.info("waiting for existing data to be flushed... be patient... this will be quick")
-		time.sleep(10) # sleep for 10 secs, it's possible that the feed hasn't ended, so new data are still being appended... 
-		self.lock.acquire()
-		keys = self.buffer.keys()
-		for k in keys:
-			future = self.flush(k)
-			future.result()
-
-		self.lock.release()
-
-	# sometime if the process restarts, we need to delete a partial finished file and restart from a clean state
-	def delete(self, key):
-		filename = os.path.abspath('%s/%s'%(self.output_folder, key))
-		try:
-			os.remove(filename)
-		except:
-			pass
-
-
-	def __write_to(self, key, items):
-		current = time.gmtime()
-
-		if key == 'current_timestampe':
-			key = int(time.mktime(current))
-
-		filename = os.path.abspath('%s/%s'%(self.output_folder, key))
-
-		with open(filename, 'ab+') as f:
-			for line in items:
-				f.write('%s\n'%line)
-		
-			if self.verbose:
-				logger.info("flushed %d to %s"%(len(items), filename))
+					self.futures.append(f)
+					
 
 		return True
 

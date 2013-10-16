@@ -39,12 +39,18 @@ class TestClient:
 		redis_cmd_queue = RedisQueue(name="cmd", redis_config=self.config['redis_config'])
 		#redis_cmd_queue.clear()
 
+		# cmd = {
+		# 	"cmd": "CRAWL_FRIENDS",
+		# 	"user_id": 1948122342,
+		# 	"data_type": "ids",
+		# 	"depth": 1,
+		# 	"bucket":"friend_ids"
+		# }
+
 		cmd = {
-			"cmd": "CRAWL_FRIENDS",
-			"user_id": 1948122342,
-			"data_type": "ids",
-			"depth": 1,
-			"result_bucket":"friend_ids"
+			"cmd": "CRAWL_USER_TIMELINE",
+			"user_id": 1948122342,#53039176,
+			"bucket": "timelines"
 		}
 
 		redis_cmd_queue.put(cmd)

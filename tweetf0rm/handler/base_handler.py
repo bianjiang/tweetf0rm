@@ -16,69 +16,84 @@ class BaseHandler(object):
 
 	def __init__(self, verbose=False):
 		'''
-			data_type: defines the sub-structure of the buffer; either ["tweets", "followers", "friends", "timelines"]
+			buckets: defines the sub-structure of the buffer; either ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
 		'''
 		self.buffer = dict()
-		self.data_types = ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
-		for data_type in self.data_types:
-			self.buffer[data_type] = dict()
+		self.buckets = ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
+		for bucket in self.buckets:
+			self.buffer[bucket] = dict()
 		self.verbose = verbose
+		self.futures = []
 
-	def append(self, data=None, data_type=None, key='current_timestampe'):
+	def append(self, data=None, bucket=None, key='current_timestampe'):
 		if (not data):
 			raise WrongArgs("what's the point? not data coming in...")
 
-		if (data_type not in self.data_types):
-			raise WrongArgs("%s is not a valid data_type..."%data_type)
+		if (bucket not in self.buckets):
+			raise WrongArgs("%s is not a valid buckets..."%bucket)
 
 		if (self.verbose):
-			#logger.info("adding data -- [%s] into [%s][%s]"%(json.dumps(data), data_type, key))
-			logger.info("adding new data -- into [%s][%s]"%(data_type, key))
+			logger.info("adding new data -- into [%s][%s]"%(bucket, key))
 
-		if (key not in self.buffer[data_type]):
-			self.buffer[data_type][key] = list()
+		if (key not in self.buffer[bucket]):
+			self.buffer[bucket][key] = list()
 			
-		self.buffer[data_type][key].append(data)
+		self.buffer[bucket][key].append(data)
 
-		need_flush = self.need_flush()
+		need_flush = self.need_flush(bucket)
 		logger.info("flush? %s"%need_flush)
 		if (need_flush):
-			self.flush()
+			self.flush(bucket)
 
 
-	def get(self, data_type, key):
-		return self.buffer[data_type][key]
+	def get(self, bucket, key):
+		return self.buffer[bucket][key]
 
 	def stat(self):
 		stat = {}
-		for data_type in self.data_types:
-			stat[data_type] = {
-				'count': len(self.buffer[data_type])
+		for bucket in self.buckets:
+			stat[bucket] = {
+				'count': len(self.buffer[bucket])
 			}
 
 			data = {}
-			for k in self.buffer[data_type]:
-				data[k] = len(self.buffer[data_type][k])
+			for k in self.buffer[bucket]:
+				data[k] = len(self.buffer[bucket][k])
 			
-			stat[data_type]["data"] = data
+			stat[bucket]["data"] = data
 		
 		return stat
 
-	def remove_key(self, data_type = None, key = None):
-		del self.buffer[data_type][key]
+	def remove_key(self, bucket = None, key = None):
+		del self.buffer[bucket][key]
 
-	def clear(self, data_type = None):
-		del self.buffer[data_type]
+	def clear(self, bucket = None):
+		if (bucket):
+			del self.buffer[bucket]
+			self.buffer[bucket] = dict()
 
 	def clear_all(self):
-		for data_type in self.data_types:
-			self.clear(data_type)
+		for bucket in self.buckets:
+			self.clear(bucket)
 
-	def need_flush(self):
+	def need_flush(self, bucket):
 		'''
 		sub-class determine when to flush and what to flush
 		'''
 		pass
 
-	def flush(self):
+	def flush(self, bucket):
 		pass
+
+	def flush_all(self, block=False):
+
+		for bucket in self.buffer:
+			self.flush(bucket)
+
+		if (block):
+			for f in self.futures:
+				while(not f.done()):
+					time.sleep(5)
+
+		return True
+
