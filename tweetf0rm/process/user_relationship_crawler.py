@@ -9,17 +9,18 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 from .worker_process import WorkerProcess
 from tweetf0rm.twitterapi.users import User
 from tweetf0rm.handler import create_handler
-from tweetf0rm.handler.inmemory_handler import RedisCommandHandler
+from tweetf0rm.handler.crawl_user_relationship_command_handler import CrawlUserRelationshipCommandHandler
+from tweetf0rm.utils import full_stack
 from tweetf0rm.exceptions import MissingArgs, NotImplemented
 import copy, json
 
 
 class UserRelationshipCrawler(WorkerProcess):
 
-	def __init__(self, apikeys, handlers = None, verbose = False, proxy=None):
+	def __init__(self, apikeys, handlers = None, verbose = False, proxy=None, config = None):
 		if (handlers == None):
 			raise MissingArgs("you need a handler to write the data to...")
-		super(UserRelationshipCrawler, self).__init__(handlers=handlers, verbose=verbose)
+		super(UserRelationshipCrawler, self).__init__(handlers=handlers, verbose=verbose, config = config)
 		self.apikeys = copy.copy(apikeys)
 		if (proxy):
 			client_args={'proxies':{'http':'http://%s'%proxy}}
@@ -98,28 +99,24 @@ class UserRelationshipCrawler(WorkerProcess):
 						#	data_type: 'ids' # object
 						#	depth: depth
 						#}
-						args["write_to_handlers"].append(RedisCommandHandler(verbose=False, template={}))
+						# will throw out exception if redis_config doesn't exist...
+						args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(verbose=False, template=template, redis_config=self.config["redis_config"]))
 					
 					func = getattr(self.user_api, self.tasks[command][data_type])
 				
 				if func:
 					try:
 						func(**args)
-
-						#propagate and generate new tasks
-						if (depth > 0 and inmemory_handler != None and command in ['CRAWL_FRIENDS', 'CRAWL_FOLLOWERS']):
-							network_type = self.tasks[command]["network_type"]
-
 					except:
 						logger.error("either the function you are calling doesn't exist, or you are calling the function with the wrong args!")
-						pass
+						logger.error(full_stack())
 				else:
 					logger.warn("whatever are you trying to do?")
 
 		if self.verbose:
 			logger.info("looks like i'm done...")
-			for handler in self.handlers:
-				logger.info(handler.stat())
+			# for handler in self.handlers:
+			# 	logger.info(handler.stat())
 
 			
 		return True

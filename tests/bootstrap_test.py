@@ -14,8 +14,6 @@ from nose.tools import nottest
 import sys
 sys.path.append("..")
 
-import multiprocessing as mp
-
 class TestBootstrap:
 
 	@classmethod
@@ -52,8 +50,8 @@ class TestBootstrap:
 	
 	def test_bootstrap(self):
 		import tweetf0rm.bootstrap as bootstrap
-		apikeys = self.config["apikeys"]["i0mf0rmer03"]
-		bootstrap.start_server(apikeys) 
+		#apikeys = self.config["apikeys"]["i0mf0rmer03"]
+		bootstrap.start_server(self.config, 'i0mf0rmer03') 
 		# pass
 		#from tweetf0rm.handler.inmemory_handler import InMemoryHandler
 		#inmemory_handler = InMemoryHandler(verbose=False)

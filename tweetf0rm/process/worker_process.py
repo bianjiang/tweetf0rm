@@ -14,13 +14,16 @@ MAX_QUEUE_SIZE = 32767
 
 class WorkerProcess(mp.Process):
 
-	def __init__(self, handlers = [], verbose=False):
+	def __init__(self, handlers = [], verbose=False, config=None):
 		super(WorkerProcess, self).__init__()
 		self.queue = mp.Queue(maxsize=MAX_QUEUE_SIZE)
 		self.lock = mp.Lock()
 		self.verbose = verbose
 		self.handlers = handlers
-		logger.info(self.handlers)
+		self.config = config
+		if verbose:
+			logger.info("number of handlers attached: %d"%(len(handlers)))
+		#logger.info(self.handlers)
 		#self.handlers = self.init_handlers(handler_configs)
 
 	

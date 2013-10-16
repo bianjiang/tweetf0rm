@@ -80,9 +80,9 @@ class User(twython.Twython):
 
 		if self.verbose:
 			logger.info("finished find_all_followers for %d..."%(user_id))
-			for handler in write_to_handlers:
-				#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("followers", user_id)), type(handler), "followers", user_id))
-				logger.info(handler.stat())
+			# for handler in write_to_handlers:
+			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("followers", user_id)), type(handler), "followers", user_id))
+			# 	logger.info(handler.stat())
 
 
 	def find_all_follower_ids(self, user_id=None, write_to_handlers = None):
@@ -118,9 +118,9 @@ class User(twython.Twython):
 
 		if self.verbose:
 			logger.info("finished find_all_follower_ids for %d..."%(user_id))
-			for handler in write_to_handlers:
-				#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("follower_ids", user_id)), type(handler), "follower_ids", user_id))
-				logger.info(handler.stat())
+			# for handler in write_to_handlers:
+			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("follower_ids", user_id)), type(handler), "follower_ids", user_id))
+			# 	logger.info(handler.stat())
 
 	def find_all_friends(self, user_id=None, write_to_handlers=None):
 
@@ -157,9 +157,9 @@ class User(twython.Twython):
 
 		if self.verbose:
 			logger.info("finished find_all_friends for %d..."%(user_id))
-			for handler in write_to_handlers:
-				#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friends", user_id)), type(handler), "friends", user_id))
-				logger.info(handler.stat())
+			# for handler in write_to_handlers:
+			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friends", user_id)), type(handler), "friends", user_id))
+			# 	logger.info(handler.stat())
 
 	def find_all_friend_ids(self, user_id=None, write_to_handlers=None):
 
@@ -196,9 +196,9 @@ class User(twython.Twython):
 
 		if self.verbose:
 			logger.info("finished find_all_friend_ids for %d..."%(user_id))
-			for handler in write_to_handlers:
-				#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friend_ids", user_id)), type(handler), "friend_ids", user_id))
-				logger.info(handler.stat())
+			# for handler in write_to_handlers:
+			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friend_ids", user_id)), type(handler), "friend_ids", user_id))
+			# 	logger.info(handler.stat())
 
 	def fetch_user_timeline(self, user_id = None, write_to_handlers=None):
 
@@ -257,8 +257,8 @@ class User(twython.Twython):
 
 		if self.verbose:
 			logger.info("[%d] total tweets: %d "%(user_id, cnt))
-			for handler in write_to_handlers:
-				logger.info(handler.stat())
+			# for handler in write_to_handlers:
+			# 	logger.info(handler.stat())
 				
 
 

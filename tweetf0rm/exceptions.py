@@ -11,3 +11,6 @@ class MissingArgs(Exception):
 
 class WrongArgs(Exception):
 	pass
+
+class InvalidConfig(Exception):
+	pass

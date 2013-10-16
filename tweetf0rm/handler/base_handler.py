@@ -40,7 +40,9 @@ class BaseHandler(object):
 			
 		self.buffer[data_type][key].append(data)
 
-		if (self.check_flush()):
+		need_flush = self.need_flush()
+		logger.info("flush? %s"%need_flush)
+		if (need_flush):
 			self.flush()
 
 
@@ -72,7 +74,7 @@ class BaseHandler(object):
 		for data_type in self.data_types:
 			self.clear(data_type)
 
-	def check_flush(self):
+	def need_flush(self):
 		'''
 		sub-class determine when to flush and what to flush
 		'''

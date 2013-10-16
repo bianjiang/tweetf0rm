@@ -6,20 +6,29 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-#import redis
 from process.user_relationship_crawler import UserRelationshipCrawler
 #from process.user_timeline_crawler import UserTimelineProcessCrawler
 from handler.inmemory_handler import InMemoryHandler
 from handler import create_handler
 import multiprocessing as mp
+from exceptions import InvalidConfig
+from tweetf0rm.redis_helper import RedisQueue
+from tweetf0rm.utils import full_stack
 
-import redis
+def check_config(config, crawler):
+	if ('apikeys' not in config or crawler not in config['apikeys'] or 'redis_config' not in config):
+		raise InvalidConfig("something is wrong with your config file... you have to have redis_config, apikeys, and crawler name specified... ")
 
-def start_server(apikeys):
+def start_server(config, crawler):
 	import copy
 	from utils import node_id, public_ip
 	logger.info(public_ip())
+	check_config(config, crawler)
+	config = copy.copy(config)
+	apikeys = copy.copy(config['apikeys'][crawler])
 
+	redis_cmd_queue = RedisQueue(name="cmd", redis_config=config['redis_config'])
+	redis_cmd_queue.clear()
 
 	inmemory_handler_config = {
 		"name": "InMemoryHandler",
@@ -30,19 +39,28 @@ def start_server(apikeys):
 
 	inmemory_handler = create_handler(inmemory_handler_config) #InMemoryHandler(verbose=False, shared_buffer=d)
 
-	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), handlers=[inmemory_handler], verbose=True)
+	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), handlers=[inmemory_handler], verbose=True, config=config)
 
 	user_relationship_crawler.start()
 
 	# cmd = {
 	# 	"cmd": "CRAWL_FRIENDS",
 	# 	"user_id": 1948122342,
-	# 	"data_type": "id"
+	# 	"data_type": "ids",
+	# 	"depth": 2,
+	# 	"result_bucket":"friend_ids"
 	# }
 	cmd = {
-		"cmd": "CRAWL_USER_TIMELINE",
-		"user_id": 1948122342#53039176
+		"cmd": "CRAWL_FRIENDS",
+		"user_id": 1948122342,
+		"data_type": "users",
+		"depth": 2,
+		"result_bucket":"friends"
 	}
+	# cmd = {
+	# 	"cmd": "CRAWL_USER_TIMELINE",
+	# 	"user_id": 1948122342#53039176
+	# }
 
 	user_relationship_crawler.enqueue(cmd)
 	user_relationship_crawler.enqueue({"cmd":"TERMINATE"})
