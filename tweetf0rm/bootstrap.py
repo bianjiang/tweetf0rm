@@ -43,14 +43,14 @@ def start_server(config, proxies):
 	while True:
 		# block, the main process...for a command
 		logger.info("waiting for cmd...")
-		if(not user_relationship_crawler.is_alive()):
+		if(not scheduler.is_alive()):
 			logger.info("no crawler is alive... i'm done too...")
 			break;
 
 		cmd = redis_cmd_queue.get(block=True, timeout=5)
 
 		if cmd:
-			user_relationship_crawler.enqueue(cmd)
+			scheduler.enqueue(cmd)
 
 		if (verbose):
 			logger.info("cmd: %s"%cmd)

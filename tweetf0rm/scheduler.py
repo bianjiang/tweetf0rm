@@ -11,9 +11,9 @@ requests_log.setLevel(logging.INFO)
 
 class Scheduler(object):
 
-	def __init__(self, config={}, proxies=[]):
+	def __init__(self, config={}, proxies=[], verbose=False):
 		self.config = config
-
+		self.crawler_queues = {}
 		if (len(proxies) > 0):
 			self.proxy_dicts = proxy_checker(proxies)
 			self.proxies = [proxy['http'] for proxy in self.proxy_dicts]
@@ -27,8 +27,8 @@ class Scheduler(object):
 		file_handler_config = {
 			"name": "FileHandler",
 			"args": {
-				"verbose": True,
-				"output_folder" : "./data"
+				"verbose": verbose,
+				"output_folder" : config["output"]
 			}
 		}
 
@@ -39,6 +39,16 @@ class Scheduler(object):
 		r = [crawler.start() for crawler in crawlers]
 
 		self.crawlers = crawlers
+
+	def is_alive(self):
+		a = [1 if crawler.is_alive() else 0 for crawler in self.crawlers]
+		return sum(a) > 0
+
+	def enqueue(self, cmd):
+
+		if (cmd['cmd'] == 'TERMINATE'):
+			[crawler.enqueue(cmd) for crawler in self.crawlers]
+		else:
 
 
 	def split(self, l, n):
