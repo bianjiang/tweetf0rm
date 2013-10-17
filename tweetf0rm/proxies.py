@@ -21,13 +21,13 @@ def check_proxy(proxy, timeout):
 		'Accept-Language': 'en-US,en;q=0.5'
 	}
 
-	proxy_dict = {"http"  : 'http://%s'%proxy}
+	p = {'proxy':proxy,'proxy_dict':{"http"  : 'http://%s'%proxy}}
 
-	r = requests.get(url, headers=headers, proxies=proxy_dict, timeout=timeout)
+	r = requests.get(url, headers=headers, proxies=p['proxy_dict'], timeout=timeout)
 
 	try:
 		if (r.status_code == requests.codes.ok):
-			return True, proxy_dict
+			return True, p
 		else:
 			return False, None
 	except:

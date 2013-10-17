@@ -81,7 +81,7 @@ def start_server(config, proxies):
 	# user_relationship_crawler.enqueue(cmd)
 	#user_relationship_crawler.enqueue({"cmd":"TERMINATE"})
 
-	user_relationship_crawler.join()
+	# user_relationship_crawler.join()
 
 	# these will return nothing since user_relationship_crawler works on a different process
 	# for handler in user_relationship_crawler.get_handlers():

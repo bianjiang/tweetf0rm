@@ -31,6 +31,9 @@ import hashlib
 def md5(data):
 	return hashlib.md5(data).hexdigest()
 
+def hash_cmd(cmd):
+	return md5(json.dumps(cmd))
+
 def node_id():
 	ip = public_ip()
 	return md5(ip)

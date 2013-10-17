@@ -10,17 +10,18 @@ from .worker_process import WorkerProcess
 from tweetf0rm.twitterapi.users import User
 from tweetf0rm.handler import create_handler
 from tweetf0rm.handler.crawl_user_relationship_command_handler import CrawlUserRelationshipCommandHandler
-from tweetf0rm.utils import full_stack
+from tweetf0rm.utils import full_stack, hash_cmd
 from tweetf0rm.exceptions import MissingArgs, NotImplemented
+from tweetf0rm.redis_helper import RedisQueue
 import copy, json
 
 
 class UserRelationshipCrawler(WorkerProcess):
 
-	def __init__(self, apikeys, handlers = None, verbose = False, proxy=None, config = None):
+	def __init__(self, idx, apikeys, handlers = None, verbose = False, config = None, proxies=None):
 		if (handlers == None):
 			raise MissingArgs("you need a handler to write the data to...")
-		super(UserRelationshipCrawler, self).__init__(handlers=handlers, verbose=verbose, config = config)
+		super(UserRelationshipCrawler, self).__init__(idx, handlers=handlers, verbose=verbose, config = config)
 		self.apikeys = copy.copy(apikeys)
 		if (proxy):
 			client_args={'proxies':{'http':'http://%s'%proxy}}
@@ -44,6 +45,7 @@ class UserRelationshipCrawler(WorkerProcess):
 			}, 
 			"CRAWL_USER_TIMELINE": "fetch_user_timeline"
 		}
+		self.redis_cmd_queue = RedisQueue(name="cmd", redis_config=config['redis_config'])
 
 	def get_handlers(self):
 		return self.handlers
@@ -68,6 +70,8 @@ class UserRelationshipCrawler(WorkerProcess):
 				logger.info("new cmd: %s"%(cmd))
 
 			command = cmd['cmd']
+
+			cmd_hash = hash_cmd(cmd)
 
 			redis_cmd_handler = None
 
@@ -116,9 +120,11 @@ class UserRelationshipCrawler(WorkerProcess):
 				if func:
 					try:
 						func(**args)
-					except:
-						logger.error("either the function you are calling doesn't exist, or you are calling the function with the wrong args!")
-						logger.error(full_stack())
+					except Exception as exc:
+						logger.error("%s"%exc)
+						#logger.error(full_stack())
+					else:
+						redis_cmd_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd_hash, "crawler_idx":self.idx})
 				else:
 					logger.warn("whatever are you trying to do?")
 
