@@ -17,6 +17,8 @@ sys.path.append("..")
 from tweetf0rm.redis_helper import RedisQueue
 from tweetf0rm.utils import full_stack
 
+from tweetf0rm.proxies import proxy_checker
+
 class TestBootstrap:
 
 	@classmethod
@@ -50,7 +52,7 @@ class TestBootstrap:
 		userIds = user_api.get_user_ids(["FDA_Drug_Info"])
 		logger.info(userIds)
 
-	
+	@nottest
 	def test_bootstrap(self):
 		import tweetf0rm.bootstrap as bootstrap
 		#apikeys = self.config["apikeys"]["i0mf0rmer03"]
@@ -64,29 +66,11 @@ class TestBootstrap:
 	def test_bootstrap_with_proxies(self):
 		pass
 
-	@nottest
+	#@nottest
 	def test_proxy(self):
-		import requests
-		url = "http://google.com"
-		headers = {
-			'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:23.0) Gecko/20100101 Firefox/23.0',
-			'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-			'Accept-Encoding': 'gzip, deflate',
-			'Accept-Language': 'en-US,en;q=0.5'
-		}
+		proxies = proxy_checker(self.proxies['proxies'])
 
-		for proxy in self.proxies['proxies']:
-			try:			
-				proxy_dict = {"http"  : 'http://%s'%proxy}
-
-				r = requests.get(url, headers=headers, proxies=proxy_dict)
-				if (r.status_code == requests.codes.ok):
-					logger.info('GOOD: [%s] - %d'%(proxy, r.elapsed.seconds))
-				else:
-					logger.warn('BROKEN: [%s] - %d'%(proxy, r.elapsed.seconds))
-			except:
-				logger.warn('BROKEN: [%s] - %d'%(proxy, r.elapsed.seconds))
-				pass
+		logger.info('%d good proxies left'%len(proxies))
 
 
 if __name__=="__main__":
