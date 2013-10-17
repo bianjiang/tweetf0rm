@@ -6,6 +6,8 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
+import time
+
 from process.user_relationship_crawler import UserRelationshipCrawler
 #from process.user_timeline_crawler import UserTimelineProcessCrawler
 from handler.inmemory_handler import InMemoryHandler
@@ -14,44 +16,28 @@ import multiprocessing as mp
 from exceptions import InvalidConfig
 from tweetf0rm.redis_helper import RedisQueue
 from tweetf0rm.utils import full_stack
-import time
+from tweetf0rm.proxies import proxy_checker
+from tweetf0rm.scheduler import Scheduler
+
 def check_config(config, crawler):
 	if ('apikeys' not in config or crawler not in config['apikeys'] or 'redis_config' not in config):
 		raise InvalidConfig("something is wrong with your config file... you have to have redis_config, apikeys, and crawler name specified... ")
 
-def start_server(config, crawler):
+def start_server(config, proxies):
 	import copy
 	from utils import node_id, public_ip
 	logger.info(public_ip())
+	
 	check_config(config, crawler)
 	config = copy.copy(config)
-	apikeys = copy.copy(config['apikeys'][crawler])
+	#apikeys = copy.copy(config['apikeys'])
 	verbose = bool(config['verbose']) if config['verbose'] else False
 
 	redis_cmd_queue = RedisQueue(name="cmd", redis_config=config['redis_config'])
 	redis_cmd_queue.clear()
 
-	# inmemory_handler_config = {
-	# 	"name": "InMemoryHandler",
-	# 	"args": {
-	# 		"verbose": True
-	# 	}
-	# }
+	scheduler = Scheduler(config, proxies)
 
-	# inmemory_handler = create_handler(inmemory_handler_config) #InMemoryHandler(verbose=False, shared_buffer=d)
-	file_handler_config = {
-		"name": "FileHandler",
-		"args": {
-			"verbose": True,
-			"output_folder" : "./data"
-		}
-	}
-
-	file_handler = create_handler(file_handler_config)
-
-	user_relationship_crawler = UserRelationshipCrawler(copy.copy(apikeys), handlers=[file_handler], verbose=verbose, config=config)
-
-	user_relationship_crawler.start()
 
 	# the main event loop, actually we don't need one, since we can just join on the crawlers and don't stop until a terminate command to each crawler, but we need one to check on redis command queue ...
 	while True:

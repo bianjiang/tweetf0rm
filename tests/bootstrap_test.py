@@ -56,7 +56,7 @@ class TestBootstrap:
 	def test_bootstrap(self):
 		import tweetf0rm.bootstrap as bootstrap
 		#apikeys = self.config["apikeys"]["i0mf0rmer03"]
-		bootstrap.start_server(self.config, 'i0mf0rmer03') 
+		bootstrap.start_server(self.config, self.proxies) 
 		# pass
 		#from tweetf0rm.handler.inmemory_handler import InMemoryHandler
 		#inmemory_handler = InMemoryHandler(verbose=False)
@@ -66,12 +66,18 @@ class TestBootstrap:
 	def test_bootstrap_with_proxies(self):
 		pass
 
-	#@nottest
+	@nottest
 	def test_proxy(self):
 		proxies = proxy_checker(self.proxies['proxies'])
 
 		logger.info('%d good proxies left'%len(proxies))
 
+		ps = []
+		for d in proxies:
+			ps.append(d['http'])
+
+		with open(os.path.abspath('proxy.json'), 'rb') as proxy_f:
+			josn.dump({'proxies':ps}, proxy_f)
 
 if __name__=="__main__":
 	import nose

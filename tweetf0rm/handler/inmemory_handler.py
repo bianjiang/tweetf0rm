@@ -12,6 +12,15 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 from .base_handler import BaseHandler
 
 class InMemoryHandler(BaseHandler):
+	'''
+	inmemory_handler_config = {
+		"name": "InMemoryHandler",
+		"args": {
+			"verbose": True
+		}
+	}
+	inmemory_handler = create_handler(inmemory_handler_config) #InMemoryHandler(verbose=False, shared_buffer=d)
+	'''
 
 	def __init__(self, verbose=False):
 		super(InMemoryHandler, self).__init__(verbose=verbose)
