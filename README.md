@@ -7,6 +7,9 @@ It's quite stable for the things that I want to do; but I has been running some 
 
 One of the long term goal is to use [boto](http://boto.readthedocs.org/en/latest/) to integrate with the Amazon EC2 cluster so that you can run multiple crawlers to workaround Twitter's API rate limit. Helps are welcome!
 
+Currently, it can run on multiple computers and collaboratively ``farm`` tweets or twitter networks. The main communication channel is built on top of [redis](http://redis.io/) a high performance in-memory key-value store. It has its own scheduler that can balance the load of each worker machine. Moreover, multiple processes can also be run concurrently provided with proxies (to work-around the twitter's rate limit).
+
+
 Installation
 ------------
 
@@ -20,21 +23,14 @@ Dependencies
 To run this, you will need:
 - [Twython](https://github.com/ryanmcgrath/twython)
 - [futures](https://pypi.python.org/pypi/futures) if you are on Python 2.7
+- [redis server](http://redis.io/) and [redis python library](https://pypi.python.org/pypi/redis)
+- [requests](http://www.python-requests.org/en/latest/)
 
 
 Features
 ------------
 
-##### I am developing this for my own research, but feature requests or contributions are welcome for sure... 
-##### If you see a problem, put in a ticket... 
-
-Currently, three different scripts are provided (to meet my own needs); and they are all under the ``scripts`` folder.
-
-- Available scripts:
-    - ``track_keywords.py``: Track a list of keywords (up to 4,000, as limited by Twitter API); and streaming all the Tweets that are related to these keywords; see Twitter API doc [status/filter](https://dev.twitter.com/docs/api/1.1/post/statuses/filter) 
-    - ``crawl_user_networks.py``: Starting from a list of ``seed`` users, this script will go out and find all their ``friends`` (or ``follower`` based-on setting) and their friends' friends until it reaches certain ``depth``. This is often used to create a friendship network for network analysis.  
-    - ``crawl_user_timelines.py``: This crawls a user's most recent tweets (up to 3,200, as limited by Twitter API).
-    - ``twitter_crawler.py``: This basically combines ``crawl_user_networks.py`` and ``crawl_user_timelines.py``, so it will create the friendship network while crawling all the tweets from users in the network.
+TBD
 
 ##### I haven't tested Python 3 yet... 
 
@@ -56,26 +52,6 @@ After you register, create an access token and grab your applications ``Consumer
 				}
 		}
 
-The rest are fairly straigtforward, you can try to run e.g., ``python crawl_user_timelines.py --help`` to get help information about the parameters of each script.
-
-		
-		$python crawl_user_timelines.py --help
-		usage: crawl_user_timelines.py [-h] -a APIKEYS -c CRAWLER -s SEEDS -o OUTPUT
-
-		optional arguments:
-		  -h, --help            show this help message and exit
-		  -a APIKEYS, --apikeys APIKEYS
-		                        config file for twitter api key (json format)
-		  -c CRAWLER, --crawler CRAWLER
-		                        the crawler identifier; you can have multiple crawler
-		                        accounts set in the apikeys.json; pick one
-		  -s SEEDS, --seeds SEEDS
-		                        the list of users you want to crawl their timelines;
-		                        see crawl_user_timelines.json as an example
-		  -o OUTPUT, --output OUTPUT
-		                        define the location of the output (each user's
-		                        timeline will be in its own file under this output
-		                        folder identified by the user id
 
 
 ### License
