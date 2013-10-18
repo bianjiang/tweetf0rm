@@ -14,6 +14,9 @@ import redis, json
 class RedisBase(object):
 
 	def __init__(self, name, namespace='default', redis_config=None):
+		if (not redis_config):
+			redis_config = { 'host': 'localhost', 'port': 6379, 'db': 0}
+
 		self.__redis_connection = redis.StrictRedis(host=redis_config['host'], port=redis_config['port'], db=redis_config['db'])
 		self.password = redis_config['password']
 		self.namespace = namespace
@@ -67,4 +70,40 @@ class RedisQueue(RedisBase):
 	def clear(self):
 		"""Clear out the queue"""
 		self.conn().delete(self.key)
+
+class CrawlerQueue(RedisQueue):
+
+	def __init__(self, crawler_id, redis_config=None):
+		super(RedisQueue, self).__init__(crawler_id, redis_config=redis_config)
+
+class CrawlerCoordinator(RedisBase):
+	'''
+	Used to coordinate queues across multiple nodes
+	'''
+	def __init__(self, redis_config=None):
+		super(CrawlerQueueStat, self).__init__("coordinator", namespace="crawler", redis_config=redis_config)
+
+	def add_crawler(self, crawler_id):
+		self.conn().sadd(self.key, crawler_id)
+
+	def remove_crawler(self, crawler_id):
+		self.conn().srem(self.key, crawler_id)
+
+	def crawler_queue_key(self, crawler_id):
+		return 'queue:%s'%(crawler_id)
+
+	def list_crawler_qsize(self):
+		'''
+		List the size of all queues
+		'''
+		crawler_ids = self.conn().smembers(self.key)
+
+		qsizes = {crawler_id:self.conn().llen(self.crawler_queue_key(crawler_id)) for crawler_id in crawler_ids}
+
+		return qsizes
+
+
+
+
+
 

@@ -6,29 +6,31 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
-from .worker_process import WorkerProcess
+from .worker_process import CrawlerProcess
 from tweetf0rm.twitterapi.users import User
 from tweetf0rm.handler import create_handler
 from tweetf0rm.handler.crawl_user_relationship_command_handler import CrawlUserRelationshipCommandHandler
 from tweetf0rm.utils import full_stack, hash_cmd
 from tweetf0rm.exceptions import MissingArgs, NotImplemented
-from tweetf0rm.redis_helper import RedisQueue
+from tweetf0rm.redis_helper import CrawlerQueue
 import copy, json
 
 
-class UserRelationshipCrawler(WorkerProcess):
+class UserRelationshipCrawler(CrawlerProcess):
 
-	def __init__(self, idx, apikeys, handlers = None, verbose = False, config = None, proxies=None):
+	def __init__(self, crawler_id, apikeys, handlers = None, verbose = False, config = None, proxies=None):
 		if (handlers == None):
 			raise MissingArgs("you need a handler to write the data to...")
-		super(UserRelationshipCrawler, self).__init__(idx, handlers=handlers, verbose=verbose, config = config)
+		super(UserRelationshipCrawler, self).__init__(crawler_id, handlers=handlers, verbose=verbose, config = config)
 		self.apikeys = copy.copy(apikeys)
-		if (proxy):
-			client_args={'proxies':{'http':'http://%s'%proxy}}
-		else:
-			client_args = None
-		self.user_api = User(apikeys=apikeys, verbose=verbose, client_args=client_args)
-		self.proxy = proxy
+
+		self.client_args = {"timeout": 300}
+
+		if (proxies):
+			self.client_args['proxies']
+
+		self.user_api = User(apikeys=apikeys, verbose=verbose, client_args=self.client_args)
+
 		if (self.verbose):
 			logger.info("# of handlers: %d"%(len(self.get_handlers())))
 		self.tasks = {
@@ -45,16 +47,15 @@ class UserRelationshipCrawler(WorkerProcess):
 			}, 
 			"CRAWL_USER_TIMELINE": "fetch_user_timeline"
 		}
-		self.redis_cmd_queue = RedisQueue(name="cmd", redis_config=config['redis_config'])
+		self.crawler_queue = CrawlerQueue(crawler_id, redis_config=config['redis_config'])
+		self.crawler_coordinator = CrawlerCoordinator(redis_config=config['redis_config'])
+		self.crawler_coordinator.add_crawler(crawler_id)
 
 	def get_handlers(self):
 		return self.handlers
 
 	def avaliable_cmds(self):
 		return self.tasks.keys()
-
-	def create_cmd(self, command):
-		raise NoImplemented("not implemented, placeholder, tend to help user create cmds")
 
 	def run(self):
 		while True:
@@ -124,7 +125,7 @@ class UserRelationshipCrawler(WorkerProcess):
 						logger.error("%s"%exc)
 						#logger.error(full_stack())
 					else:
-						redis_cmd_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd_hash, "crawler_idx":self.idx})
+						self.crawler_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd_hash, "crawler_id":self.crawler_id})
 				else:
 					logger.warn("whatever are you trying to do?")
 

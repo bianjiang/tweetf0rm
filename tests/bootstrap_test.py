@@ -39,6 +39,28 @@ class TestBootstrap:
 	def teardown(self):
 		pass
 
+	def test_distribute_to(self):
+		def distribute_to(qsizes):
+			'''
+			return a list of keys (crawler_ids) that have the minimum number of pending cmds
+			'''
+
+			min_v = min(qsizes.values())
+
+			return [crawler_id for crawler_id in qsizes if qsizes[crawler_id] == min_v]
+
+		qsizes = {
+			"1": 5,
+			"2": 5,
+			"3": 2
+			}
+
+		for i in range(10):
+			c_id = distribute_to(qsizes)[0]
+			
+			qsizes[c_id] += 1
+
+		logger.info(qsizes)
 
 	@nottest
 	def test_get_user_id(self):

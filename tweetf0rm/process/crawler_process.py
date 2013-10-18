@@ -12,11 +12,11 @@ import tweetf0rm.handler
 
 MAX_QUEUE_SIZE = 32767 
 
-class WorkerProcess(mp.Process):
+class CrawlerProcess(mp.Process):
 
-	def __init__(self, idx, handlers = [], verbose=False, config=None):
-		super(WorkerProcess, self).__init__()
-		self.idx = idx
+	def __init__(self, crawler_id, handlers = [], verbose=False, config=None):
+		super(CrawlerProcess, self).__init__()
+		self.crawler_id = crawler_id
 		self.queue = mp.Queue(maxsize=MAX_QUEUE_SIZE)
 		self.lock = mp.Lock()
 		self.verbose = verbose
@@ -27,8 +27,8 @@ class WorkerProcess(mp.Process):
 		#logger.info(self.handlers)
 		#self.handlers = self.init_handlers(handler_configs)
 
-	def get_idx(self):
-		return self.idx
+	def get_crawler_id(self):
+		return self.crawler_id
 
 	def enqueue(self, request):
 		self.queue.put(request, block=True)

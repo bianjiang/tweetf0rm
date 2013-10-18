@@ -15,7 +15,7 @@ from handler import create_handler
 import multiprocessing as mp
 from exceptions import InvalidConfig
 from tweetf0rm.redis_helper import RedisQueue
-from tweetf0rm.utils import full_stack
+from tweetf0rm.utils import full_stack, node_id, public_ip
 from tweetf0rm.proxies import proxy_checker
 from tweetf0rm.scheduler import Scheduler
 
@@ -25,8 +25,6 @@ def check_config(config, crawler):
 
 def start_server(config, proxies):
 	import copy
-	from utils import node_id, public_ip
-	logger.info(public_ip())
 	
 	check_config(config, crawler)
 	config = copy.copy(config)
@@ -36,8 +34,7 @@ def start_server(config, proxies):
 	redis_cmd_queue = RedisQueue(name="cmd", redis_config=config['redis_config'])
 	redis_cmd_queue.clear()
 
-	scheduler = Scheduler(config, proxies)
-
+	scheduler = Scheduler(node_id(), config, proxies)
 
 	# the main event loop, actually we don't need one, since we can just join on the crawlers and don't stop until a terminate command to each crawler, but we need one to check on redis command queue ...
 	while True:

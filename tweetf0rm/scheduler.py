@@ -10,13 +10,23 @@ requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.INFO)
 
 import json
-from tweetf0rm.utils import full_stack, hash_cmd
+from tweetf0rm.utils import full_stack, hash_cmd, md5
+
+def distribute_to(qsizes):
+	'''
+	return a list of keys (crawler_ids) that have the minimum number of pending cmds
+	'''
+
+	min_v = min(qsizes.values())
+
+	return [crawler_id for crawler_id in qsizes if qsizes[crawler_id] == min_v]
 
 class Scheduler(object):
 
-	def __init__(self, config={}, proxies=[], verbose=False):
+	def __init__(self, node_id, config={}, proxies=[], verbose=False):
+		self.node_id = node_id
 		self.config = config
-		self.crawler_queues = {}
+
 		if (len(proxies) > 0):
 			self.proxy_dicts = proxy_checker(proxies)
 			self.proxies = [proxy['http'] for proxy in self.proxy_dicts]
@@ -37,34 +47,32 @@ class Scheduler(object):
 
 		crawlers = {}
 		for idx in range(number_of_processes):
-			crawler = UserRelationshipCrawler(idx, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], verbose=verbose, config=copy.copy(config))
-			crawlers[idx] = {
-				'crawler':crawler
-				'queue': {}
-			}
-			crawler[idx]['crawler'].start()
+			crawler_id = md5('%s:%s'%(self.node_id, idx))
+			crawler = UserRelationshipCrawler(crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], verbose=verbose, config=copy.copy(config))
+			crawlers[crawler_id] = crawler
+			crawler[crawler_id]['crawler'].start()
 
 		self.crawlers = crawlers
 
 	def is_alive(self):
-		a = [1 if self.crawlers[idx].is_alive() else 0 for idx in self.crawlers]
+		a = [1 if self.crawlers[crawler_id].is_alive() else 0 for crawler_id in self.crawlers]
 		return sum(a) > 0
 
-	def distribute_to(self):
-		current_queue_size = 0
-		crawler = None
-		for idx in self.crawlers:
-			idx_queue_size = len(self.crawlers[idx]['queue'])
-			if (current_queue_size == 0 or current_queue_size > idx_queue_size):
-				current_queue_size = idx_queue_size
-				crawler = self.crawlers[idx]
+	# def distribute_to(self):
+	# 	current_queue_size = 0
+	# 	crawler = None
+	# 	for idx in self.crawlers:
+	# 		idx_queue_size = len(self.crawlers[idx]['queue'])
+	# 		if (current_queue_size == 0 or current_queue_size > idx_queue_size):
+	# 			current_queue_size = idx_queue_size
+	# 			crawler = self.crawlers[idx]
 
-		return crawler
+	# 	return crawler
 
 	def persist_queues(self):
 		cmds = []
-		for idx in self.crawlers:
-			cmds.extend(self.crawlers[idx]['queue'])
+		for crawler_id in self.crawlers:
+			cmds.extend(self.crawlers[crawler_id]['queue'])
 
 		with open('__cmds.json', 'wb') as f:
 			json.dump(cmds, f)
@@ -76,7 +84,8 @@ class Scheduler(object):
 		elif(cmd['cmd'] == 'CMD_FINISHED'):
 			#acknowledged finished cmd 
 			try:
-				del self.crawlers[idx]['queue'][cmd['cmd_hash']]
+				crawler_id = cmd['crawler_id']
+				del self.crawlers[crawler_id]['queue'][cmd['cmd_hash']]
 			except Exception as exc:
 				logger.warn("the cmd doesn't exist? %s: %s"%(cmd['cmd_hash'], exc))
 		else:

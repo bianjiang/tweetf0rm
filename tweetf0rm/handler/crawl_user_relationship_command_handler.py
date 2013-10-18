@@ -12,12 +12,20 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 from .base_handler import BaseHandler
 import multiprocessing as mp
 import futures, json, copy, time
-from tweetf0rm.redis_helper import RedisQueue
+from tweetf0rm.redis_helper import CrawlerQueue, CrawlerCoordinator
 from tweetf0rm.utils import full_stack
+from tweetf0rm.scheduler import distribute_to
+import json
 
 def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
+
 	try:
-		redis_cmd_queue = RedisQueue(name="cmd", redis_config=redis_config)
+
+		crawler_coordinator = CrawlerCoordinator(redis_config=redis_config)
+
+		qsizes = crawler_queue.list_qsize()
+		
+		crawler_queues = {}
 
 		for element in bulk:
 			if data_type == "ids" and type(element) == int:
@@ -29,10 +37,20 @@ def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
 			t["user_id"] = user_id
 			t["depth"] -= 1
 
-			redis_cmd_queue.put(t)
+			c_id = distribute_to(qsizes)[0]
 
-		if verbose:
-			logger.info("number of command in queue: %d"%redis_cmd_queue.qsize())
+			if (c_id in crawler_queues):
+				crawler_queue = crawler_queues[c_id]
+			else:
+				crawler_queue = CrawlerQueue(c_id, redis_config=redis_config)
+				crawler_queues[c_id] = crawler_queue
+
+			crawler_queue.put(t)
+			qsizes[c_id] += 1
+
+			if verbose:
+				logger.info("send [%s] to %s"%(json.dumps(t),c_id))
+
 			
 	except:
 		logger.error(full_stack())
