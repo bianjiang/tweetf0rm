@@ -56,9 +56,6 @@ def start_server(config, proxies):
 			logger.info(node_coordinator.node_qsizes())
 			logger.info(scheduler.check_local_qsizes())
 
-
-		
-
 	# cmd = {
 	# 	"cmd": "CRAWL_FRIENDS",
 	# 	"user_id": 1948122342,
@@ -79,32 +76,18 @@ def start_server(config, proxies):
 	##	"bucket": "timelines"
 	# # }
 
-	# user_relationship_crawler.enqueue(cmd)
-	#user_relationship_crawler.enqueue({"cmd":"TERMINATE"})
-
-	# user_relationship_crawler.join()
-
-	# these will return nothing since user_relationship_crawler works on a different process
-	# for handler in user_relationship_crawler.get_handlers():
-	# 	logger.info(handler.stat())
-
-	#r = redis.StrictRedis(host='localhost', port=6379, db=0)
-
-	#r.execute_command("AUTH", "wh0tever")
-	#r.set('node_id', node_id())
-	#logger.info(r.get('node_id'))
-	#logger.info(node_id())
 	pass
 
 if __name__=="__main__":
-	bootstrap()
-	quit()
+	import json, os
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-c', '--config', help="config.json that contains a) twitter api keys; b) redis connection string; c) mongodb connection string", required = True)
-	parser.add_argument('-c', '--crawler', help="the crawler identifier; you can have multiple crawler accounts set in the config.json; pick one", required = True)
+	parser.add_argument('-p', '--proxies', help="the crawler identifier; you can have multiple crawler accounts set in the config.json; pick one", required = True)
 
 	args = parser.parse_args()
 
-	with open(os.path.abspath(args.config), 'rb') as config_f:
-		import json, os
-		start_server()
+	with open(os.path.abspath(args.config), 'rb') as config_f, open(os.path.abspath(arg.proxies), 'rb') as proxy_f:
+		config = json.load(config_f)
+		proxies = json.load(proxy_f)
+
+		start_server(config, proxies)
