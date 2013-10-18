@@ -101,15 +101,17 @@ class Scheduler(object):
 			crawler_id = self.distribute_to()
 
 			self.crawlers[crawler_id]['queue'][hash_cmd(cmd)] = cmd
+
 			self.crawlers[crawler_id]['crawler'].enqueue(cmd)
 
 			if (self.verbose):
 				logger.info("pusing [%s] to crawler: %s"%(hash_cmd(cmd), crawler_id))
 
 	def check_local_qsizes(self):
+		#logger.info(self.crawlers)
 		return {crawler_id:len(self.crawlers[crawler_id]['queue']) for crawler_id in self.crawlers}
 
-		
+
 	def split(self, l, n):
 		""" Yield successive n-sized chunks from l."""
 		for i in xrange(0, len(l), n):
