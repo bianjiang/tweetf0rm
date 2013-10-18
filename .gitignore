@@ -1,5 +1,7 @@
 # Created by http://gitignore.io
 
+config.json
+
 ### Python ###
 *.py[cod]
 
