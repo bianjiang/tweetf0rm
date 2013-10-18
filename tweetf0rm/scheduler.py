@@ -15,6 +15,7 @@ from tweetf0rm.proxies import proxy_checker
 from process.user_relationship_crawler import UserRelationshipCrawler
 #from handler.inmemory_handler import InMemoryHandler
 from handler import create_handler
+from tweetf0rm.redis_helper import NodeCoordinator
 
 class Scheduler(object):
 
@@ -59,6 +60,8 @@ class Scheduler(object):
 			crawler.start()
 
 		self.crawlers = crawlers
+		self.node_coordinator = NodeCoordinator(config['redis_config'])
+		self.node_coordinator.add_node(node_id)
 
 	def is_alive(self):
 		a = [1 if self.crawlers[crawler_id]['crawler'].is_alive() else 0 for crawler_id in self.crawlers]
@@ -103,7 +106,10 @@ class Scheduler(object):
 			if (self.verbose):
 				logger.info("pusing [%s] to crawler: %s"%(hash_cmd(cmd), crawler_id))
 
+	def check_local_qsizes(self):
+		return {crawler_id:len(self.crawlers[crawler_id]['queue']) for crawler_id in self.crawlers}
 
+		
 	def split(self, l, n):
 		""" Yield successive n-sized chunks from l."""
 		for i in xrange(0, len(l), n):

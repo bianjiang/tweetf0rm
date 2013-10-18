@@ -41,25 +41,25 @@ class TestClient:
 		node_queue = NodeQueue(nid, redis_config=self.config['redis_config'])
 		#redis_cmd_queue.clear()
 
-		# cmd = {
-		# 	"cmd": "CRAWL_FRIENDS",
-		# 	"user_id": 1948122342,
-		# 	"data_type": "ids",
-		# 	"depth": 1,
-		# 	"bucket":"friend_ids"
-		# }
-
 		cmd = {
-			"cmd": "CRAWL_USER_TIMELINE",
-			"user_id": 1948122342,#53039176,
-			"bucket": "timelines"
+			"cmd": "CRAWL_FRIENDS",
+			"user_id": 1948122342,
+			"data_type": "ids",
+			"depth": 2,
+			"bucket":"friend_ids"
 		}
 
+		# cmd = {
+		# 	"cmd": "CRAWL_USER_TIMELINE",
+		# 	"user_id": 1948122342,#53039176,
+		# 	"bucket": "timelines"
+		# }
+
 		node_queue.put(cmd)
 
-		cmd = {"cmd":"TERMINATE"}
+		#cmd = {"cmd":"TERMINATE"}
 		
-		node_queue.put(cmd)
+		#node_queue.put(cmd)
 
 		return True
 

@@ -10,7 +10,7 @@ import time
 
 import multiprocessing as mp
 from exceptions import InvalidConfig
-from tweetf0rm.redis_helper import NodeQueue
+from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
 from tweetf0rm.utils import full_stack, node_id, public_ip
 from tweetf0rm.proxies import proxy_checker
 from tweetf0rm.scheduler import Scheduler
@@ -36,6 +36,7 @@ def start_server(config, proxies):
 	if (verbose):
 		logger.info('starting node_id: %s'%this_node_id)
 
+	node_coordinator = NodeCoordinator(config['redis_config'])
 	#time.sleep(5)
 	# the main event loop, actually we don't need one, since we can just join on the crawlers and don't stop until a terminate command to each crawler, but we need one to check on redis command queue ...
 	while True:
@@ -45,13 +46,15 @@ def start_server(config, proxies):
 			logger.info("no crawler is alive... i'm done too...")
 			break;
 
-		cmd = node_queue.get(block=True, timeout=5)
+		cmd = node_queue.get(block=True, timeout=90)
 
 		if cmd:
 			scheduler.enqueue(cmd)
 
 		if (verbose):
 			logger.info("cmd: %s"%cmd)
+			logger.info(node_coordinator.node_qsizes())
+			logger.info(scheduler.check_local_qsizes())
 
 
 		

@@ -22,6 +22,9 @@ def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
 		node_coordinator = NodeCoordinator(redis_config=redis_config)
 
 		qsizes = node_coordinator.node_qsizes()
+
+		if (verbose):
+			logger.info(qsizes)
 		
 		node_queues = {}
 

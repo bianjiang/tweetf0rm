@@ -84,6 +84,9 @@ class NodeCoordinator(RedisBase):
 	def __init__(self, redis_config=None):
 		super(NodeCoordinator, self).__init__("coordinator", namespace="node", redis_config=redis_config)
 
+	def clear(self):
+		self.conn().delete(self.key)
+
 	def add_node(self, node_id):
 		self.conn().sadd(self.key, node_id)
 
@@ -98,6 +101,8 @@ class NodeCoordinator(RedisBase):
 		List the size of all node queues
 		'''
 		node_ids = self.conn().smembers(self.key)
+
+		logger.info(node_ids)
 
 		qsizes = {node_id:self.conn().llen(self.node_queue_key(node_id)) for node_id in node_ids}
 
