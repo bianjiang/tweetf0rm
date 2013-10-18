@@ -12,8 +12,8 @@ from nose.tools import nottest
 import sys, time
 sys.path.append("..")
 
-from tweetf0rm.redis_helper import RedisQueue
-from tweetf0rm.utils import full_stack
+from tweetf0rm.redis_helper import NodeQueue
+from tweetf0rm.utils import full_stack, node_id, public_ip
 
 class TestClient:
 
@@ -36,7 +36,9 @@ class TestClient:
 
 
 	def test_client(self):
-		redis_cmd_queue = RedisQueue(name="cmd", redis_config=self.config['redis_config'])
+		nid = node_id()
+		logger.info("sending to %s"%(nid))
+		node_queue = NodeQueue(nid, redis_config=self.config['redis_config'])
 		#redis_cmd_queue.clear()
 
 		# cmd = {
@@ -53,11 +55,11 @@ class TestClient:
 			"bucket": "timelines"
 		}
 
-		redis_cmd_queue.put(cmd)
+		node_queue.put(cmd)
 
 		cmd = {"cmd":"TERMINATE"}
 		
-		redis_cmd_queue.put(cmd)
+		node_queue.put(cmd)
 
 		return True
 

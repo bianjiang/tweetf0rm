@@ -12,20 +12,18 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 from .base_handler import BaseHandler
 import multiprocessing as mp
 import futures, json, copy, time
-from tweetf0rm.redis_helper import CrawlerQueue, CrawlerCoordinator
-from tweetf0rm.utils import full_stack
-from tweetf0rm.scheduler import distribute_to
+from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
+from tweetf0rm.utils import full_stack, distribute_to_node
 import json
 
 def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
 
 	try:
+		node_coordinator = NodeCoordinator(redis_config=redis_config)
 
-		crawler_coordinator = CrawlerCoordinator(redis_config=redis_config)
-
-		qsizes = crawler_queue.list_qsize()
+		qsizes = node_coordinator.node_qsizes()
 		
-		crawler_queues = {}
+		node_queues = {}
 
 		for element in bulk:
 			if data_type == "ids" and type(element) == int:
@@ -37,23 +35,23 @@ def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
 			t["user_id"] = user_id
 			t["depth"] -= 1
 
-			c_id = distribute_to(qsizes)[0]
+			node_id = distribute_to_node(qsizes)[0]
 
-			if (c_id in crawler_queues):
-				crawler_queue = crawler_queues[c_id]
+			if (node_id in node_queues):
+				node_queue = node_queues[node_id]
 			else:
-				crawler_queue = CrawlerQueue(c_id, redis_config=redis_config)
-				crawler_queues[c_id] = crawler_queue
+				node_queue = NodeQueue(node_id, redis_config=redis_config)
+				node_queues[node_id] = node_queue
 
-			crawler_queue.put(t)
-			qsizes[c_id] += 1
+			node_queue.put(t)
+			qsizes[node_id] += 1
 
 			if verbose:
-				logger.info("send [%s] to %s"%(json.dumps(t),c_id))
+				logger.info("send [%s] to node: %s"%(json.dumps(t),node_id))
 
 			
-	except:
-		logger.error(full_stack())
+	except Exception as exc:
+		logger.error('error during flush: %s'%exc)
 
 	return True
 		

@@ -10,6 +10,15 @@ class Singleton(type):
 
 import requests, json, traceback, sys
 
+def distribute_to_node(qsizes):
+	'''
+	return a list of keys (crawler_ids) that have the minimum number of pending cmds
+	'''
+
+	min_v = min(qsizes.values())
+
+	return [node_id for node_id in qsizes if qsizes[node_id] == min_v]
+	
 def full_stack():
 	exc = sys.exc_info()[0]
 	stack = traceback.extract_stack()[:-1]  # last one would be full_stack()

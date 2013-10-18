@@ -6,28 +6,29 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
-from .worker_process import CrawlerProcess
+from .crawler_process import CrawlerProcess
 from tweetf0rm.twitterapi.users import User
 from tweetf0rm.handler import create_handler
 from tweetf0rm.handler.crawl_user_relationship_command_handler import CrawlUserRelationshipCommandHandler
 from tweetf0rm.utils import full_stack, hash_cmd
 from tweetf0rm.exceptions import MissingArgs, NotImplemented
-from tweetf0rm.redis_helper import CrawlerQueue
+from tweetf0rm.redis_helper import NodeQueue
 import copy, json
 
 
 class UserRelationshipCrawler(CrawlerProcess):
 
-	def __init__(self, crawler_id, apikeys, handlers = None, verbose = False, config = None, proxies=None):
+	def __init__(self, node_id, crawler_id, apikeys, handlers = None, verbose = False, redis_config = None, proxies=None):
 		if (handlers == None):
 			raise MissingArgs("you need a handler to write the data to...")
-		super(UserRelationshipCrawler, self).__init__(crawler_id, handlers=handlers, verbose=verbose, config = config)
+		super(UserRelationshipCrawler, self).__init__(crawler_id, handlers=handlers, verbose=verbose)
+		self.redis_config = redis_config
 		self.apikeys = copy.copy(apikeys)
-
+		self.node_id = node_id
 		self.client_args = {"timeout": 300}
 
 		if (proxies):
-			self.client_args['proxies']
+			self.client_args['proxies'] = proxies
 
 		self.user_api = User(apikeys=apikeys, verbose=verbose, client_args=self.client_args)
 
@@ -47,9 +48,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 			}, 
 			"CRAWL_USER_TIMELINE": "fetch_user_timeline"
 		}
-		self.crawler_queue = CrawlerQueue(crawler_id, redis_config=config['redis_config'])
-		self.crawler_coordinator = CrawlerCoordinator(redis_config=config['redis_config'])
-		self.crawler_coordinator.add_crawler(crawler_id)
+		self.node_queue = NodeQueue(self.node_id, redis_config=redis_config)
 
 	def get_handlers(self):
 		return self.handlers
@@ -114,7 +113,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 						#	depth: depth
 						#}
 						# will throw out exception if redis_config doesn't exist...
-						args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(verbose=False, template=template, redis_config=self.config["redis_config"]))
+						args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(verbose=False, template=template, redis_config=self.redis_config))
 					
 					func = getattr(self.user_api, self.tasks[command][data_type])
 				
@@ -125,7 +124,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 						logger.error("%s"%exc)
 						#logger.error(full_stack())
 					else:
-						self.crawler_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd_hash, "crawler_id":self.crawler_id})
+						self.node_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd_hash, "crawler_id":self.crawler_id})
 				else:
 					logger.warn("whatever are you trying to do?")
 

@@ -7,16 +7,14 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 requests_log = logging.getLogger("requests")
-requests_log.setLevel(logging.INFO)
+requests_log.setLevel(logging.WARNING)
 
 from nose.tools import nottest
 
-import sys
+import sys, os, json
 sys.path.append("..")
 
-from tweetf0rm.redis_helper import RedisQueue
 from tweetf0rm.utils import full_stack
-
 from tweetf0rm.proxies import proxy_checker
 
 class TestBootstrap:
@@ -39,6 +37,7 @@ class TestBootstrap:
 	def teardown(self):
 		pass
 
+	@nottest
 	def test_distribute_to(self):
 		def distribute_to(qsizes):
 			'''
@@ -74,11 +73,11 @@ class TestBootstrap:
 		userIds = user_api.get_user_ids(["FDA_Drug_Info"])
 		logger.info(userIds)
 
-	@nottest
+	#@nottest
 	def test_bootstrap(self):
 		import tweetf0rm.bootstrap as bootstrap
 		#apikeys = self.config["apikeys"]["i0mf0rmer03"]
-		bootstrap.start_server(self.config, self.proxies) 
+		bootstrap.start_server(self.config, self.proxies["proxies"]) 
 		# pass
 		#from tweetf0rm.handler.inmemory_handler import InMemoryHandler
 		#inmemory_handler = InMemoryHandler(verbose=False)
@@ -90,16 +89,17 @@ class TestBootstrap:
 
 	@nottest
 	def test_proxy(self):
-		proxies = proxy_checker(self.proxies['proxies'])
 
+		proxies = proxy_checker(self.proxies['proxies'])
+		#logger.info(proxies)
 		logger.info('%d good proxies left'%len(proxies))
 
 		ps = []
 		for d in proxies:
-			ps.append(d['http'])
+		 	ps.append(d['proxy'])
 
-		with open(os.path.abspath('proxy.json'), 'rb') as proxy_f:
-			josn.dump({'proxies':ps}, proxy_f)
+		with open(os.path.abspath('proxy.json'), 'wb') as proxy_f:
+		 	json.dump({'proxies':ps}, proxy_f)
 
 if __name__=="__main__":
 	import nose

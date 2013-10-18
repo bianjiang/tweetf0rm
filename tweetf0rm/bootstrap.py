@@ -8,34 +8,35 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 import time
 
-from process.user_relationship_crawler import UserRelationshipCrawler
-#from process.user_timeline_crawler import UserTimelineProcessCrawler
-from handler.inmemory_handler import InMemoryHandler
-from handler import create_handler
 import multiprocessing as mp
 from exceptions import InvalidConfig
-from tweetf0rm.redis_helper import RedisQueue
+from tweetf0rm.redis_helper import NodeQueue
 from tweetf0rm.utils import full_stack, node_id, public_ip
 from tweetf0rm.proxies import proxy_checker
 from tweetf0rm.scheduler import Scheduler
 
-def check_config(config, crawler):
-	if ('apikeys' not in config or crawler not in config['apikeys'] or 'redis_config' not in config):
-		raise InvalidConfig("something is wrong with your config file... you have to have redis_config, apikeys, and crawler name specified... ")
+def check_config(config):
+	if ('apikeys' not in config or 'redis_config' not in config):
+		raise InvalidConfig("something is wrong with your config file... you have to have redis_config and apikeys")
 
 def start_server(config, proxies):
 	import copy
 	
-	check_config(config, crawler)
+	check_config(config)
 	config = copy.copy(config)
 	#apikeys = copy.copy(config['apikeys'])
 	verbose = bool(config['verbose']) if config['verbose'] else False
 
-	redis_cmd_queue = RedisQueue(name="cmd", redis_config=config['redis_config'])
-	redis_cmd_queue.clear()
+	this_node_id = node_id()
+	node_queue = NodeQueue(this_node_id, redis_config=config['redis_config'])
+	node_queue.clear()
 
-	scheduler = Scheduler(node_id(), config, proxies)
+	scheduler = Scheduler(this_node_id, config=config, proxies=proxies, verbose=verbose)
 
+	if (verbose):
+		logger.info('starting node_id: %s'%this_node_id)
+
+	#time.sleep(5)
 	# the main event loop, actually we don't need one, since we can just join on the crawlers and don't stop until a terminate command to each crawler, but we need one to check on redis command queue ...
 	while True:
 		# block, the main process...for a command
@@ -44,7 +45,7 @@ def start_server(config, proxies):
 			logger.info("no crawler is alive... i'm done too...")
 			break;
 
-		cmd = redis_cmd_queue.get(block=True, timeout=5)
+		cmd = node_queue.get(block=True, timeout=5)
 
 		if cmd:
 			scheduler.enqueue(cmd)

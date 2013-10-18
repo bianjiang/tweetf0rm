@@ -30,6 +30,7 @@ class RedisBase(object):
 		self.__redis_connection.execute_command("AUTH", self.password)
 
 	def conn(self):
+		self.__auth()
 		return self.__redis_connection
 
 class RedisQueue(RedisBase):
@@ -71,34 +72,34 @@ class RedisQueue(RedisBase):
 		"""Clear out the queue"""
 		self.conn().delete(self.key)
 
-class CrawlerQueue(RedisQueue):
+class NodeQueue(RedisQueue):
 
-	def __init__(self, crawler_id, redis_config=None):
-		super(RedisQueue, self).__init__(crawler_id, redis_config=redis_config)
+	def __init__(self, node_id, redis_config=None):
+		super(NodeQueue, self).__init__(node_id, redis_config=redis_config)
 
-class CrawlerCoordinator(RedisBase):
+class NodeCoordinator(RedisBase):
 	'''
 	Used to coordinate queues across multiple nodes
 	'''
 	def __init__(self, redis_config=None):
-		super(CrawlerQueueStat, self).__init__("coordinator", namespace="crawler", redis_config=redis_config)
+		super(NodeCoordinator, self).__init__("coordinator", namespace="node", redis_config=redis_config)
 
-	def add_crawler(self, crawler_id):
-		self.conn().sadd(self.key, crawler_id)
+	def add_node(self, node_id):
+		self.conn().sadd(self.key, node_id)
 
-	def remove_crawler(self, crawler_id):
-		self.conn().srem(self.key, crawler_id)
+	def remove_node(self, node_id):
+		self.conn().srem(self.key, node_id)
 
-	def crawler_queue_key(self, crawler_id):
-		return 'queue:%s'%(crawler_id)
+	def node_queue_key(self, node_id):
+		return 'queue:%s'%(node_id)
 
-	def list_crawler_qsize(self):
+	def node_qsizes(self):
 		'''
-		List the size of all queues
+		List the size of all node queues
 		'''
-		crawler_ids = self.conn().smembers(self.key)
+		node_ids = self.conn().smembers(self.key)
 
-		qsizes = {crawler_id:self.conn().llen(self.crawler_queue_key(crawler_id)) for crawler_id in crawler_ids}
+		qsizes = {node_id:self.conn().llen(self.node_queue_key(node_id)) for node_id in node_ids}
 
 		return qsizes
 
