@@ -1,4 +1,4 @@
-tweetf0rmer
+tweetf0rm
 =========
 
 A Twitter crawler that helps you collect data from Twitter for research. Most of the heavy works are already done by [Twython](https://github.com/ryanmcgrath/twython). ``tweetf0rmer`` is just a collection of python scripts help to deal with errors such as connection failures. In most use cases, it will auto-restart when an exception occurs. Moreover, when the crawler exceeds the Twitter API's [rate limit](https://dev.twitter.com/docs/rate-limiting/1.1/limits), the crawler will pause itself and auto-restart later.
