@@ -38,6 +38,32 @@ class TestBootstrap:
 		pass
 
 	@nottest
+	def test_distribute_to_local(self):
+		def distribute_to(crawlers):
+
+			current_qsize = None
+			current_crawler_id = None
+			for crawler_id in crawlers:
+				qsize = len(crawlers[crawler_id]['queue'])
+				if (current_qsize == None or current_qsize >= qsize):
+					current_qsize = qsize
+					current_crawler_id = crawler_id
+
+			return current_crawler_id
+
+		crawlers = {}
+
+		crawlers[1] = {'queue': {1:'',2:'',3:'',4:'',5:''}}
+		crawlers[2] = {'queue': {1:'',2:''}}
+		crawlers[3]= {'queue': {1:'',2:'', 3:''}}
+
+		for i in range(10, 20):
+			crawler_id = distribute_to(crawlers)
+			crawlers[crawler_id]['queue'][i] = ''
+
+		logger.info(crawlers)
+
+	@nottest
 	def test_distribute_to(self):
 		def distribute_to(qsizes):
 			'''

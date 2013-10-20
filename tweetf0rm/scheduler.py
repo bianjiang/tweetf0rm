@@ -68,15 +68,18 @@ class Scheduler(object):
 		return sum(a) > 0
 
 	def distribute_to(self):
-		current_qsize = 0
+		current_qsize = None
 		current_crawler_id = None
 		for crawler_id in self.crawlers:
 			qsize = len(self.crawlers[crawler_id]['queue'])
-			if (current_qsize == 0 or current_qsize > qsize):
+
+			if (current_qsize == None or current_qsize >= qsize):
 				current_qsize = qsize
 				current_crawler_id = crawler_id
+				#logger.info('%s:%d >= %d?'%(crawler_id, current_qsize, qsize))
 
-		return crawler_id
+
+		return current_crawler_id
 
 	def persist_queues(self):
 		cmds = {}
@@ -99,6 +102,8 @@ class Scheduler(object):
 				logger.warn("the cmd doesn't exist? %s: %s"%(cmd['cmd_hash'], exc))
 		else:
 			crawler_id = self.distribute_to()
+
+			logger.info(crawler_id)
 
 			self.crawlers[crawler_id]['queue'][hash_cmd(cmd)] = cmd
 
