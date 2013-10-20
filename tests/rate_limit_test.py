@@ -55,7 +55,7 @@ class TestTwitterRateLimit:
 		pass
 
 
-	#@nottest
+	@nottest
 	def test_rate_limit(self):
 		from tweetf0rm.proxies import proxy_checker
 

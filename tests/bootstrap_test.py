@@ -14,7 +14,7 @@ from nose.tools import nottest
 import sys, os, json, exceptions
 sys.path.append("..")
 
-from tweetf0rm.utils import full_stack
+from tweetf0rm.utils import full_stack, hash_cmd, md5, get_keys_by_min_value
 from tweetf0rm.proxies import proxy_checker
 
 class TestBootstrap:
@@ -99,7 +99,7 @@ class TestBootstrap:
 		userIds = user_api.get_user_ids(["FDA_Drug_Info"])
 		logger.info(userIds)
 
-	@nottest
+	#@nottest
 	def test_bootstrap(self):
 		import tweetf0rm.bootstrap as bootstrap
 		#apikeys = self.config["apikeys"]["i0mf0rmer03"]
@@ -109,40 +109,56 @@ class TestBootstrap:
 		#inmemory_handler = InMemoryHandler(verbose=False)
 
 
-	@nottest
+	#@nottest
 	def test_bootstrap_with_proxies(self):
 		pass
 
-	@nottest
+	#@nottest
 	def test_split(self):
 
-		def split(l, n):
-			for i in xrange(0, len(l), n):
-				yield l[i:i+n]
+		def split(lst, n):
+			lsize = {}
+			results = {}
+			for i in range(n):
+				lsize[i] = 0
+				results[i] = []
+
+			
+			for x in lst:
+				idx = get_keys_by_min_value(lsize)[0]
+				results[idx].append(x)
+				lsize[idx] += 1
+
+			for i in range(n):
+				yield results[i]
+
+			
 
 
-		l = [1,2,3,4,5, 6]
+		l = range(150)
 
-		logger.info({}.values())
-		n = iter(l)
-		logger.info(next(n))
-		logger.info(next(n))
-		logger.info(next(n))
-		logger.info(next(n))
-		logger.info(next(n))
-		logger.info(next(n))
-		try:
-			logger.info(next(n))
-		except Exception as exc:
-			try:
-				logger.info(type(exc))
-				logger.info(isinstance(exc, exceptions.StopIteration))
-				raise
-			except Exception as sss:
-				logger.info("again...%r"%(exc))
-				raise
+		# logger.info({}.values())
+		# n = iter(l)
+		# logger.info(next(n))
+		# logger.info(next(n))
+		# logger.info(next(n))
+		# logger.info(next(n))
+		# logger.info(next(n))
+		# logger.info(next(n))
+		# try:
+		# 	logger.info(next(n))
+		# except Exception as exc:
+		# 	try:
+		# 		logger.info(type(exc))
+		# 		logger.info(isinstance(exc, exceptions.StopIteration))
+		# 		raise
+		# 	except Exception as sss:
+		# 		logger.info("again...%r"%(exc))
+		# 		raise
 			#raise
-		# p = split(l, 2)
+		p = split(l, 16)
+		for i in range(16):
+			logger.info(len(next(p)))
 		# pp = next(p) if p else None
 		# logger.info(pp)
 

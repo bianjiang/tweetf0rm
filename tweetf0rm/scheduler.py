@@ -162,9 +162,21 @@ class Scheduler(object):
 		return {crawler_id:len(self.crawlers[crawler_id]['queue']) for crawler_id in self.crawlers}
 
 
-	def split(self, l, n):
-		""" Yield successive n-sized chunks from l."""
-		for i in xrange(0, len(l), n):
-			yield l[i:i+n]
+	def split(self, lst, n):
+		""" Yield successive n chunks of even sized sub-lists from lst."""
+		lsize = {}
+		results = {}
+		for i in range(n):
+			lsize[i] = 0
+			results[i] = []
+
+		
+		for x in lst:
+			idx = get_keys_by_min_value(lsize)[0]
+			results[idx].append(x)
+			lsize[idx] += 1
+
+		for i in range(n):
+			yield results[i]
 
 		
