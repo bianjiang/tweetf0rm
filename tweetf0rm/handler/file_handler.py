@@ -13,7 +13,7 @@ from .base_handler import BaseHandler
 import futures, os
 from tweetf0rm.utils import full_stack
 
-def flush_file(output_folder, bucket, items, verbose=False):
+def flush_file(output_folder, bucket, items):
 	try:
 		bucket_folder = os.path.abspath('%s/%s'%(output_folder, bucket))
 
@@ -23,8 +23,7 @@ def flush_file(output_folder, bucket, items, verbose=False):
 				for line in lines:
 					f.write('%s\n'%line)
 		
-			if (verbose):
-				logger.info("flushed %d lines to %s"%(len(lines), filename))
+			logger.debug("flushed %d lines to %s"%(len(lines), filename))
 
 	except:
 		logger.error(full_stack())
@@ -36,8 +35,8 @@ from threading import Timer
 
 class FileHandler(BaseHandler):
 
-	def __init__(self, output_folder='./data', verbose=False):
-		super(FileHandler, self).__init__(verbose=verbose)
+	def __init__(self, output_folder='./data'):
+		super(FileHandler, self).__init__()
 		self.output_folder = os.path.abspath(output_folder)
 		if not os.path.exists(self.output_folder):
 			os.makedirs(self.output_folder)
@@ -57,15 +56,15 @@ class FileHandler(BaseHandler):
 
 	def flush(self, bucket, from_timer=False):
 
-		if (self.verbose and from_timer):
-			logger.info("I'm actually from the past...")
+		if (from_timer):
+			logger.debug("I'm actually from the past...")
 
 		with futures.ProcessPoolExecutor(max_workers=1) as executor:
 			# for each bucket it's a dict, where the key needs to be the file name; and the value is a list of json encoded value
 			for bucket, items in self.buffer.iteritems():
 
 				if (len(items) > 0):
-					f = executor.submit(flush_file, self.output_folder, bucket, items, verbose=self.verbose)
+					f = executor.submit(flush_file, self.output_folder, bucket, items)
 				
 					# send to a different process to operate, clear the buffer
 					self.clear(bucket)

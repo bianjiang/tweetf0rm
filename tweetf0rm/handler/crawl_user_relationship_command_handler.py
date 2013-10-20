@@ -15,15 +15,14 @@ from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
 from tweetf0rm.utils import full_stack, get_keys_by_min_value
 import json
 
-def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
+def flush_cmd(bulk, data_type, template, redis_config):
 
 	try:
 		node_coordinator = NodeCoordinator(redis_config=redis_config)
 
 		qsizes = node_coordinator.node_qsizes()
 
-		if (verbose):
-			logger.info(qsizes)
+		logger.debug(qsizes)
 		
 		node_queues = {}
 
@@ -48,8 +47,7 @@ def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
 			node_queue.put(t)
 			qsizes[node_id] += 1
 
-			if verbose:
-				logger.info("send [%s] to node: %s"%(json.dumps(t),node_id))
+			logger.debug("send [%s] to node: %s"%(json.dumps(t),node_id))
 
 			
 	except Exception as exc:
@@ -60,14 +58,14 @@ def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
 
 class CrawlUserRelationshipCommandHandler(BaseHandler):
 
-	def __init__(self, verbose=False, template=None, redis_config = None):
+	def __init__(self, template=None, redis_config = None):
 		'''
 		A RedisCommandHandler is used to push new commands into the queue;
 		this is helpful, in cases such as crawling a user's followers' followers to create a network
 		some user has extremely large number of followers, it's impossible (and inefficient) to re-iterate through 
 		the follower lists, after it's done... when it flush, it flush the commands to the redis channel
 		'''
-		super(CrawlUserRelationshipCommandHandler, self).__init__(verbose=verbose)
+		super(CrawlUserRelationshipCommandHandler, self).__init__()
 		self.data_type = template["data_type"]
 		self.template = template
 		self.redis_config = redis_config
@@ -77,14 +75,14 @@ class CrawlUserRelationshipCommandHandler(BaseHandler):
 		return True
 
 	def flush(self, bucket):
-		logger.info("i'm getting flushed...")
+		logger.debug("i'm getting flushed...")
 
 		with futures.ProcessPoolExecutor(max_workers=1) as executor:
 			for k, v in self.buffer[bucket].iteritems():
 				for s in v:
 					o = json.loads(s)
 
-					f = executor.submit(flush_cmd, o[self.data_type], self.data_type, self.template, self.redis_config, verbose=self.verbose)
+					f = executor.submit(flush_cmd, o[self.data_type], self.data_type, self.template, self.redis_config)
 
 					self.futures.append(f)
 					# while (f.running()):

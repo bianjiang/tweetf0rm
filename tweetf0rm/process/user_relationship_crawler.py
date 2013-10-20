@@ -17,10 +17,10 @@ import copy, json
 
 class UserRelationshipCrawler(CrawlerProcess):
 
-	def __init__(self, node_id, crawler_id, apikeys, handlers = None, verbose = False, redis_config = None, proxies=None):
+	def __init__(self, node_id, crawler_id, apikeys, handlers = None, redis_config = None, proxies=None):
 		if (handlers == None):
 			raise MissingArgs("you need a handler to write the data to...")
-		super(UserRelationshipCrawler, self).__init__(crawler_id, handlers=handlers, verbose=verbose)
+		super(UserRelationshipCrawler, self).__init__(crawler_id, handlers=handlers)
 		self.redis_config = redis_config
 		self.apikeys = copy.copy(apikeys)
 		self.node_id = node_id
@@ -52,7 +52,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 		if (self.user_api):
 			del self.user_api
 
-		self.user_api = User(apikeys=self.apikeys, verbose=self.verbose, client_args=self.client_args)
+		self.user_api = User(apikeys=self.apikeys, client_args=self.client_args)
 
 	def get_handlers(self):
 		return self.handlers
@@ -70,8 +70,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 			#}
 			cmd = self.get_cmd()
 
-			if self.verbose:
-				logger.info("new cmd: %s"%(cmd))
+			logger.debug("new cmd: %s"%(cmd))
 
 			command = cmd['cmd']
 
@@ -117,7 +116,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 						#	depth: depth
 						#}
 						# will throw out exception if redis_config doesn't exist...
-						args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(verbose=False, template=template, redis_config=self.redis_config))
+						args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
 					
 					func = getattr(self.user_api, self.tasks[command][data_type])
 				
@@ -150,11 +149,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 				else:
 					logger.warn("whatever are you trying to do?")
 
-		if self.verbose:
-			logger.info("looks like i'm done...")
-			# for handler in self.handlers:
-			# 	logger.info(handler.stat())
-
+		logger.info("looks like i'm done...")
 			
 		return True
 

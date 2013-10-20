@@ -8,7 +8,6 @@ You can use this raw class, but normally you will use a script in the scripts fo
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 import twython
 import json, os, time
@@ -20,12 +19,10 @@ class User(twython.Twython):
 		"""
 		Constructor with apikeys, and output folder
 
-		* verbose: be verbose about what we do. Defaults to False.
 		* apikeys: apikeys
 		"""
 		import copy
 
-		self.verbose = kwargs.pop('verbose', False)
 		apikeys = copy.copy(kwargs.pop('apikeys', None))
 		
 		if not apikeys:
@@ -65,8 +62,8 @@ class User(twython.Twython):
 					
 				cursor = int(followers['next_cursor'])
 
-				if self.verbose:
-					logger.info("find #%d followers... NEXT_CURSOR: %d"%(len(followers["users"]), cursor))
+				
+				logger.debug("find #%d followers... NEXT_CURSOR: %d"%(len(followers["users"]), cursor))
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				rate_limits = self.get_application_rate_limit_status(resources=['users', 'followers'])
@@ -78,11 +75,8 @@ class User(twython.Twython):
 
 				time.sleep(wait_for)
 
-		if self.verbose:
-			logger.info("finished find_all_followers for %d..."%(user_id))
-			# for handler in write_to_handlers:
-			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("followers", user_id)), type(handler), "followers", user_id))
-			# 	logger.info(handler.stat())
+		logger.info("finished find_all_followers for %d..."%(user_id))
+
 
 
 	def find_all_follower_ids(self, user_id=None, write_to_handlers = None, bucket = "follower_ids"):
@@ -103,8 +97,7 @@ class User(twython.Twython):
 
 				cursor = int(follower_ids['next_cursor'])
 
-				if self.verbose:
-					logger.info("find #%d followers... NEXT_CURSOR: %d"%(len(follower_ids["ids"]), cursor))
+				logger.debug("find #%d followers... NEXT_CURSOR: %d"%(len(follower_ids["ids"]), cursor))
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				rate_limits = self.get_application_rate_limit_status(resources=['users', 'followers'])
@@ -116,11 +109,8 @@ class User(twython.Twython):
 
 				time.sleep(wait_for)
 
-		if self.verbose:
-			logger.info("finished find_all_follower_ids for %d..."%(user_id))
-			# for handler in write_to_handlers:
-			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("follower_ids", user_id)), type(handler), "follower_ids", user_id))
-			# 	logger.info(handler.stat())
+		logger.info("finished find_all_follower_ids for %d..."%(user_id))
+
 
 	def find_all_friends(self, user_id=None, write_to_handlers=None, bucket="friends"):
 
@@ -141,8 +131,7 @@ class User(twython.Twython):
 
 				cursor = int(friends['next_cursor'])
 
-				if self.verbose:
-					logger.info("find #%d friends... NEXT_CURSOR: %d"%(len(friends["users"]), cursor))
+				logger.debug("find #%d friends... NEXT_CURSOR: %d"%(len(friends["users"]), cursor))
 
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
@@ -155,11 +144,8 @@ class User(twython.Twython):
 
 				time.sleep(wait_for)
 
-		if self.verbose:
-			logger.info("finished find_all_friends for %d..."%(user_id))
-			# for handler in write_to_handlers:
-			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friends", user_id)), type(handler), "friends", user_id))
-			# 	logger.info(handler.stat())
+		logger.info("finished find_all_friends for %d..."%(user_id))
+
 
 	def find_all_friend_ids(self, user_id=None, write_to_handlers=None, bucket="friend_ids"):
 
@@ -180,8 +166,7 @@ class User(twython.Twython):
 
 				cursor = int(friend_ids['next_cursor'])
 
-				if self.verbose:
-					logger.info("find #%d friend_ids... NEXT_CURSOR: %d"%(len(friend_ids["ids"]), cursor))
+				logger.debug("find #%d friend_ids... NEXT_CURSOR: %d"%(len(friend_ids["ids"]), cursor))
 
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
@@ -194,11 +179,8 @@ class User(twython.Twython):
 
 				time.sleep(wait_for)
 
-		if self.verbose:
-			logger.info("finished find_all_friend_ids for %d..."%(user_id))
-			# for handler in write_to_handlers:
-			# 	#logger.info("appended %d items into [%s] with key [%s][%s]"%(len(handler.get("friend_ids", user_id)), type(handler), "friend_ids", user_id))
-			# 	logger.info(handler.stat())
+		logger.info("finished find_all_friend_ids for %d..."%(user_id))
+
 
 	def fetch_user_timeline(self, user_id = None, write_to_handlers=None, bucket="timelines"):
 
@@ -235,9 +217,7 @@ class User(twython.Twython):
 
 				cnt += len(tweets)
 
-				if self.verbose:
-					logger.debug('%d > %d ? %s'%(prev_max_id, current_max_id, bool(prev_max_id > current_max_id)))
-					logger.info("fetched tweets: %d"%cnt)
+				logger.debug('%d > %d ? %s'%(prev_max_id, current_max_id, bool(prev_max_id > current_max_id)))
 
 				time.sleep(1)
 
@@ -255,10 +235,7 @@ class User(twython.Twython):
 			for handler in write_to_handlers:
 				handler.append(json.dumps(tweet), bucket=bucket, key=user_id) 
 
-		if self.verbose:
-			logger.info("[%d] total tweets: %d "%(user_id, cnt))
-			# for handler in write_to_handlers:
-			# 	logger.info(handler.stat())
+		logger.info("[%d] total tweets: %d "%(user_id, cnt))
 				
 
 

@@ -20,10 +20,9 @@ from tweetf0rm.redis_helper import NodeCoordinator
 
 class Scheduler(object):
 
-	def __init__(self, node_id, config={}, proxies=[], verbose=False):
+	def __init__(self, node_id, config={}, proxies=[]):
 		self.node_id = node_id
 		self.config = config
-		self.verbose = verbose
 		if (len(proxies) > 0):
 			
 			self.proxy_list = proxy_checker(proxies)
@@ -39,13 +38,11 @@ class Scheduler(object):
 			self.proxy_generator = None
 			number_of_processes = 1
 
-		if (verbose):
-			logger.info("number of crawlers: %d"%(number_of_processes))
+		logger.info("number of crawlers: %d"%(number_of_processes))
 
 		file_handler_config = {
 			"name": "FileHandler",
 			"args": {
-				"verbose": verbose,
 				"output_folder" : config["output"]
 			}
 		}
@@ -57,10 +54,11 @@ class Scheduler(object):
 		for idx in range(number_of_processes):
 			crawler_id = md5('%s:%s'%(self.node_id, idx))
 			apikeys = self.config['apikeys'][apikey_list[idx]]
-			if (verbose):
-				logger.info('creating a new crawler: %s'%crawler_id)
+			
+			logger.debug('creating a new crawler: %s'%crawler_id)
+			
 			crawler_proxies = next(self.proxy_generator) if self.proxy_generator else None
-			crawler = UserRelationshipCrawler(self.node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], verbose=verbose, redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
+			crawler = UserRelationshipCrawler(self.node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
 			crawlers[crawler_id] = {
 				'crawler': crawler,
 				'queue': {}
@@ -154,8 +152,7 @@ class Scheduler(object):
 
 			self.crawlers[crawler_id]['crawler'].enqueue(cmd)
 
-			if (self.verbose):
-				logger.info("pusing [%s] to crawler: %s"%(hash_cmd(cmd), crawler_id))
+			logger.debug("pusing [%s] to crawler: %s"%(hash_cmd(cmd), crawler_id))
 
 	def check_local_qsizes(self):
 		#logger.info(self.crawlers)

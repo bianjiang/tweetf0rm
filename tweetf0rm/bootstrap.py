@@ -27,24 +27,20 @@ def start_server(config, proxies):
 	
 	check_config(config)
 	config = copy.copy(config)
-	#apikeys = copy.copy(config['apikeys'])
-	verbose = bool(config['verbose']) if config['verbose'] else False
 
 	this_node_id = node_id()
 	node_queue = NodeQueue(this_node_id, redis_config=config['redis_config'])
 	node_queue.clear()
 
-	scheduler = Scheduler(this_node_id, config=config, proxies=proxies, verbose=verbose)
+	scheduler = Scheduler(this_node_id, config=config, proxies=proxies)
 
-	if (verbose):
-		logger.info('starting node_id: %s'%this_node_id)
+	logger.info('starting node_id: %s'%this_node_id)
 
 	node_coordinator = NodeCoordinator(config['redis_config'])
 	#time.sleep(5)
 	# the main event loop, actually we don't need one, since we can just join on the crawlers and don't stop until a terminate command to each crawler, but we need one to check on redis command queue ...
 	while True:
 		# block, the main process...for a command
-		logger.info("waiting for cmd...")
 		if(not scheduler.is_alive()):
 			logger.info("no crawler is alive... i'm done too...")
 			break;
@@ -54,10 +50,9 @@ def start_server(config, proxies):
 		if cmd:
 			scheduler.enqueue(cmd)
 
-		if (verbose):
-			logger.info("cmd: %s"%cmd)
-			logger.info(node_coordinator.node_qsizes())
-			logger.info(scheduler.check_local_qsizes())
+		logger.debug("cmd: %s"%cmd)
+		logger.debug(node_coordinator.node_qsizes())
+		logger.debug(scheduler.check_local_qsizes())
 
 	# cmd = {
 	# 	"cmd": "CRAWL_FRIENDS",

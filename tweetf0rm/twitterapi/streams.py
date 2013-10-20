@@ -10,7 +10,6 @@ KeywordsStreamer: straightforward class that tracks a list of keywords; most of 
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 from twython import TwythonStreamer
 import os, copy, datetime, json
@@ -21,14 +20,12 @@ class KeywordsStreamer(TwythonStreamer):
 		"""
 		Constructor with some extra params:
 
-		* verbose: be verbose about what we do. Defaults to False.
 
 		For other params see: TwythonStreamer
 		"""
 		from write_to_handler import WriteToHandler
 		import copy
 
-		self.verbose = kwargs.pop('verbose', False)
 		self.write_to_handler = WriteToHandler(kwargs.pop('output', '.'))
 		self.counter = 0
 		apikeys = copy.copy(kwargs.pop('apikeys', None))
@@ -46,7 +43,7 @@ class KeywordsStreamer(TwythonStreamer):
 	def on_success(self, data):
 		if 'text' in data:
 			self.counter += 1
-			if self.verbose and self.counter % 100 == 0:
+			if self.counter % 1000 == 0:
 				logger.info("received: %d"%self.counter)
 			#logger.debug(data['text'].encode('utf-8'))
 			self.write_to_handler.append(json.dumps(data))

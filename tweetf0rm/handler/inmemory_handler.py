@@ -14,12 +14,10 @@ class InMemoryHandler(BaseHandler):
 	'''
 	inmemory_handler_config = {
 		"name": "InMemoryHandler",
-		"args": {
-			"verbose": True
-		}
+		"args": {}
 	}
-	inmemory_handler = create_handler(inmemory_handler_config) #InMemoryHandler(verbose=False, shared_buffer=d)
+	inmemory_handler = create_handler(inmemory_handler_config)
 	'''
 
-	def __init__(self, verbose=False):
-		super(InMemoryHandler, self).__init__(verbose=verbose)
+	def __init__(self):
+		super(InMemoryHandler, self).__init__()
