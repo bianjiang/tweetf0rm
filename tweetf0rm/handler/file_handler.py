@@ -32,7 +32,7 @@ def flush_file(output_folder, bucket, items, verbose=False):
 
 	return True
 
-FLUSH_SIZE = 100
+FLUSH_SIZE = 10
 from threading import Timer
 
 class FileHandler(BaseHandler):
