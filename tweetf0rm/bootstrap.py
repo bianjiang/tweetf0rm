@@ -45,7 +45,7 @@ def start_server(config, proxies):
 			logger.info("no crawler is alive... i'm done too...")
 			break;
 
-		cmd = node_queue.get(block=True, timeout=90)
+		cmd = node_queue.get(block=True, timeout=360)
 
 		if cmd:
 			scheduler.enqueue(cmd)
