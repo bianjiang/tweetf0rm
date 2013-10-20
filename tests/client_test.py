@@ -34,7 +34,7 @@ class TestClient:
 	def teardown(self):
 		pass
 
-
+	@nottest
 	def test_client(self):
 		nid = node_id()
 		logger.info("sending to %s"%(nid))

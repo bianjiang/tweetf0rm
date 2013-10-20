@@ -1,0 +1,28 @@
+{
+	"apikeys": {
+		"i0mf0rmer13" :{
+			"app_key":"OZIoBbvBWoucRcubIFyw",
+			"app_secret":"Nsu6szoQYbAuuNniEi0zSvp4xTzenhd3EcqR6IyxM",
+			"oauth_token":"1974003931-c9HztoKDvVkH08F40PNBYTLOK4LOW9DSYqNOffn",
+			"oauth_token_secret":"q0WWvm5JnASlxYiX8DT5wC7BpD3EUoNtMrTja4hpmw"
+		},
+		"i0mf0rmer13.1" :{
+			"app_key":"u5lPEsgzUSLNb6jKUQLzg",
+			"app_secret":"eu4mFHBxrkUg5h7zQder20h01C5UCR4RevZuWyBwA",
+			"oauth_token":"1974003931-p8342pZwNxndmpGa6pnnsj9p5w8XwZvFDfibDkD",
+			"oauth_token_secret":"b8ExF4TCUVqsc9TIP84Bp5MO7IHLUzRibNL9IheQ4"
+		},
+		"i0mf0rmer132" :{
+			"app_key":"Gfz8D7M2Vwhkte9NUA",
+			"app_secret":"gShUxT33zKAqG9EBCDjUQDzXXdM8asgm15D7salGrkA",
+			"oauth_token":"1974003931-bWKl7JBAuKg8GLZJESctbGQIt0nyQ3ptgjNdxkd",
+			"oauth_token_secret":"8SLpqtJcmzJ6QDvtyvJIAgQTDvZfvYGiQ4uP0Vvc"
+		},
+		"i0mf0rmer133" :{
+			"app_key":"1NWJllf72Qhu4eYQpw",
+			"app_secret":"I8TSVEQsHe2a7Fk42ugdDXo4KjmAtDE9y8XFjEVUOm0",
+			"oauth_token":"1974003931-soPkG6ypFqzzjTPGPVUfNMgaUDXAWS2p5ObsqaM",
+			"oauth_token_secret":"2UHA1MvoPlNYC2FQjrUtNJdFCkxUNgFWXow4K6bV1Y"
+		}
+	}
+}

@@ -46,7 +46,8 @@ class UserRelationshipCrawler(CrawlerProcess):
 
 	def init_user_api(self): # this will throw StopIteration if all proxies have been tried...
 		if (self.proxies): 
-			self.client_args['proxies'] = next(self.proxies) # this will throw out 
+			self.client_args['proxies'] = next(self.proxies)['proxy_dict'] # this will throw out 
+			logger.info("client_args: %s"%json.dumps(self.client_args))
 
 		if (self.user_api):
 			del self.user_api
