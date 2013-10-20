@@ -5,6 +5,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+requests_log = logging.getLogger("requests")
+requests_log.setLevel(logging.WARNING)
 
 import sys, time, argparse
 sys.path.append(".")

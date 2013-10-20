@@ -7,7 +7,6 @@ RedisCommandHandler: handler that generates new commands on the fly
 import logging
 
 logger = logging.getLogger(__name__)
-#logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 from .base_handler import BaseHandler
 import multiprocessing as mp

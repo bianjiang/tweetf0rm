@@ -7,7 +7,6 @@ base_handler.py: handlers are the sinks of data
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 from tweetf0rm.exceptions import WrongArgs
 import json

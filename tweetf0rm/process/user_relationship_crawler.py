@@ -4,7 +4,6 @@
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 from .crawler_process import CrawlerProcess
 from tweetf0rm.twitterapi.users import User

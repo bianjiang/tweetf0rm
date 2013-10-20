@@ -5,9 +5,6 @@
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
-requests_log = logging.getLogger("requests")
-requests_log.setLevel(logging.DEBUG)
 
 from tweetf0rm.utils import full_stack
 import requests, futures

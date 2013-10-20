@@ -8,7 +8,6 @@ write_to_handler.py: handler that's collects the data, and write to the disk on 
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 from tweetf0rm.exceptions import NotImplemented
 
