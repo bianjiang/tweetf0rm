@@ -7,13 +7,13 @@ RedisCommandHandler: handler that generates new commands on the fly
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
+#logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 
 from .base_handler import BaseHandler
 import multiprocessing as mp
 import futures, json, copy, time
 from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
-from tweetf0rm.utils import full_stack, distribute_to_node
+from tweetf0rm.utils import full_stack, get_keys_by_min_value
 import json
 
 def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
@@ -38,7 +38,7 @@ def flush_cmd(bulk, data_type, template, redis_config, verbose=False):
 			t["user_id"] = user_id
 			t["depth"] -= 1
 
-			node_id = distribute_to_node(qsizes)[0]
+			node_id = get_keys_by_min_value(qsizes)[0]
 
 			if (node_id in node_queues):
 				node_queue = node_queues[node_id]

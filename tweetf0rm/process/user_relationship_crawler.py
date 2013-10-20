@@ -25,15 +25,6 @@ class UserRelationshipCrawler(CrawlerProcess):
 		self.redis_config = redis_config
 		self.apikeys = copy.copy(apikeys)
 		self.node_id = node_id
-		self.client_args = {"timeout": 300}
-
-		if (proxies):
-			self.client_args['proxies'] = proxies
-
-		self.user_api = User(apikeys=apikeys, verbose=verbose, client_args=self.client_args)
-
-		if (self.verbose):
-			logger.info("# of handlers: %d"%(len(self.get_handlers())))
 		self.tasks = {
 			"TERMINATE": "TERMINATE", 
 			"CRAWL_FRIENDS" : {
@@ -48,7 +39,20 @@ class UserRelationshipCrawler(CrawlerProcess):
 			}, 
 			"CRAWL_USER_TIMELINE": "fetch_user_timeline"
 		}
-		self.node_queue = NodeQueue(self.node_id, redis_config=redis_config)
+		self.node_queue = NodeQueue(self.node_id, redis_config=redis_config)		
+		self.client_args = {"timeout": 300}
+		self.proxies = iter(proxies) if proxies else None
+		self.user_api = None
+		self.init_user_api()
+
+	def init_user_api(self): # this will throw StopIteration if all proxies have been tried...
+		if (self.proxies): 
+			self.client_args['proxies'] = next(self.proxies) # this will throw out 
+
+		if (self.user_api):
+			del self.user_api
+
+		self.user_api = User(apikeys=self.apikeys, verbose=self.verbose, client_args=self.client_args)
 
 	def get_handlers(self):
 		return self.handlers
@@ -122,6 +126,24 @@ class UserRelationshipCrawler(CrawlerProcess):
 						func(**args)
 					except Exception as exc:
 						logger.error("%s"%exc)
+						try:
+							self.init_user_api()
+						except Exception as init_user_api_exc:
+							import exceptions
+							if (isinstance(init_user_api, exceptions.StopIteration)): # no more proxy to try... so kill myself...
+								for handler in self.handlers:
+				 					handler.flush_all()
+				 				# flush first
+								self.node_queue.put({
+									'cmd':'CRAWLER_FAILED',
+									'crawler_id': self.crawler_id
+									})
+							return False
+							#raise
+						else:
+							#put current task back to queue...
+							self.enqueue(cmd)
+
 						#logger.error(full_stack())
 					else:
 						self.node_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd_hash, "crawler_id":self.crawler_id})

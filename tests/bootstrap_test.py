@@ -11,7 +11,7 @@ requests_log.setLevel(logging.WARNING)
 
 from nose.tools import nottest
 
-import sys, os, json
+import sys, os, json, exceptions
 sys.path.append("..")
 
 from tweetf0rm.utils import full_stack
@@ -114,18 +114,53 @@ class TestBootstrap:
 		pass
 
 	@nottest
-	def test_proxy(self):
+	def test_split(self):
 
+		def split(l, n):
+			for i in xrange(0, len(l), n):
+				yield l[i:i+n]
+
+
+		l = [1,2,3,4,5, 6]
+
+		logger.info({}.values())
+		n = iter(l)
+		logger.info(next(n))
+		logger.info(next(n))
+		logger.info(next(n))
+		logger.info(next(n))
+		logger.info(next(n))
+		logger.info(next(n))
+		try:
+			logger.info(next(n))
+		except Exception as exc:
+			try:
+				logger.info(type(exc))
+				logger.info(isinstance(exc, exceptions.StopIteration))
+				raise
+			except Exception as sss:
+				logger.info("again...%r"%(exc))
+				raise
+			#raise
+		# p = split(l, 2)
+		# pp = next(p) if p else None
+		# logger.info(pp)
+
+
+		#logger.info(next(p))
+
+	@nottest
+	def test_proxy(self):
 		proxies = proxy_checker(self.proxies['proxies'])
 		#logger.info(proxies)
 		logger.info('%d good proxies left'%len(proxies))
 
-		ps = []
-		for d in proxies:
-		 	ps.append(d['proxy'])
+		# ps = []
+		# for d in proxies:
+		#  	ps.append(d['proxy'])
 
-		with open(os.path.abspath('proxy.json'), 'wb') as proxy_f:
-		 	json.dump({'proxies':ps}, proxy_f)
+		# with open(os.path.abspath('proxy.json'), 'wb') as proxy_f:
+		#  	json.dump({'proxies':ps}, proxy_f)
 
 if __name__=="__main__":
 	import nose

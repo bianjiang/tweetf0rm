@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 requests_log = logging.getLogger("requests")
-requests_log.setLevel(logging.WARNING)
+requests_log.setLevel(logging.DEBUG)
 
 from tweetf0rm.utils import full_stack
 import requests, futures
@@ -20,8 +20,10 @@ def check_proxy(proxy, timeout):
 		'Accept-Encoding': 'gzip, deflate',
 		'Accept-Language': 'en-US,en;q=0.5'
 	}
+	proxy_ip = proxy.keys()[0]
+	proxy_type = proxy.values()[0]
 
-	p = {'proxy':proxy,'proxy_dict':{"http"  : 'http://%s'%proxy}}
+	p = {'proxy':proxy,'proxy_dict':{proxy_type: '%s://%s'%(proxy_type, proxy_ip)}}
 
 	r = requests.get(url, headers=headers, proxies=p['proxy_dict'], timeout=timeout)
 
@@ -34,7 +36,9 @@ def check_proxy(proxy, timeout):
 		return False, None
 
 def proxy_checker(proxies):
-	proxies = set(proxies)
+	'''
+		proxies is a list of {key:value}, where the key is the ip of the proxy (including port), e.g., 192.168.1.1:8080, and the value is the type of the proxy (http/https)
+	'''
 
 	logger.info('%d proxies to check'%(len(proxies)))
 	good_proxies = []

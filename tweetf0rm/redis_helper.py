@@ -5,9 +5,9 @@
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
-requests_log = logging.getLogger("requests")
-requests_log.setLevel(logging.INFO)
+#logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
+# requests_log = logging.getLogger("requests")
+# requests_log.setLevel(logging.INFO)
 
 import redis, json
 
@@ -83,26 +83,28 @@ class NodeCoordinator(RedisBase):
 	'''
 	def __init__(self, redis_config=None):
 		super(NodeCoordinator, self).__init__("coordinator", namespace="node", redis_config=redis_config)
+		self.active_nodes = '%s:active'%(self.key)
+		self.all_nodes = '%s:all'%(self.key)
 
 	def clear(self):
 		self.conn().delete(self.key)
 
 	def add_node(self, node_id):
-		self.conn().sadd(self.key, node_id)
+		self.conn().sadd(self.active_nodes, node_id)
+		self.conn().sadd(self.all_nodes, node_id)
 
 	def remove_node(self, node_id):
-		self.conn().srem(self.key, node_id)
+		''' Only remove the node from the active list;'''
+		self.conn().srem(self.active_nodes, node_id)
 
 	def node_queue_key(self, node_id):
 		return 'queue:%s'%(node_id)
 
 	def node_qsizes(self):
 		'''
-		List the size of all node queues
+		List the size of all active nodes' queues
 		'''
-		node_ids = self.conn().smembers(self.key)
-
-		logger.info(node_ids)
+		node_ids = self.conn().smembers(self.active_nodes)
 
 		qsizes = {node_id:self.conn().llen(self.node_queue_key(node_id)) for node_id in node_ids}
 
