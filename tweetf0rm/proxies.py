@@ -40,7 +40,7 @@ def proxy_checker(proxies):
 	logger.info('%d proxies to check'%(len(proxies)))
 	good_proxies = []
 
-	with futures.ThreadPoolExecutor(max_workers=10) as executor:
+	with futures.ProcessPoolExecutor(max_workers=100) as executor:
 
 		future_to_proxy = {executor.submit(check_proxy, proxy, 60): proxy for proxy in proxies}
 			
