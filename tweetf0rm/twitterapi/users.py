@@ -13,6 +13,7 @@ import twython
 import json, os, time
 from tweetf0rm.exceptions import NotImplemented, MissingArgs, WrongArgs
 
+MAX_RETRY_CNT = 5
 class User(twython.Twython):
 
 	def __init__(self, *args, **kwargs):
@@ -43,7 +44,6 @@ class User(twython.Twython):
 			apikeys.pop('app_secret')
 		
 		kwargs.update(apikeys)
-		logger.info(kwargs)
 
 		super(User, self).__init__(*args, **kwargs)
 
@@ -71,8 +71,9 @@ class User(twython.Twython):
 		if (write_to_handlers == None):
 			raise MissingArgs("come on, you gotta write the result to something...")
 
+		retry_cnt = MAX_RETRY_CNT
 		cursor = -1
-		while cursor != 0:
+		while cursor != 0 and retry_cnt > 1:
 			try:
 				followers = self.get_followers_list(user_id=user_id, cursor=cursor, count=200)
 
@@ -80,12 +81,17 @@ class User(twython.Twython):
 					handler.append(json.dumps(followers), bucket=bucket, key=user_id) 
 					
 				cursor = int(followers['next_cursor'])
-
 				
 				logger.debug("find #%d followers... NEXT_CURSOR: %d"%(len(followers["users"]), cursor))
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				self.rate_limit_error_occured('followers', '/followers/list')
+			except Exception as exc:
+				time.sleep(10)
+				logger.debug("exception: %s"%exc)
+				retry_cnt -= 1
+				if (retry_cnt == 0):
+					raise MaxRetryReached("max retry reached due to %s"%(exc))
 				
 
 		logger.info("finished find_all_followers for %d..."%(user_id))
@@ -99,8 +105,9 @@ class User(twython.Twython):
 		if (write_to_handlers == None):
 			raise MissingArgs("come on, you gotta write the result to something...")
 
+		retry_cnt = MAX_RETRY_CNT
 		cursor = -1
-		while cursor != 0:
+		while cursor != 0 and retry_cnt > 1:
 			try:
 				follower_ids = self.get_followers_ids(user_id=user_id, cursor=cursor, count=200)
 
@@ -113,6 +120,12 @@ class User(twython.Twython):
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				self.rate_limit_error_occured('followers', '/followers/ids')
+			except Exception as exc:
+				time.sleep(10)
+				logger.debug("exception: %s"%exc)
+				retry_cnt -= 1
+				if (retry_cnt == 0):
+					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
 
 		logger.info("finished find_all_follower_ids for %d..."%(user_id))
@@ -126,8 +139,9 @@ class User(twython.Twython):
 		if (write_to_handlers == None):
 			raise MissingArgs("come on, you gotta write the result to something...")
 
+		retry_cnt = MAX_RETRY_CNT
 		cursor = -1
-		while cursor != 0:
+		while cursor != 0 and retry_cnt > 1:
 			try:
 				friends = self.get_friends_list(user_id=user_id, cursor=cursor, count=200)
 
@@ -142,6 +156,12 @@ class User(twython.Twython):
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				self.rate_limit_error_occured('friends', '/friends/list')
+			except Exception as exc:
+				time.sleep(10)
+				logger.debug("exception: %s"%exc)
+				retry_cnt -= 1
+				if (retry_cnt == 0):
+					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
 		logger.info("finished find_all_friends for %d..."%(user_id))
 
@@ -154,8 +174,9 @@ class User(twython.Twython):
 		if (write_to_handlers == None):
 			raise MissingArgs("come on, you gotta write the result to something...")
 
+		retry_cnt = MAX_RETRY_CNT
 		cursor = -1
-		while cursor != 0:
+		while cursor != 0 and retry_cnt > 1:
 			try:
 				friend_ids = self.get_friends_ids(user_id=user_id, cursor=cursor, count=200)
 
@@ -170,6 +191,12 @@ class User(twython.Twython):
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
 				self.rate_limit_error_occured('friends', '/friends/ids')
+			except Exception as exc:
+				time.sleep(10)
+				logger.debug("exception: %s"%exc)
+				retry_cnt -= 1
+				if (retry_cnt == 0):
+					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
 		logger.info("finished find_all_friend_ids for %d..."%(user_id))
 
@@ -187,8 +214,9 @@ class User(twython.Twython):
 		last_lowest_id = current_max_id # used to workaround users who has less than 200 tweets, 1 loop is enough...
 		cnt = 0
 		
+		retry_cnt = MAX_RETRY_CNT
 		timeline = [] # holder tweets in memory... you won't get more than 3,200 tweets per user, so I guess this is fine...
-		while current_max_id != prev_max_id:
+		while current_max_id != prev_max_id and retry_cnt > 1:
 			try:
 				if current_max_id > 0:
 					tweets = self.get_user_timeline(user_id=user_id, max_id=current_max_id, count=200)
@@ -215,6 +243,12 @@ class User(twython.Twython):
 
 			except twython.exceptions.TwythonRateLimitError:
 				self.rate_limit_error_occured('statuses', '/statuses/user_timeline')
+			except Exception as exc:
+				time.sleep(10)
+				logger.debug("exception: %s"%exc)
+				retry_cnt -= 1
+				if (retry_cnt == 0):
+					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
 		for tweet in timeline:
 			for handler in write_to_handlers:

@@ -14,3 +14,6 @@ class WrongArgs(Exception):
 
 class InvalidConfig(Exception):
 	pass
+
+class MaxRetryReached(Exception):
+	pass
