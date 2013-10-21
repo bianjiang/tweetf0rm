@@ -16,6 +16,7 @@ from process.user_relationship_crawler import UserRelationshipCrawler
 #from handler.inmemory_handler import InMemoryHandler
 from handler import create_handler
 from tweetf0rm.redis_helper import NodeCoordinator
+import twython
 
 
 class Scheduler(object):
@@ -52,18 +53,21 @@ class Scheduler(object):
 
 		crawlers = {}
 		for idx in range(number_of_processes):
-			crawler_id = md5('%s:%s'%(self.node_id, idx))
-			apikeys = self.config['apikeys'][apikey_list[idx]]
-			
-			logger.debug('creating a new crawler: %s'%crawler_id)
-			
-			crawler_proxies = next(self.proxy_generator) if self.proxy_generator else None
-			crawler = UserRelationshipCrawler(self.node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
-			crawlers[crawler_id] = {
-				'crawler': crawler,
-				'queue': {}
-			}
-			crawler.start()
+			try:
+				crawler_id = md5('%s:%s'%(self.node_id, idx))
+				apikeys = self.config['apikeys'][apikey_list[idx]]
+				
+				logger.debug('creating a new crawler: %s'%crawler_id)
+				
+				crawler_proxies = next(self.proxy_generator) if self.proxy_generator else None
+				crawler = UserRelationshipCrawler(self.node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
+				crawlers[crawler_id] = {
+					'crawler': crawler,
+					'queue': {}
+				}
+				crawler.start()
+			except twython.exceptions.TwythonAuthError as exc:
+				logger.error('%s: %s'%(exc, apikeys))
 
 		self.crawlers = crawlers
 		self.node_coordinator = NodeCoordinator(config['redis_config'])
