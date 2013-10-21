@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s-[%(module)s][%(fun
 requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.WARNING)
 
-import sys, time, argparse, json, os
+import sys, time, argparse, json, os, pprint
 sys.path.append(".")
 
 import multiprocessing as mp
@@ -53,8 +53,8 @@ def start_server(config, proxies):
 			scheduler.enqueue(cmd)
 		
 		if (time.time() - pre_time > 60):
-			logger.info('alive: %s'%scheduler.list_alive())
-			logger.info('local queue_sizes: %s'%scheduler.check_local_qsizes())
+			logger.info(pprint.pformat(scheduler.crawler_status()))
+			#logger.info('local queue_sizes: %s'%scheduler.check_local_qsizes())
 			pre_time = time.time()
 
 	# cmd = {

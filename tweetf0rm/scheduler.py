@@ -16,7 +16,7 @@ from process.user_relationship_crawler import UserRelationshipCrawler
 #from handler.inmemory_handler import InMemoryHandler
 from handler import create_handler
 from tweetf0rm.redis_helper import NodeCoordinator
-import twython
+import twython, pprint
 
 
 class Scheduler(object):
@@ -79,8 +79,8 @@ class Scheduler(object):
 		a = [1 if self.crawlers[crawler_id]['crawler'].is_alive() else 0 for crawler_id in self.crawlers]
 		return sum(a) > 0
 
-	def list_alive(self):
-		return [{crawler_id: True} if self.crawlers[crawler_id]['crawler'].is_alive() else {crawler_id: False}  for crawler_id in self.crawlers]
+	def crawler_status(self):
+		return [{crawler_id: True, 'qsize': len(self.crawlers[crawler_id]['queue'])} if self.crawlers[crawler_id]['crawler'].is_alive() else {crawler_id: False}  for crawler_id in self.crawlers]
 
 	def distribute_to(self):
 		current_qsize = None
