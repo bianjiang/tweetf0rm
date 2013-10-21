@@ -69,6 +69,8 @@ class Scheduler(object):
 		self.node_coordinator = NodeCoordinator(config['redis_config'])
 		self.node_coordinator.add_node(node_id)
 
+		logger.info("number of crawlers: %d created"%(number_of_processes))
+
 	def is_alive(self):
 		a = [1 if self.crawlers[crawler_id]['crawler'].is_alive() else 0 for crawler_id in self.crawlers]
 		return sum(a) > 0

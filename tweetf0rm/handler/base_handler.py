@@ -13,7 +13,7 @@ import json
 
 class BaseHandler(object):
 
-	def __init__(self, verbose=False):
+	def __init__(self):
 		'''
 			buckets: defines the sub-structure of the buffer; either ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
 		'''
@@ -21,7 +21,6 @@ class BaseHandler(object):
 		self.buckets = ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]
 		for bucket in self.buckets:
 			self.buffer[bucket] = dict()
-		self.verbose = verbose
 		self.futures = []
 
 	def append(self, data=None, bucket=None, key='current_timestampe'):
@@ -31,8 +30,7 @@ class BaseHandler(object):
 		if (bucket not in self.buckets):
 			raise WrongArgs("%s is not a valid buckets..."%bucket)
 
-		if (self.verbose):
-			logger.info("adding new data -- into [%s][%s]"%(bucket, key))
+		logger.debug("adding new data -- into [%s][%s]"%(bucket, key))
 
 		if (key not in self.buffer[bucket]):
 			self.buffer[bucket][key] = list()
@@ -40,7 +38,7 @@ class BaseHandler(object):
 		self.buffer[bucket][key].append(data)
 
 		need_flush = self.need_flush(bucket)
-		logger.info("flush? %s"%need_flush)
+		logger.debug("flush? %s"%need_flush)
 		if (need_flush):
 			self.flush(bucket)
 

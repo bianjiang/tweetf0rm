@@ -29,6 +29,7 @@ class User(twython.Twython):
 			raise MissingArgs('apikeys is missing')
 
 		self.apikeys = copy.copy(apikeys) # keep a copy
+		#self.crawler_id = kwargs.pop('crawler_id', None)
 
 		oauth2 = kwargs.pop('oauth2', True) # default to use oauth2 (application level access, read-only)
 
@@ -43,6 +44,20 @@ class User(twython.Twython):
 		kwargs.update(apikeys)
 
 		super(User, self).__init__(*args, **kwargs)
+
+	def rate_limit_error_occured(self, resource, api):
+		rate_limits = self.get_application_rate_limit_status(resources=[resource])
+
+		#e.g., ['resources']['followers']['/followers/list']['reset']
+
+		wait_for = int(rate_limits['resources'][resource][api]['reset']) - time.time() + 10
+
+		#logger.debug(rate_limits)
+		logger.warn('[%s] rate limit reached, sleep for %d'%(rate_limits['rate_limit_context'], wait_for))
+		if wait_for < 0:
+			wait_for = 60
+
+		time.sleep(wait_for)
 
 	def find_all_followers(self, user_id=None, write_to_handlers = None, bucket="followers"):
 
@@ -66,17 +81,10 @@ class User(twython.Twython):
 				logger.debug("find #%d followers... NEXT_CURSOR: %d"%(len(followers["users"]), cursor))
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
-				rate_limits = self.get_application_rate_limit_status(resources=['users', 'followers'])
-				wait_for = int(rate_limits['resources']['followers']['/followers/list']['reset']) - time.time() + 10
-				logger.info(rate_limits)
-				logger.warn('rate time error, sleep for %d'%wait_for)
-				if wait_for < 0:
-					wait_for = 60
-
-				time.sleep(wait_for)
+				self.rate_limit_error_occured('followers', '/followers/list')
+				
 
 		logger.info("finished find_all_followers for %d..."%(user_id))
-
 
 
 	def find_all_follower_ids(self, user_id=None, write_to_handlers = None, bucket = "follower_ids"):
@@ -100,14 +108,8 @@ class User(twython.Twython):
 				logger.debug("find #%d followers... NEXT_CURSOR: %d"%(len(follower_ids["ids"]), cursor))
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
-				rate_limits = self.get_application_rate_limit_status(resources=['users', 'followers'])
-				wait_for = int(rate_limits['resources']['followers']['/followers/ids']['reset']) - time.time() + 10
-				logger.info(rate_limits)
-				logger.warn('rate time error, sleep for %d'%wait_for)
-				if wait_for < 0:
-					wait_for = 60
+				self.rate_limit_error_occured('followers', '/followers/ids')
 
-				time.sleep(wait_for)
 
 		logger.info("finished find_all_follower_ids for %d..."%(user_id))
 
@@ -135,14 +137,7 @@ class User(twython.Twython):
 
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
-				rate_limits = self.get_application_rate_limit_status(resources=['users', 'friends'])
-				wait_for = int(rate_limits['resources']['friends']['/friends/list']['reset']) - time.time() + 10
-				logger.info(rate_limits)
-				logger.warn('rate time error, sleep for %d'%wait_for)
-				if wait_for < 0:
-					wait_for = 60
-
-				time.sleep(wait_for)
+				self.rate_limit_error_occured('friends', '/friends/list')
 
 		logger.info("finished find_all_friends for %d..."%(user_id))
 
@@ -170,14 +165,7 @@ class User(twython.Twython):
 
 				time.sleep(2)
 			except twython.exceptions.TwythonRateLimitError:
-				rate_limits = self.get_application_rate_limit_status(resources=['users', 'friends'])
-				wait_for = int(rate_limits['resources']['friends']['/friends/ids']['reset']) - time.time() + 10
-				logger.info(rate_limits)
-				logger.warn('rate time error, sleep for %d'%wait_for)
-				if wait_for < 0:
-					wait_for = 60
-
-				time.sleep(wait_for)
+				self.rate_limit_error_occured('friends', '/friends/ids')
 
 		logger.info("finished find_all_friend_ids for %d..."%(user_id))
 
@@ -222,14 +210,7 @@ class User(twython.Twython):
 				time.sleep(1)
 
 			except twython.exceptions.TwythonRateLimitError:
-				rate_limits = self.get_application_rate_limit_status(resources=['statuses'])
-				wait_for = int(rate_limits['resources']['statuses']['/statuses/user_timeline']['reset']) - time.time() + 10
-				logger.info(rate_limits)
-				logger.warn('rate time error, sleep for %d'%wait_for)
-				if wait_for < 0:
-					wait_for = 60
-
-				time.sleep(wait_for)
+				self.rate_limit_error_occured('statuses', '/statuses/user_timeline')
 
 		for tweet in timeline:
 			for handler in write_to_handlers:

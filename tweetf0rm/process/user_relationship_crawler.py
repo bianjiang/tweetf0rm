@@ -52,6 +52,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 		if (self.user_api):
 			del self.user_api
 
+		#crawler_id=self.crawler_id, 
 		self.user_api = User(apikeys=self.apikeys, client_args=self.client_args)
 
 	def get_handlers(self):
@@ -129,7 +130,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 							self.init_user_api()
 						except Exception as init_user_api_exc:
 							import exceptions
-							if (isinstance(init_user_api, exceptions.StopIteration)): # no more proxy to try... so kill myself...
+							if (isinstance(init_user_api_exc, exceptions.StopIteration)): # no more proxy to try... so kill myself...
 								for handler in self.handlers:
 				 					handler.flush_all()
 				 				# flush first

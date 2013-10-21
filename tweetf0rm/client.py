@@ -22,7 +22,7 @@ def cmd(config):
 
 	cmd = {
 		"cmd": "CRAWL_FRIENDS",
-		"user_id": 1948122342, #random.uniform(1, 10),#1948122342,
+		"user_id": 1948122342, #1948122342, #random.uniform(1, 10),#1948122342,
 		"data_type": "ids",
 		"depth": 2,
 		"bucket":"friend_ids"

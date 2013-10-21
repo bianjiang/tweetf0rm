@@ -96,7 +96,7 @@ class TestBootstrap:
 		
 		#inmemoryhandler = InMemoryHandler()
 		user_api = User(apikeys=apikeys)
-		userIds = user_api.get_user_ids(["FDA_Drug_Info"])
+		userIds = user_api.get_user_ids(["AmericanCance"])
 		logger.info(userIds)
 
 	#@nottest
@@ -109,11 +109,8 @@ class TestBootstrap:
 		#inmemory_handler = InMemoryHandler(verbose=False)
 
 
-	#@nottest
-	def test_bootstrap_with_proxies(self):
-		pass
 
-	#@nottest
+	@nottest
 	def test_split(self):
 
 		def split(lst, n):

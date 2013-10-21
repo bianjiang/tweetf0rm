@@ -8,11 +8,11 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.WARNING)
 
-import sys, time, argparse
+import sys, time, argparse, json, os
 sys.path.append(".")
 
 import multiprocessing as mp
-from exceptions import InvalidConfig
+from tweetf0rm.exceptions import InvalidConfig
 from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
 from tweetf0rm.utils import full_stack, node_id, public_ip
 from tweetf0rm.proxies import proxy_checker
@@ -74,18 +74,16 @@ def start_server(config, proxies):
 	##	"bucket": "timelines"
 	# # }
 
-	pass
 
 if __name__=="__main__":
-	import json, os
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-c', '--config', help="config.json that contains a) twitter api keys; b) redis connection string; c) mongodb connection string", required = True)
 	parser.add_argument('-p', '--proxies', help="the crawler identifier; you can have multiple crawler accounts set in the config.json; pick one", required = True)
 
 	args = parser.parse_args()
 
-	with open(os.path.abspath(args.config), 'rb') as config_f, open(os.path.abspath(arg.proxies), 'rb') as proxy_f:
+	with open(os.path.abspath(args.config), 'rb') as config_f, open(os.path.abspath(args.proxies), 'rb') as proxy_f:
 		config = json.load(config_f)
 		proxies = json.load(proxy_f)
 
-		start_server(config, proxies)
+		start_server(config, proxies['proxies'])
