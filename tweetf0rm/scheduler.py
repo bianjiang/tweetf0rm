@@ -150,12 +150,13 @@ class Scheduler(object):
 				logger.warn("the cmd doesn't exist? %s: %s"%(cmd['cmd_hash'], exc))
 		else:
 			crawler_id = self.distribute_to()
-
-			self.crawlers[crawler_id]['queue'][hash_cmd(cmd)] = cmd
+			cmd_hash = hash_cmd(cmd)
+			cmd['cmd_hash'] = cmd_hash
+			self.crawlers[crawler_id]['queue'][cmd_hash] = cmd
 
 			self.crawlers[crawler_id]['crawler'].enqueue(cmd)
 
-			logger.debug("pusing [%s] to crawler: %s"%(hash_cmd(cmd), crawler_id))
+			logger.info("pusing %s: [%s] to crawler: %s"%(cmd, cmd_hash, crawler_id))
 
 	def check_local_qsizes(self):
 		#logger.info(self.crawlers)

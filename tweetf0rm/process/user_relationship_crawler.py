@@ -71,11 +71,10 @@ class UserRelationshipCrawler(CrawlerProcess):
 			#}
 			cmd = self.get_cmd()
 
-			logger.debug("new cmd: %s"%(cmd))
 
 			command = cmd['cmd']
 
-			cmd_hash = hash_cmd(cmd)
+			logger.info("new cmd: %s [%s]"%(cmd, cmd['cmd_hash']))
 
 			redis_cmd_handler = None
 
@@ -104,7 +103,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 					data_type = cmd['data_type']
 					depth = cmd["depth"] if "depth" in cmd else None
 
-					logger.info("depth: %d"%(depth))
+					#logger.debug("depth: %d"%(depth))
 					# for handler in self.handlers:
 					# 	if isinstance(handler, InMemoryHandler):
 					# 		inmemory_handler = handler
@@ -146,7 +145,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 
 						#logger.error(full_stack())
 					else:
-						self.node_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd_hash, "crawler_id":self.crawler_id})
+						self.node_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd['cmd_hash'], "crawler_id":self.crawler_id})
 				else:
 					logger.warn("whatever are you trying to do?")
 

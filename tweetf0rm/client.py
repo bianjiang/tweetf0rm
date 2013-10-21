@@ -24,7 +24,7 @@ def cmd(config):
 		"cmd": "CRAWL_FRIENDS",
 		"user_id": 1948122342, #1948122342, #random.uniform(1, 10),#1948122342,
 		"data_type": "ids",
-		"depth": 2,
+		"depth": 1,
 		"bucket":"friend_ids"
 	}
 
