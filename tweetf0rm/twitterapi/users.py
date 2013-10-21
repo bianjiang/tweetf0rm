@@ -21,6 +21,7 @@ class User(twython.Twython):
 
 		* apikeys: apikeys
 		"""
+		logger.info(kwargs)
 		import copy
 
 		apikeys = copy.copy(kwargs.pop('apikeys', None))
@@ -42,8 +43,11 @@ class User(twython.Twython):
 			apikeys.pop('app_secret')
 		
 		kwargs.update(apikeys)
+		logger.info(kwargs)
 
 		super(User, self).__init__(*args, **kwargs)
+
+		
 
 	def rate_limit_error_occured(self, resource, api):
 		rate_limits = self.get_application_rate_limit_status(resources=[resource])

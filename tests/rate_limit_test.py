@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 requests_log = logging.getLogger("requests")
-requests_log.setLevel(logging.WARNING)
+requests_log.setLevel(logging.DEBUG)
 
 from nose.tools import nottest
 
@@ -29,8 +29,7 @@ class Handler(object):
 
 def call_user_api(apikeys, client_args):
 
-	logger.info('here')
-	user_api = User(apikeys=apikeys, verbose=False, client_args=client_args)
+	user_api = User(apikeys=apikeys, client_args=client_args)
 	user_api.find_all_friend_ids(53039176, [Handler()])
 
 			
@@ -54,6 +53,17 @@ class TestTwitterRateLimit:
 	def teardown(self):
 		pass
 
+	@nottest
+	def test_china_proxy(self):
+		apikeys = self.config['apikeys']['i0mf0rmer13']
+			
+		client_args = {
+			"timeout": 300,
+			"proxies": {'http':'203.156.207.249:8080'}#proxy_list[i]['proxy_dict']
+		}
+
+		call_user_api(apikeys, client_args)
+
 
 	@nottest
 	def test_rate_limit(self):
@@ -68,7 +78,7 @@ class TestTwitterRateLimit:
 
 			client_args = {
 				"timeout": 300,
-				"proxies": proxy_list[i]['proxy_dict']
+				"proxies": {'http':'203.156.207.249:8080'}#proxy_list[i]['proxy_dict']
 			}
 			logger.info(client_args)
 
