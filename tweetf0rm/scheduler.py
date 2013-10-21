@@ -145,7 +145,7 @@ class Scheduler(object):
 			try:
 				crawler_id = cmd['crawler_id']
 				del self.crawlers[crawler_id]['queue'][cmd['cmd_hash']]
-				logger.info('removeing cmd: %s from [%s]'%(cmd['cmd_hash'], crawler_id))
+				logger.debug('removeing cmd: %s from [%s]'%(cmd['cmd_hash'], crawler_id))
 			except Exception as exc:
 				logger.warn("the cmd doesn't exist? %s: %s"%(cmd['cmd_hash'], exc))
 		else:
@@ -156,7 +156,7 @@ class Scheduler(object):
 
 			self.crawlers[crawler_id]['crawler'].enqueue(cmd)
 
-			logger.info("pusing %s: [%s] to crawler: %s"%(cmd, cmd_hash, crawler_id))
+			logger.debug("pusing %s: [%s] to crawler: %s"%(cmd, cmd_hash, crawler_id))
 
 	def check_local_qsizes(self):
 		#logger.info(self.crawlers)

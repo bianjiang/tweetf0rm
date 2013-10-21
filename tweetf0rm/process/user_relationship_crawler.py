@@ -74,7 +74,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 
 			command = cmd['cmd']
 
-			logger.info("new cmd: %s [%s]"%(cmd, cmd['cmd_hash']))
+			logger.debug("new cmd: %s [%s]"%(cmd, cmd['cmd_hash']))
 
 			redis_cmd_handler = None
 
