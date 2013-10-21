@@ -77,13 +77,17 @@ def start_server(config, proxies):
 
 if __name__=="__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-c', '--config', help="config.json that contains a) twitter api keys; b) redis connection string; c) mongodb connection string", required = True)
-	parser.add_argument('-p', '--proxies', help="the crawler identifier; you can have multiple crawler accounts set in the config.json; pick one", required = True)
+	parser.add_argument('-c', '--config', help="config.json that contains a) twitter api keys; b) redis connection string;", required = True)
+	parser.add_argument('-p', '--proxies', help="the proxies.json file")
 
 	args = parser.parse_args()
 
-	with open(os.path.abspath(args.config), 'rb') as config_f, open(os.path.abspath(args.proxies), 'rb') as proxy_f:
-		config = json.load(config_f)
-		proxies = json.load(proxy_f)
+	proxies = None
+	if args.proxies:
+		with open(os.path.abspath(args.proxies), 'rb') as proxy_f:
+			proxies = json.load(proxy_f)['proxies']
 
-		start_server(config, proxies['proxies'])
+	with open(os.path.abspath(args.config), 'rb') as config_f:
+		config = json.load(config_f)	
+
+		start_server(config, proxies)

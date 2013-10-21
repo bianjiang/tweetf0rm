@@ -22,14 +22,16 @@ def check_proxy(proxy, timeout):
 
 	p = {'proxy':proxy,'proxy_dict':{proxy_type: '%s://%s'%(proxy_type, proxy_ip)}}
 
-	r = requests.get(url, headers=headers, proxies=p['proxy_dict'], timeout=timeout)
-
 	try:
+
+		r = requests.get(url, headers=headers, proxies=p['proxy_dict'], timeout=timeout)
+
 		if (r.status_code == requests.codes.ok):
 			return True, p
 		else:
 			return False, None
-	except:
+	except Exception as exc:
+		logger.debug("proxy [%s] failed: %s"%(p['proxy'], exc))
 		return False, None
 
 def proxy_checker(proxies):
@@ -38,24 +40,30 @@ def proxy_checker(proxies):
 	'''
 
 	logger.info('%d proxies to check'%(len(proxies)))
-	good_proxies = []
 
+	results = []
 	with futures.ProcessPoolExecutor(max_workers=100) as executor:
 
-		future_to_proxy = {executor.submit(check_proxy, proxy, 60): proxy for proxy in proxies}
+		future_to_proxy = {executor.submit(check_proxy, proxy, 15): proxy for proxy in proxies}
+
+		for future in future_to_proxy:
+			future.add_done_callback(lambda f: results.append(f.result()))
 			
-		for future in futures.as_completed(future_to_proxy):
 
-			proxy = future_to_proxy[future]
-			try:
-				good, proxy_dict = future.result()
-			except Exception as exc:
-				logger.info('%r generated an exception: %s'%(proxy, exc))
-			else:
-				if (good):
-					good_proxies.append(proxy_dict)
+		futures.wait(future_to_proxy)
 
-		return good_proxies
+		# for future in futures.as_completed(future_to_proxy):
+
+		# 	proxy = future_to_proxy[future]
+		# 	try:
+		# 		good, proxy_dict = future.result()
+		# 	except Exception as exc:
+		# 		logger.info('%r generated an exception: %s'%(proxy, exc))
+		# 	else:
+		# 		if (good):
+		# 			good_proxies.append(proxy_dict)
+		
+		return [p for (good, p) in results if good]
 
 
 

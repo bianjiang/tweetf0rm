@@ -96,9 +96,12 @@ if __name__=="__main__":
 	for i in range(5):
 		proxies.extend(crawl_spys_ru(i))
 
-	proxies = proxy_checker(proxies)
+	proxies = [p['proxy'] for p in proxy_checker(proxies)]
 
 	logger.info(len(proxies))
+	with open(os.path.abspath(args.output), 'wb') as proxy_f:
+		json.dump({'proxies':proxies}, proxy_f)
+	
 
 			
 
