@@ -75,6 +75,9 @@ class Scheduler(object):
 		a = [1 if self.crawlers[crawler_id]['crawler'].is_alive() else 0 for crawler_id in self.crawlers]
 		return sum(a) > 0
 
+	def list_alive(self):
+		return [crawler_id if self.crawlers[crawler_id]['crawler'].is_alive() for crawler_id in self.crawlers]
+
 	def distribute_to(self):
 		current_qsize = None
 		current_crawler_id = None

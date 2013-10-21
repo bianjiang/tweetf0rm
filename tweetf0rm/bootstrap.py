@@ -39,6 +39,8 @@ def start_server(config, proxies):
 	node_coordinator = NodeCoordinator(config['redis_config'])
 	#time.sleep(5)
 	# the main event loop, actually we don't need one, since we can just join on the crawlers and don't stop until a terminate command to each crawler, but we need one to check on redis command queue ...
+	
+	pre_time = time.time()
 	while True:
 		# block, the main process...for a command
 		if(not scheduler.is_alive()):
@@ -49,10 +51,11 @@ def start_server(config, proxies):
 
 		if cmd:
 			scheduler.enqueue(cmd)
-
-		logger.debug("cmd: %s"%cmd)
-		logger.debug(node_coordinator.node_qsizes())
-		logger.debug(scheduler.check_local_qsizes())
+		
+		if (time.time() - pre_time > 60):
+			logger.info('alive: %s'%scheduler.list_alive())
+			logger.info('local queue_sizes: %s'%scheduler.check_local_qsizes())
+			pre_time = time.time()
 
 	# cmd = {
 	# 	"cmd": "CRAWL_FRIENDS",
