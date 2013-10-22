@@ -31,7 +31,6 @@ def flush_file(output_folder, bucket, items):
 	return True
 
 FLUSH_SIZE = 10
-from threading import Timer
 
 class FileHandler(BaseHandler):
 
@@ -50,14 +49,9 @@ class FileHandler(BaseHandler):
 		if (len(self.buffer[bucket]) >  FLUSH_SIZE):
 			return True
 		else:
-			Timer(60,self.flush,args=[bucket, True])
-
 			return False
 
-	def flush(self, bucket, from_timer=False):
-
-		if (from_timer):
-			logger.info("flushed because of a timeout")
+	def flush(self, bucket):
 
 		with futures.ProcessPoolExecutor(max_workers=1) as executor:
 			# for each bucket it's a dict, where the key needs to be the file name; and the value is a list of json encoded value

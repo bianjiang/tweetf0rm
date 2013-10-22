@@ -138,6 +138,8 @@ class Scheduler(object):
 			if (remaining_tasks > 0):
 				self.persist_queues()
 			[self.crawlers[crawler_id]['crawler'].enqueue(cmd) for crawler_id in self.crawlers]
+		elif(cmd['cmd'] == 'CRAWLER_FLUSH'):
+			[self.crawlers[crawler_id]['crawler'].enqueue(cmd) for crawler_id in self.crawlers]
 		elif(cmd['cmd'] == 'CRAWLER_FAILED'):
 			crawler_id = cmd['crawler_id']
 			if (crawler_id in self.crawlers):

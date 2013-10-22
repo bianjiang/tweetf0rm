@@ -66,6 +66,7 @@ class BaseHandler(object):
 
 	def clear(self, bucket = None):
 		if (bucket):
+			logger.info("clear bucket: %s"%bucket)
 			del self.buffer[bucket]
 			self.buffer[bucket] = dict()
 
@@ -80,6 +81,7 @@ class BaseHandler(object):
 		pass
 
 	def flush(self, bucket):
+		logger.info('calling the BaseHandler flush???')
 		pass
 
 	def flush_all(self, block=False):

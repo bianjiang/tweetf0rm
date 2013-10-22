@@ -56,6 +56,8 @@ def start_server(config, proxies):
 			logger.info(pprint.pformat(scheduler.crawler_status()))
 			#logger.info('local queue_sizes: %s'%scheduler.check_local_qsizes())
 			pre_time = time.time()
+			cmd = {'cmd': 'CRAWLER_FLUSH'}
+			scheduler.enqueue(cmd)
 
 	# cmd = {
 	# 	"cmd": "CRAWL_FRIENDS",

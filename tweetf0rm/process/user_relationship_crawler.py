@@ -84,6 +84,9 @@ class UserRelationshipCrawler(CrawlerProcess):
 				for handler in self.handlers:
 				 	handler.flush_all()
 				break
+			if (command == 'CRAWLER_FLUSH'):
+				for handler in self.handlers:
+				 	handler.flush_all()
 			else:
 
 				args = {
@@ -117,7 +120,16 @@ class UserRelationshipCrawler(CrawlerProcess):
 							#	depth: depth
 							#}
 							# will throw out exception if redis_config doesn't exist...
-							args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
+							found = False
+							for handler in args["write_to_handlers"]:
+								if (isinstance(handler, CrawlUserRelationshipCommandHandler)):
+									logger.info("just updating the template in CrawlUserRelationshipCommandHandler")
+									handler.update_template(template)
+									found = True
+
+							if (not found):
+								logger.info("adding new CrawlUserRelationshipCommandHandler")
+								args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
 
 					except Exception as exc:
 						logger.warn(exc)
