@@ -57,7 +57,7 @@ class FileHandler(BaseHandler):
 	def flush(self, bucket, from_timer=False):
 
 		if (from_timer):
-			logger.debug("I'm actually from the past...")
+			logger.info("flushed because of a timeout")
 
 		with futures.ProcessPoolExecutor(max_workers=1) as executor:
 			# for each bucket it's a dict, where the key needs to be the file name; and the value is a list of json encoded value
