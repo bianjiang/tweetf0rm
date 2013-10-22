@@ -60,7 +60,7 @@ class Scheduler(object):
 				logger.debug('creating a new crawler: %s'%crawler_id)
 				
 				crawler_proxies = next(self.proxy_generator) if self.proxy_generator else None
-				crawler = UserRelationshipCrawler(self.node_id, crawler_id, copy.copy(apikeys), handler_configs=[file_handler_config], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
+				crawler = UserRelationshipCrawler(self.node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
 				crawlers[crawler_id] = {
 					'crawler': crawler,
 					'queue': {}

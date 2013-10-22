@@ -66,12 +66,9 @@ class CrawlUserRelationshipCommandHandler(BaseHandler):
 		the follower lists, after it's done... when it flush, it flush the commands to the redis channel
 		'''
 		super(CrawlUserRelationshipCommandHandler, self).__init__()
-		self.update_template(template)
-		self.redis_config = redis_config
-
-	def update_template(self, template):
 		self.template = template
 		self.data_type = template["data_type"]
+		self.redis_config = redis_config
 
 	def need_flush(self, bucket):
 		# flush every time there is new data comes in

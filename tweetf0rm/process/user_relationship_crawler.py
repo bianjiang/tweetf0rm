@@ -12,16 +12,15 @@ from tweetf0rm.handler.crawl_user_relationship_command_handler import CrawlUserR
 from tweetf0rm.utils import full_stack, hash_cmd
 from tweetf0rm.exceptions import MissingArgs, NotImplemented
 from tweetf0rm.redis_helper import NodeQueue
-from tweetf0rm.handler import create_handler
 import copy, json
 
 
 class UserRelationshipCrawler(CrawlerProcess):
 
-	def __init__(self, node_id, crawler_id, apikeys, handler_configs = [], redis_config = None, proxies=None):
-		if (len(handler_configs) == 0):
+	def __init__(self, node_id, crawler_id, apikeys, handlers = None, redis_config = None, proxies=None):
+		if (handlers == None):
 			raise MissingArgs("you need a handler to write the data to...")
-		super(UserRelationshipCrawler, self).__init__(crawler_id, handler_configs=handler_configs)
+		super(UserRelationshipCrawler, self).__init__(crawler_id, handlers=handlers)
 		self.redis_config = redis_config
 		self.apikeys = copy.copy(apikeys)
 		self.node_id = node_id
@@ -91,7 +90,8 @@ class UserRelationshipCrawler(CrawlerProcess):
 
 				args = {
 					"user_id": cmd['user_id'],
-					"write_to_handlers": [create_handler(handler_config) for handler_config in self.handler_configs],
+					"write_to_handlers": self.handlers,
+					"cmd_handlers" : []
 				}
 
 				bucket = cmd["bucket"] if "bucket" in cmd else None
@@ -120,9 +120,9 @@ class UserRelationshipCrawler(CrawlerProcess):
 							#	depth: depth
 							#}
 							# will throw out exception if redis_config doesn't exist...
-							args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
+							args["cmd_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
 
-							logger.info("depth: %d, # of handlers: %d"%(depth, len(args['write_to_handlers'])))
+							logger.info("depth: %d, # of cmd_handlers: %d"%(depth, len(args['cmd_handlers'])))
 
 					except Exception as exc:
 						logger.warn(exc)
@@ -132,6 +132,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 				if func:
 					try:
 						func(**args)
+						del args['cmd_handlers']
 					except Exception as exc:
 						logger.error("%s"%exc)
 						try:

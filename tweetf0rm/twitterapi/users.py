@@ -63,13 +63,10 @@ class User(twython.Twython):
 
 		time.sleep(wait_for)
 
-	def find_all_followers(self, user_id=None, write_to_handlers = None, bucket="followers"):
+	def find_all_followers(self, user_id=None, write_to_handlers = [], cmd_handlers=[], bucket="followers"):
 
 		if (not user_id):
 			raise MissingArgs("user_id cannot be None")
-
-		if (write_to_handlers == None):
-			raise MissingArgs("come on, you gotta write the result to something...")
 
 		retry_cnt = MAX_RETRY_CNT
 		cursor = -1
@@ -79,7 +76,10 @@ class User(twython.Twython):
 
 				for handler in write_to_handlers:
 					handler.append(json.dumps(followers), bucket=bucket, key=user_id) 
-					
+				
+				for handler in cmd_handlers:
+					handler.append(json.dumps(followers), bucket=bucket, key=user_id) 
+
 				cursor = int(followers['next_cursor'])
 				
 				logger.debug("find #%d followers... NEXT_CURSOR: %d"%(len(followers["users"]), cursor))
@@ -97,13 +97,10 @@ class User(twython.Twython):
 		logger.info("finished find_all_followers for %s..."%(user_id))
 
 
-	def find_all_follower_ids(self, user_id=None, write_to_handlers = None, bucket = "follower_ids"):
+	def find_all_follower_ids(self, user_id=None, write_to_handlers = [], cmd_handlers=[], bucket = "follower_ids"):
 
 		if (not user_id):
 			raise MissingArgs("user_id cannot be None")
-
-		if (write_to_handlers == None):
-			raise MissingArgs("come on, you gotta write the result to something...")
 
 		retry_cnt = MAX_RETRY_CNT
 		cursor = -1
@@ -112,6 +109,9 @@ class User(twython.Twython):
 				follower_ids = self.get_followers_ids(user_id=user_id, cursor=cursor, count=200)
 
 				for handler in write_to_handlers:
+					handler.append(json.dumps(follower_ids), bucket=bucket, key=user_id)
+
+				for handler in cmd_handlers:
 					handler.append(json.dumps(follower_ids), bucket=bucket, key=user_id) 
 
 				cursor = int(follower_ids['next_cursor'])
@@ -131,13 +131,10 @@ class User(twython.Twython):
 		logger.info("finished find_all_follower_ids for %s..."%(user_id))
 
 
-	def find_all_friends(self, user_id=None, write_to_handlers=None, bucket="friends"):
+	def find_all_friends(self, user_id=None, write_to_handlers=[], cmd_handlers=[], bucket="friends"):
 
 		if (not user_id):
 			raise MissingArgs("user_id cannot be None")
-
-		if (write_to_handlers == None):
-			raise MissingArgs("come on, you gotta write the result to something...")
 
 		retry_cnt = MAX_RETRY_CNT
 		cursor = -1
@@ -146,8 +143,10 @@ class User(twython.Twython):
 				friends = self.get_friends_list(user_id=user_id, cursor=cursor, count=200)
 
 				for handler in write_to_handlers:
-					handler.append(json.dumps(friends), bucket=bucket, key=user_id) 
+					handler.append(json.dumps(friends), bucket=bucket, key=user_id)
 
+				for handler in cmd_handlers:
+					handler.append(json.dumps(friends), bucket=bucket, key=user_id) 
 
 				cursor = int(friends['next_cursor'])
 
@@ -166,13 +165,10 @@ class User(twython.Twython):
 		logger.info("finished find_all_friends for %s..."%(user_id))
 
 
-	def find_all_friend_ids(self, user_id=None, write_to_handlers=None, bucket="friend_ids"):
+	def find_all_friend_ids(self, user_id=None, write_to_handlers=[], cmd_handlers=[], bucket="friend_ids"):
 
 		if (not user_id):
 			raise MissingArgs("user_id cannot be None")
-
-		if (write_to_handlers == None):
-			raise MissingArgs("come on, you gotta write the result to something...")
 
 		retry_cnt = MAX_RETRY_CNT
 		cursor = -1
@@ -183,6 +179,8 @@ class User(twython.Twython):
 				for handler in write_to_handlers:
 					handler.append(json.dumps(friend_ids), bucket=bucket, key=user_id) 
 
+				for handler in cmd_handlers:
+					handler.append(json.dumps(friend_ids), bucket=bucket, key=user_id) 
 
 				cursor = int(friend_ids['next_cursor'])
 
@@ -201,13 +199,11 @@ class User(twython.Twython):
 		logger.info("finished find_all_friend_ids for %s..."%(user_id))
 
 
-	def fetch_user_timeline(self, user_id = None, write_to_handlers=None, bucket="timelines"):
+	def fetch_user_timeline(self, user_id = None, write_to_handlers=[], cmd_handlers=[], bucket="timelines"):
 
 		if not user_id:
 			raise Exception("user_timeline: user_id cannot be None")
 
-		if (write_to_handlers == None):
-			raise MissingArgs("come on, you gotta write the result to something...")
 
 		prev_max_id = -1
 		current_max_id = 0
@@ -252,6 +248,9 @@ class User(twython.Twython):
 
 		for tweet in timeline:
 			for handler in write_to_handlers:
+				handler.append(json.dumps(tweet), bucket=bucket, key=user_id)
+
+			for handler in cmd_handlers:
 				handler.append(json.dumps(tweet), bucket=bucket, key=user_id) 
 
 		logger.info("[%s] total tweets: %d "%(user_id, cnt))
