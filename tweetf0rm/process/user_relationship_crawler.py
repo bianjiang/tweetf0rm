@@ -101,22 +101,28 @@ class UserRelationshipCrawler(CrawlerProcess):
 					func = getattr(self.user_api, self.tasks[command])
 				elif (command in ['CRAWL_FRIENDS', 'CRAWL_FOLLOWERS']):
 					data_type = cmd['data_type']
-					depth = cmd["depth"] if "depth" in cmd else None
+					
+					try:
+						depth = cmd["depth"] if "depth" in cmd else None
+						depth = int(depth)
+						# for handler in self.handlers:
+						# 	if isinstance(handler, InMemoryHandler):
+						# 		inmemory_handler = handler
+						if (depth > 1):
+							template = copy.copy(cmd)
+							# template = {
+							#	network_type: "followers", # or friends
+							#	user_id: id,
+							#	data_type: 'ids' # object
+							#	depth: depth
+							#}
+							# will throw out exception if redis_config doesn't exist...
+							args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
 
-					#logger.debug("depth: %d"%(depth))
-					# for handler in self.handlers:
-					# 	if isinstance(handler, InMemoryHandler):
-					# 		inmemory_handler = handler
-					if (depth > 1):
-						template = copy.copy(cmd)
-						# template = {
-						#	network_type: "followers", # or friends
-						#	user_id: id,
-						#	data_type: 'ids' # object
-						#	depth: depth
-						#}
-						# will throw out exception if redis_config doesn't exist...
-						args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
+					except Exception as exc:
+						logger.info("depth: %d"%(depth))
+
+					
 					
 					func = getattr(self.user_api, self.tasks[command][data_type])
 				

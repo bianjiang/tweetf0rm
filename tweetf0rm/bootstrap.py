@@ -92,5 +92,14 @@ if __name__=="__main__":
 
 	with open(os.path.abspath(args.config), 'rb') as config_f:
 		config = json.load(config_f)	
-
-		start_server(config, proxies)
+		
+		try:
+			start_server(config, proxies)
+		except KeyboardInterrupt:
+			print()
+			logger.error('You pressed Ctrl+C!')
+			pass
+		except Exception as exc:		
+			logger.error(exc)
+		finally:
+			pass

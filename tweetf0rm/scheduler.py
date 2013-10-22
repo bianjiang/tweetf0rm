@@ -15,7 +15,7 @@ from tweetf0rm.proxies import proxy_checker
 from process.user_relationship_crawler import UserRelationshipCrawler
 #from handler.inmemory_handler import InMemoryHandler
 from handler import create_handler
-from tweetf0rm.redis_helper import NodeCoordinator
+from tweetf0rm.redis_helper import NodeCoordinator, NodeQueue
 import twython, pprint
 
 

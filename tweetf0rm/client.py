@@ -200,7 +200,7 @@ def print_avaliable_cmd():
 
 if __name__=="__main__":
 	import json, os
-	print_avaliable_cmd()
+	
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-c', '--config', help="config.json that contains a) twitter api keys; b) redis connection string;", required = True)
 	parser.add_argument('-cmd', '--command', help="the cmd you want to run, e.g., \"CRAWL_FRIENDS\"", required=True)
@@ -210,10 +210,12 @@ if __name__=="__main__":
 	parser.add_argument('-j', '--json', help="the location of the json file that has a list of user_ids or screen_names", required=False)
 	parser.add_argument('-o', '--output', help="the location of the output json file for storing user_ids", default='user_ids.json')
 	
+	try:
+		args = parser.parse_args()
 
-	args = parser.parse_args()
+		with open(os.path.abspath(args.config), 'rb') as config_f:
+			config = json.load(config_f)
 
-	with open(os.path.abspath(args.config), 'rb') as config_f:
-		config = json.load(config_f)
-
-		cmd(config, args)
+			cmd(config, args)
+	except:
+		print_avaliable_cmd()
