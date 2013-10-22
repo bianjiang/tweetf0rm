@@ -13,12 +13,12 @@ MAX_QUEUE_SIZE = 32767
 
 class CrawlerProcess(mp.Process):
 
-	def __init__(self, crawler_id, handlers = []):
+	def __init__(self, crawler_id, handler_configs = []):
 		super(CrawlerProcess, self).__init__()
 		self.crawler_id = crawler_id
 		self.queue = mp.Queue(maxsize=MAX_QUEUE_SIZE)
 		self.lock = mp.Lock()
-		self.handlers = handlers
+		self.handler_configs = handler_configs
 		logger.debug("number of handlers attached: %d"%(len(handlers)))
 
 

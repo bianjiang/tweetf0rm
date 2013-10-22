@@ -12,15 +12,16 @@ from tweetf0rm.handler.crawl_user_relationship_command_handler import CrawlUserR
 from tweetf0rm.utils import full_stack, hash_cmd
 from tweetf0rm.exceptions import MissingArgs, NotImplemented
 from tweetf0rm.redis_helper import NodeQueue
+from tweetf0rm.handler import create_handler
 import copy, json
 
 
 class UserRelationshipCrawler(CrawlerProcess):
 
-	def __init__(self, node_id, crawler_id, apikeys, handlers = None, redis_config = None, proxies=None):
-		if (handlers == None):
+	def __init__(self, node_id, crawler_id, apikeys, handler_configs = [], redis_config = None, proxies=None):
+		if (len(handler_configs) == 0):
 			raise MissingArgs("you need a handler to write the data to...")
-		super(UserRelationshipCrawler, self).__init__(crawler_id, handlers=handlers)
+		super(UserRelationshipCrawler, self).__init__(crawler_id, handler_configs=handler_configs)
 		self.redis_config = redis_config
 		self.apikeys = copy.copy(apikeys)
 		self.node_id = node_id
@@ -71,7 +72,6 @@ class UserRelationshipCrawler(CrawlerProcess):
 			#}
 			cmd = self.get_cmd()
 
-
 			command = cmd['cmd']
 
 			logger.debug("new cmd: %s [%s]"%(cmd, cmd['cmd_hash']))
@@ -91,7 +91,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 
 				args = {
 					"user_id": cmd['user_id'],
-					"write_to_handlers": self.handlers,
+					"write_to_handlers": [create_handler(handler_config) for handler_config in self.handler_configs],
 				}
 
 				bucket = cmd["bucket"] if "bucket" in cmd else None
@@ -120,16 +120,9 @@ class UserRelationshipCrawler(CrawlerProcess):
 							#	depth: depth
 							#}
 							# will throw out exception if redis_config doesn't exist...
-							found = False
-							for handler in args["write_to_handlers"]:
-								if (isinstance(handler, CrawlUserRelationshipCommandHandler)):
-									logger.info("just updating the template in CrawlUserRelationshipCommandHandler")
-									handler.update_template(template)
-									found = True
+							args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
 
-							if (not found):
-								logger.info("adding new CrawlUserRelationshipCommandHandler")
-								args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
+							logger.info("depth: %d, # of handlers: %d"%(depth, len(args['write_to_handlers'])))
 
 					except Exception as exc:
 						logger.warn(exc)
