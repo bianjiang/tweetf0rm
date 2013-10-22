@@ -89,10 +89,10 @@ Remember that Twitter's rate limit is per account as as well as per IP. So, you 
 To start the ``f0rm", you can simply run:
 
 	
-	python bootstrap.py -c config.json -p proxy.json
+	python bootstrap.py -c config.json -p proxies.json
 
 
-To issue a command to the ``f0rm``, you are basically pushing commands to redis. The client side hasn't finished yet, but you can take a look at ``client_test.py`` in the ``tests`` folder, and see how the commands should look like, e.g.,
+To issue a command to the ``f0rm``, you are basically pushing commands to redis. This is how the commands should look like, e.g.,
 	
 	cmd = {
 	 	"cmd": "CRAWL_FRIENDS",
@@ -112,12 +112,28 @@ To issue a command to the ``f0rm``, you are basically pushing commands to redis.
 	
 	cmd = {
 		"cmd": "CRAWL_USER_TIMELINE",
-		"user_id": 1948122342#53039176,
+		"user_id": 53039176,
 		"bucket": "timelines"
 	} 
 
 bucket determine where the results will be saved in the ``output`` folder (specified in ``config.json``). All twitter data are json encoded strings, and output files are normally named with the twitter user id, e.g., if you are crawling a user's timeline, all his/her tweets will be organized in the "timelines" sub-folder with his/her twitter id (numerical and unique identifier for each twitter user).
 
+There is a ``client.py`` script that helps you generate these commands and push to the local redis node queue. e.g., 
+
+	python tweetf0rm/client.py -c tests/config.json -cmd CRAWL_FRIENDS -d 1 -dt "ids" -uid 1948122342
+
+means you want to crawl all friends of ``uid=1948122342`` with ``depth`` as ``1`` and the results are just the twitter user ids of his/her friends. There are also commands you can use to crawl a list of users, e.g., 
+	
+	python tweetf0rm/client.py -c tests/config.json -cmd BATCH_CRAWL_FRIENDS -d 1 -dt "ids" -j user_ids.json
+
+instead of providing a specific ``user_id``, you provide a ``json`` file that contains a list of ``user_ids``.
+
+MISC
+------------
+
+There is also a script (``scripts/crawl_proxies.py``) for crawling proxies server list from spy.ru. It will crawl the http proxies listed in spy.ru, test each one and produce the ``proxies.json`` with valid proxies.
+
+Note that, if you don't use proxies, you can only have one crawler active, since Twitter's rate limit applies to both the account as well as the IP.
 
 
 ### License
