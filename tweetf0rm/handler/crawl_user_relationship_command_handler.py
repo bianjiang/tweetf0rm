@@ -33,8 +33,8 @@ def flush_cmd(bulk, data_type, template, redis_config):
 				user_id = element['id']
 			
 			t = copy.copy(template)
-			t["user_id"] = user_id
-			t["depth"] -= 1
+			t["user_id"] = int(user_id)
+			t["depth"] = int(t["depth"]) -1
 
 			node_id = get_keys_by_min_value(qsizes)[0]
 
