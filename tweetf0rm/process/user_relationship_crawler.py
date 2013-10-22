@@ -120,7 +120,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 							args["write_to_handlers"].append(CrawlUserRelationshipCommandHandler(template=template, redis_config=self.redis_config))
 
 					except Exception as exc:
-						logger.info("depth: %d"%(depth))
+						logger.warn(exc)
 
 					
 					
