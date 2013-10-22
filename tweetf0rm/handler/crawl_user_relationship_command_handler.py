@@ -12,7 +12,7 @@ from .base_handler import BaseHandler
 import multiprocessing as mp
 import futures, json, copy, time
 from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
-from tweetf0rm.utils import full_stack, get_keys_by_min_value
+from tweetf0rm.utils import full_stack, get_keys_by_min_value, hash_cmd
 import json
 
 def flush_cmd(bulk, data_type, template, redis_config):
@@ -44,6 +44,8 @@ def flush_cmd(bulk, data_type, template, redis_config):
 				node_queue = NodeQueue(node_id, redis_config=redis_config)
 				node_queues[node_id] = node_queue
 
+
+			t['cmd_hash'] = hash_cmd(t)
 			node_queue.put(t)
 			qsizes[node_id] += 1
 
