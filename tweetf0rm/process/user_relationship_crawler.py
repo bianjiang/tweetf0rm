@@ -121,8 +121,6 @@ class UserRelationshipCrawler(CrawlerProcess):
 
 					except Exception as exc:
 						logger.warn(exc)
-
-					
 					
 					func = getattr(self.user_api, self.tasks[command][data_type])
 				

@@ -94,7 +94,7 @@ class User(twython.Twython):
 					raise MaxRetryReached("max retry reached due to %s"%(exc))
 				
 
-		logger.info("finished find_all_followers for %d..."%(user_id))
+		logger.info("finished find_all_followers for %s..."%(user_id))
 
 
 	def find_all_follower_ids(self, user_id=None, write_to_handlers = None, bucket = "follower_ids"):
@@ -128,7 +128,7 @@ class User(twython.Twython):
 					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
 
-		logger.info("finished find_all_follower_ids for %d..."%(user_id))
+		logger.info("finished find_all_follower_ids for %s..."%(user_id))
 
 
 	def find_all_friends(self, user_id=None, write_to_handlers=None, bucket="friends"):
@@ -163,7 +163,7 @@ class User(twython.Twython):
 				if (retry_cnt == 0):
 					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
-		logger.info("finished find_all_friends for %d..."%(user_id))
+		logger.info("finished find_all_friends for %s..."%(user_id))
 
 
 	def find_all_friend_ids(self, user_id=None, write_to_handlers=None, bucket="friend_ids"):
@@ -198,7 +198,7 @@ class User(twython.Twython):
 				if (retry_cnt == 0):
 					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
-		logger.info("finished find_all_friend_ids for %d..."%(user_id))
+		logger.info("finished find_all_friend_ids for %s..."%(user_id))
 
 
 	def fetch_user_timeline(self, user_id = None, write_to_handlers=None, bucket="timelines"):
@@ -254,7 +254,7 @@ class User(twython.Twython):
 			for handler in write_to_handlers:
 				handler.append(json.dumps(tweet), bucket=bucket, key=user_id) 
 
-		logger.info("[%d] total tweets: %d "%(user_id, cnt))
+		logger.info("[%s] total tweets: %d "%(user_id, cnt))
 				
 
 
