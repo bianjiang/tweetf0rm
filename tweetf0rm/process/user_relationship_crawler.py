@@ -152,6 +152,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 							#raise
 						else:
 							#put current task back to queue...
+							logger.info('pushing current task back to the queue: %s'%(json.dumps(cmd)))
 							self.enqueue(cmd)
 
 						#logger.error(full_stack())
