@@ -143,6 +143,8 @@ class UserRelationshipCrawler(CrawlerProcess):
 							if (isinstance(init_user_api_exc, exceptions.StopIteration)): # no more proxy to try... so kill myself...
 								for handler in self.handlers:
 				 					handler.flush_all()
+
+				 				logger.warn('not enough proxy servers, kill me... %s'%(self.crawler_id))
 				 				# flush first
 								self.node_queue.put({
 									'cmd':'CRAWLER_FAILED',

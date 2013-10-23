@@ -103,5 +103,6 @@ if __name__=="__main__":
 			pass
 		except Exception as exc:		
 			logger.error(exc)
+			logger.error(full_stack())
 		finally:
 			pass

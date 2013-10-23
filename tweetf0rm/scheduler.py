@@ -121,6 +121,7 @@ class Scheduler(object):
 		qsizes = self.node_coordinator.node_qsizes()		
 
 		for cmd in queue.values():
+
 			node_id = get_keys_by_min_value(qsizes)[0]
 
 			node_queue = get_node_queue(self, node_id)			
@@ -143,6 +144,7 @@ class Scheduler(object):
 		elif(cmd['cmd'] == 'CRAWLER_FAILED'):
 			crawler_id = cmd['crawler_id']
 			if (crawler_id in self.crawlers):
+				logger.warn('%s just failed... redistributing its workload'%(crawler_id))
 				self.distribute_to_nodes(self.crawlers[crawler_id]['queue'])
 				# wait until it dies (flushed all the data...)
 				while(self.crawlers[crawler_id]['crawler'].is_alive()):
