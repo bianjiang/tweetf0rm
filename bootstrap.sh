@@ -1,9 +1,3 @@
 #!/bin/bash
 
-#launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
-#launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
-
-#mongod
-#redis-server /usr/local/etc/redis.conf
-
-python 
+PYTHONPATH=$PYTHONPATH:./tweetf0rm python ./tweetf0rm/bootstrap.py "$@"
