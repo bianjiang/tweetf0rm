@@ -145,10 +145,13 @@ class Scheduler(object):
 			crawler_id = cmd['crawler_id']
 			if (crawler_id in self.crawlers):
 				logger.warn('%s just failed... redistributing its workload'%(crawler_id))
-				self.distribute_to_nodes(self.crawlers[crawler_id]['queue'])
-				# wait until it dies (flushed all the data...)
-				while(self.crawlers[crawler_id]['crawler'].is_alive()):
-					time.sleep(60)
+				try:
+					self.distribute_to_nodes(self.crawlers[crawler_id]['queue'])
+					# wait until it dies (flushed all the data...)
+					while(self.crawlers[crawler_id]['crawler'].is_alive()):
+						time.sleep(60)
+				except Exception as exc:
+					logger.error(full_stack())
 			else:
 				logger.warn("whatever are you trying to do? crawler_id: [%s] is not valid..."%(crawler_id))
 		elif(cmd['cmd'] == 'CMD_FINISHED'):
