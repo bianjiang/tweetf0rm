@@ -9,8 +9,6 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s-[%(module)s][%(fun
 requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.WARNING)
 
-from nose.tools import nottest
-
 import sys, time, argparse, random, copy
 sys.path.append(".")
 from tweetf0rm.redis_helper import NodeQueue
