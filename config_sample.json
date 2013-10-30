@@ -23,7 +23,7 @@
 		"host": "localhost",
 		"port": 6379,
 		"db": 0,
-		"password": "iloveusm"
+		"password": "PASSWORD"
 	},
 	"verbose": "True",
 	"output": "./data"
