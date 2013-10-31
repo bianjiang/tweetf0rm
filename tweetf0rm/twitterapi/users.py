@@ -246,15 +246,18 @@ class User(twython.Twython):
 				if (retry_cnt == 0):
 					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
-		for tweet in timeline:
+		if (len(timeline) > 0):
+			for tweet in timeline:
+				for handler in write_to_handlers:
+					handler.append(json.dumps(tweet), bucket=bucket, key=user_id)
+
+				for handler in cmd_handlers:
+					handler.append(json.dumps(tweet), bucket=bucket, key=user_id)
+		else:
 			for handler in write_to_handlers:
-				handler.append(json.dumps(tweet), bucket=bucket, key=user_id)
+				handler.append(json.dumps({}), bucket=bucket, key=user_id)
 
-			for handler in cmd_handlers:
-				handler.append(json.dumps(tweet), bucket=bucket, key=user_id) 
-
-		logger.info("[%s] total tweets: %d "%(user_id, cnt))
-				
+		logger.info("[%s] total tweets: %d "%(user_id, cnt))				
 
 
 	def get_user_ids(self, seeds):

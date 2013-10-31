@@ -17,7 +17,7 @@ from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
 from tweetf0rm.utils import full_stack, node_id, public_ip
 from tweetf0rm.proxies import proxy_checker
 from tweetf0rm.scheduler import Scheduler
-import time, os, tarfile
+import time, os, tarfile, futures
 
 def check_config(config):
 	if ('apikeys' not in config or 'redis_config' not in config):
@@ -25,6 +25,7 @@ def check_config(config):
 
 def tarball_results(data_folder, bucket, output_tarball_foldler, timestamp):
 
+	logger.info("archiving bucket: [%s] at %s"%(bucket, timestamp))
 	data_folder = os.path.join(os.path.abspath(data_folder), bucket)
 
 	if (not os.path.exists(data_folder)):
@@ -91,6 +92,9 @@ def start_server(config, proxies):
 		if (not os.path.exists(folder_to_create)):
 			os.makedirs(folder_to_create)
 
+	logger.info("output to %s"%(ouput_folder))
+	logger.info("archived to %s"%(archive_output))
+
 	this_node_id = node_id()
 	node_queue = NodeQueue(this_node_id, redis_config=config['redis_config'])
 	node_queue.clear()
@@ -124,12 +128,16 @@ def start_server(config, proxies):
 			scheduler.enqueue(cmd)
 
 		if (time.time() - last_archive_ts > 3600):
-			with futures.ProcessPoolExecutor(max_workers=1) as executor:
 
-				for bucket in ["tweets", "followers", "follower_ids", "friends", "friend_ids", "timelines"]:
-					future = executor.submit(tarball_results, ouput_folder, bucket, archive_output, time.time() - 3600)
+			logger.info("start archive procedure...")
+			with futures.ProcessPoolExecutor(max_workers=len(buckets)) as executor:
 
-					future.add_done_callback(lambda f: logger.info("archive %s created? %s"%f.result()))
+				future_proxies = {executor.submit(tarball_results, ouput_folder, bucket, archive_output, int(time.time()) - 3600): bucket for bucket in buckets}
+		
+				for future in future_proxies:
+					future.add_done_callback(lambda f: logger.info("archive created? %s: [%s]"%f.result()))
+
+			last_archive_ts = time.time()
 				
 
 	# cmd = {
