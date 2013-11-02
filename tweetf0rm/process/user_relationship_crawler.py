@@ -42,18 +42,27 @@ class UserRelationshipCrawler(CrawlerProcess):
 		self.client_args = {"timeout": 300}
 		self.proxies = iter(proxies) if proxies else None
 		self.user_api = None
+
 		self.init_user_api()
 
+		#self.init_user_api()
+
 	def init_user_api(self): # this will throw StopIteration if all proxies have been tried...
-		if (self.proxies): 
-			self.client_args['proxies'] = next(self.proxies)['proxy_dict'] # this will throw out 
-			#logger.info("client_args: %s"%json.dumps(self.client_args))
+		if (self.proxies):
+			try:
+				self.client_args['proxies'] = next(self.proxies)['proxy_dict'] # this will throw out 
+				#logger.info("client_args: %s"%json.dumps(self.client_args))
+			except StopIteration as exc:
+				raise
+			except Exception as exc:
+				self.init_user_api()
 
 		if (self.user_api):
 			del self.user_api
 
 		#crawler_id=self.crawler_id, 
 		self.user_api = User(apikeys=self.apikeys, client_args=self.client_args)
+
 
 	def get_handlers(self):
 		return self.handlers
@@ -134,22 +143,23 @@ class UserRelationshipCrawler(CrawlerProcess):
 					try:
 						func(**args)
 						del args['cmd_handlers']
+						self.node_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd['cmd_hash'], "crawler_id":self.crawler_id})
 					except Exception as exc:
 						logger.error("%s"%exc)
 						try:
 							self.init_user_api()
-						except Exception as init_user_api_exc:
-							import exceptions
-							if (isinstance(init_user_api_exc, exceptions.StopIteration)): # no more proxy to try... so kill myself...
-								for handler in self.handlers:
-				 					handler.flush_all()
+						except StopIteration as init_user_api_exc:
+							# import exceptions
+							# if (isinstance(init_user_api_exc, exceptions.StopIteration)): # no more proxy to try... so kill myself...
+							for handler in self.handlers:
+			 					handler.flush_all()
 
-				 				logger.warn('not enough proxy servers, kill me... %s'%(self.crawler_id))
-				 				# flush first
-								self.node_queue.put({
-									'cmd':'CRAWLER_FAILED',
-									'crawler_id': self.crawler_id
-									})
+			 				logger.warn('not enough proxy servers, kill me... %s'%(self.crawler_id))
+			 				# flush first
+							self.node_queue.put({
+								'cmd':'CRAWLER_FAILED',
+								'crawler_id': self.crawler_id
+								})
 							return False
 							#raise
 						else:
@@ -158,8 +168,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 							self.enqueue(cmd)
 
 						#logger.error(full_stack())
-					else:
-						self.node_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd['cmd_hash'], "crawler_id":self.crawler_id})
+						
 				else:
 					logger.warn("whatever are you trying to do?")
 

@@ -41,6 +41,22 @@ class Scheduler(object):
 
 		logger.info("number of crawlers: %d"%(number_of_processes))
 
+		apikey_list = self.config['apikeys'].keys()
+
+
+		self.crawlers = {}
+		for idx in range(number_of_processes):
+			try:
+				self.new_crawler(self.config['apikeys'][apikey_list[idx]], config)
+			except:
+				pass
+
+		self.node_coordinator = NodeCoordinator(config['redis_config'])
+		self.node_coordinator.add_node(node_id)
+
+		logger.info("number of crawlers: %d created"%(number_of_processes))
+
+	def new_crawler(self, apikeys, config, crawler_proxies = None):
 		file_handler_config = {
 			"name": "FileHandler",
 			"args": {
@@ -48,39 +64,43 @@ class Scheduler(object):
 			}
 		}
 
-		apikey_list = self.config['apikeys'].keys()
-
-
-		crawlers = {}
-		for idx in range(number_of_processes):
-			try:
-				crawler_id = md5('%s:%s'%(self.node_id, idx))
-				apikeys = self.config['apikeys'][apikey_list[idx]]
-				
-				logger.debug('creating a new crawler: %s'%crawler_id)
-				
+		try:
+			#crawler_id = md5('%s:%s'%(self.node_id, idx))
+			#apikeys = self.config['apikeys'][apikey_list[idx]]
+			crawler_id = apikeys['app_key']
+			logger.debug('creating a new crawler: %s'%crawler_id)
+			if (not crawler_proxies):
 				crawler_proxies = next(self.proxy_generator) if self.proxy_generator else None
-				crawler = UserRelationshipCrawler(self.node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
-				crawlers[crawler_id] = {
-					'crawler': crawler,
-					'queue': {}
-				}
-				crawler.start()
-			except twython.exceptions.TwythonAuthError as exc:
-				logger.error('%s: %s'%(exc, apikeys))
+			crawler = UserRelationshipCrawler(self.node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
+			self.crawlers[crawler_id] = {
+				'apikeys': apikeys,
+				'crawler': crawler,
+				'queue': {},
+				'crawler_proxies': crawler_proxies
+			}
+			crawler.start()
+		except twython.exceptions.TwythonAuthError as exc:
+			logger.error('%s: %s'%(exc, apikeys))
+		except:
+			raise
 
-		self.crawlers = crawlers
-		self.node_coordinator = NodeCoordinator(config['redis_config'])
-		self.node_coordinator.add_node(node_id)
-
-		logger.info("number of crawlers: %d created"%(number_of_processes))
 
 	def is_alive(self):
 		a = [1 if self.crawlers[crawler_id]['crawler'].is_alive() else 0 for crawler_id in self.crawlers]
 		return sum(a) > 0
 
 	def crawler_status(self):
-		return [{crawler_id: True, 'qsize': len(self.crawlers[crawler_id]['queue'])} if self.crawlers[crawler_id]['crawler'].is_alive() else {crawler_id: False}  for crawler_id in self.crawlers]
+		status = []
+		for crawler_id in self.crawlers:
+			cc = self.crawlers[crawler_id]
+			if (not cc['crawler'].is_alive()):
+				self.new_crawler(cc['apikeys'], self.config, cc['crawler_proxies'])
+
+			status.append({crawler_id: cc['crawler'].is_alive(), 'qsize': len(cc['queue'])})
+
+		return status
+
+		#return [{crawler_id: True, 'qsize': len(self.crawlers[crawler_id]['queue'])}  else {crawler_id: False}  for crawler_id in self.crawlers]
 
 	def distribute_to(self):
 		current_qsize = None
@@ -159,7 +179,7 @@ class Scheduler(object):
 			try:
 				crawler_id = cmd['crawler_id']
 				del self.crawlers[crawler_id]['queue'][cmd['cmd_hash']]
-				logger.debug('removeing cmd: %s from [%s]'%(cmd['cmd_hash'], crawler_id))
+				logger.info('removed cmd: %s from [%s]'%(cmd['cmd_hash'], crawler_id))
 			except Exception as exc:
 				logger.warn("the cmd doesn't exist? %s: %s"%(cmd['cmd_hash'], exc))
 		else:
@@ -170,7 +190,7 @@ class Scheduler(object):
 
 			self.crawlers[crawler_id]['crawler'].enqueue(cmd)
 
-			logger.debug("pusing %s: [%s] to crawler: %s"%(cmd, cmd_hash, crawler_id))
+			logger.debug("pushed %s: [%s] to crawler: %s"%(cmd, cmd_hash, crawler_id))
 
 	def check_local_qsizes(self):
 		#logger.info(self.crawlers)
