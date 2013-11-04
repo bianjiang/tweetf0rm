@@ -28,6 +28,8 @@ class Scheduler(object):
 			
 			self.proxy_list = proxy_checker(proxies)
 
+			logger.info("number of live proxies: %d"%(len(self.proxy_list)))
+
 			# each process only get one apikey...  if there are more proxies than apikeys, each process can get more than one proxy that can be rotated when one fails. 
 			number_of_processes = min(len(self.config['apikeys']), len(self.proxy_list))
 

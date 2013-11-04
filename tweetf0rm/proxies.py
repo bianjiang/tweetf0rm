@@ -31,7 +31,7 @@ def check_proxy(proxy, timeout):
 		else:
 			return False, None
 	except Exception as exc:
-		logger.debug("proxy [%s] failed: %s"%(p['proxy'], exc))
+		logger.info("proxy [%s] failed: %s"%(p['proxy'], exc))
 		return False, None
 
 def proxy_checker(proxies):
