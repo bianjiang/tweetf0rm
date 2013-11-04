@@ -1,13 +1,12 @@
 tweetf0rm
 =========
 
-A Twitter crawler that helps you collect data from Twitter for research. Most of the heavy works are already done by [Twython](https://github.com/ryanmcgrath/twython). ``tweetf0rmer`` is just a collection of python scripts help to deal with errors such as connection failures. In most use cases, it will auto-restart when an exception occurs. Moreover, when the crawler exceeds the Twitter API's [rate limit](https://dev.twitter.com/docs/rate-limiting/1.1/limits), the crawler will pause itself and auto-restart later.
+A crawler that helps you collect data from Twitter for research. Most of the heavy works are already done by [Twython](https://github.com/ryanmcgrath/twython). ``tweetf0rm`` is just a collection of python scripts help to deal with parallelization, proxies, and errors such as connection failures. In most use cases, it will auto-restart when an exception occurs. And, when a crawler exceeds the Twitter API's [rate limit](https://dev.twitter.com/docs/rate-limiting/1.1/limits), the crawler will pause itself and auto-restart later.
 
-Currently, it can run on multiple computers and collaboratively ``farm`` tweets or twitter networks. The main communication channel is built on top of [redis](http://redis.io/) a high performance in-memory key-value store. It has its own scheduler that can balance the load of each worker machine. Moreover, multiple processes can also be run concurrently on each node with different http proxies (to work-around the twitter's rate limit).
+To workaround Twitter's rate limits, ``tweetf0rm`` can spawn multiple crawlers each with different proxy and twitter dev account on a single computer (or on multiple computers) and collaboratively ``farm`` user tweets and twitter relationship networks (i.e., friends and followers). The communication channel for coordinating among multiple crawlers is built on top of [redis](http://redis.io/) -- a high performance in-memory key-value store. It has its own scheduler that can balance the load of each worker (or worker machines).
 
-It's quite stable for the things that I want to do; but I has been running some of the scripts for 15 days without many hiccups.
+It's quite stable for the things that I want to do. I have collected billions of tweets from **2.8 millions** twitter users in about 2 weeks with a single machine.
 
-One of the long term goal is to use [boto](http://boto.readthedocs.org/en/latest/) to integrate with the Amazon EC2 cluster so that you can run multiple crawlers to workaround Twitter's API rate limit. Helps are welcome!
 
 Installation
 ------------
@@ -23,15 +22,15 @@ To run this, you will need:
 - [futures](https://pypi.python.org/pypi/futures) if you are on Python 2.7
 - [redis server](http://redis.io/) and [redis python library](https://pypi.python.org/pypi/redis)
 - [requests](http://www.python-requests.org/en/latest/)
+- (optional) [lxml](http://lxml.de/) if you want to use the ``crawl_proxies.py`` script to get a list of free proxies from http://spys.ru/en/http-proxy-list/.
 
+##### I haven't tested Python 3 yet... 
 
 Features
 ------------
 
 - Support running multiple crawler processes (through python ``multiprocessing``) with different proxies on single node;
 - Support a cluster of nodes to collaboratively ``f0rm`` tweets.
-
-##### I haven't tested Python 3 yet... 
 
 
 How to use
@@ -73,13 +72,16 @@ Even you only wants to run on one node with multiple crawler processes, you will
 				"password": "iloveusm"
 			},
 			"verbose": "True",
-			"output": "./data"
+			"output": "./data",
+			"archive_output": "./data"
 		}
+
+Most of these options are straightforward. ``output`` defines where the crawled data will be stored; ``archive_output`` defines where the gzipped files will be stored (without compression, it takes a lot of space to store the raw tweets; about 100G per 100,000 users tweets).
 
 The proxies need to be listed in ``proxy.json`` file like:
 
 		{
-			"proxies":["58.20.127.100:3128", "58.20.223.230:3128", "210.22.63.90:8080"]
+			"proxies": [{"66.35.68.146:8089": "http"}, {"69.197.132.80:7808": "http"}, {"198.56.208.37:8089": "http"}]
 		}
 
 The proxy will be verified upon bootstrap, and only the valid ones will be kept and used (currently it's not switching to a different proxy when a proxy server goes down, but will be added soon). There are a lot free proxy servers available.
@@ -89,7 +91,7 @@ Remember that Twitter's rate limit is per account as as well as per IP. So, you 
 To start the ``f0rm", you can simply run:
 
 	
-	python bootstrap.py -c config.json -p proxies.json
+	$ ./bootstrap.sh -c config.json -p proxies.json
 
 
 To issue a command to the ``f0rm``, you are basically pushing commands to redis. This is how the commands should look like, e.g.,
@@ -120,11 +122,11 @@ bucket determine where the results will be saved in the ``output`` folder (speci
 
 There is a ``client.py`` script that helps you generate these commands and push to the local redis node queue. e.g., 
 
-	python tweetf0rm/client.py -c tests/config.json -cmd CRAWL_FRIENDS -d 1 -dt "ids" -uid 1948122342
+	$ client.sh -c tests/config.json -cmd CRAWL_FRIENDS -d 1 -dt "ids" -uid 1948122342
 
 means you want to crawl all friends of ``uid=1948122342`` with ``depth`` as ``1`` and the results are just the twitter user ids of his/her friends. There are also commands you can use to crawl a list of users, e.g., 
 	
-	python tweetf0rm/client.py -c tests/config.json -cmd BATCH_CRAWL_FRIENDS -d 1 -dt "ids" -j user_ids.json
+	$ client.sh -c tests/config.json -cmd BATCH_CRAWL_FRIENDS -d 1 -dt "ids" -j user_ids.json
 
 instead of providing a specific ``user_id``, you provide a ``json`` file that contains a list of ``user_ids``.
 

@@ -26,5 +26,6 @@
 		"password": "PASSWORD"
 	},
 	"verbose": "True",
-	"output": "./data"
+	"output": "./data",
+	"archive_output": "./data"
 }
