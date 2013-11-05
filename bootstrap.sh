@@ -1,3 +1,3 @@
 #!/bin/bash
 
-PYTHONPATH=$PYTHONPATH:./tweetf0rm python2.7 ./tweetf0rm/bootstrap.py "$@"
+PYTHONPATH=$PYTHONPATH:./tweetf0rm python ./tweetf0rm/bootstrap.py "$@"
