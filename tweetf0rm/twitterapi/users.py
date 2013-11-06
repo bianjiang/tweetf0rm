@@ -94,7 +94,7 @@ class User(twython.Twython):
 					raise MaxRetryReached("max retry reached due to %s"%(exc))
 				
 
-		logger.info("finished find_all_followers for %s..."%(user_id))
+		logger.debug("finished find_all_followers for %s..."%(user_id))
 
 
 	def find_all_follower_ids(self, user_id=None, write_to_handlers = [], cmd_handlers=[], bucket = "follower_ids"):
@@ -128,7 +128,7 @@ class User(twython.Twython):
 					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
 
-		logger.info("finished find_all_follower_ids for %s..."%(user_id))
+		logger.debug("finished find_all_follower_ids for %s..."%(user_id))
 
 
 	def find_all_friends(self, user_id=None, write_to_handlers=[], cmd_handlers=[], bucket="friends"):
@@ -162,7 +162,7 @@ class User(twython.Twython):
 				if (retry_cnt == 0):
 					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
-		logger.info("finished find_all_friends for %s..."%(user_id))
+		logger.debug("finished find_all_friends for %s..."%(user_id))
 
 
 	def find_all_friend_ids(self, user_id=None, write_to_handlers=[], cmd_handlers=[], bucket="friend_ids"):
@@ -196,7 +196,7 @@ class User(twython.Twython):
 				if (retry_cnt == 0):
 					raise MaxRetryReached("max retry reached due to %s"%(exc))
 
-		logger.info("finished find_all_friend_ids for %s..."%(user_id))
+		logger.debug("finished find_all_friend_ids for %s..."%(user_id))
 
 
 	def fetch_user_timeline(self, user_id = None, write_to_handlers=[], cmd_handlers=[], bucket="timelines"):
@@ -257,19 +257,13 @@ class User(twython.Twython):
 			for handler in write_to_handlers:
 				handler.append(json.dumps({}), bucket=bucket, key=user_id)
 
-		logger.info("[%s] total tweets: %d "%(user_id, cnt))				
+		logger.debug("[%s] total tweets: %d "%(user_id, cnt))				
 
 
-	def get_user_ids(self, seeds):
+	def get_user_ids_by_screen_names(self, seeds):
 		#get user id first
-		screen_names = []
-		user_ids = set()
-		for each in seeds:
-			try:
-				user_id = int(each)
-				user_ids.add(user_id)
-			except:
-				screen_names.append(each)
+		screen_names = list(set(seeds))
+		user_ids = set()		
 
 		if len(screen_names) > 0:
 			users = self.lookup_user(screen_name=screen_names)
@@ -278,6 +272,17 @@ class User(twython.Twython):
 				user_ids.add(user['id'])
 
 		return user_ids
+
+	def get_users(self, seeds):
+		#get user id first
+		user_ids = list(set(seeds))
+		users = set()
+	
+
+		if len(user_ids) > 0:
+			users = self.lookup_user(user_id=user_ids)
+
+		return users
 
 
 		

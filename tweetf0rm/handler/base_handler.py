@@ -66,7 +66,7 @@ class BaseHandler(object):
 
 	def clear(self, bucket = None):
 		if (bucket):
-			logger.info("clear bucket: %s"%bucket)
+			logger.debug("clear bucket: %s"%bucket)
 			del self.buffer[bucket]
 			self.buffer[bucket] = dict()
 

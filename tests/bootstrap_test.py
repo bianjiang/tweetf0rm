@@ -96,7 +96,7 @@ class TestBootstrap:
 		
 		#inmemoryhandler = InMemoryHandler()
 		user_api = User(apikeys=apikeys)
-		userIds = user_api.get_user_ids(["AmericanCance"])
+		userIds = user_api.get_user_ids_by_screen_names(["AmericanCance"])
 		logger.info(userIds)
 
 	@nottest

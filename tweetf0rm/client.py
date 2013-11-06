@@ -90,7 +90,11 @@ avaliable_cmds = {
 		'bucket': {
 			'value': 'timelines'
 		}
-	}, 'GET_UIDS_FROM_SCREEN_NAMES': {}
+	}, 'GET_UIDS_FROM_SCREEN_NAMES': {
+
+	}, 'GET_USERS_FROM_IDS': {
+
+	}
 	}
 
 from tweetf0rm.twitterapi.users import User
@@ -127,8 +131,17 @@ def cmd(config, args):
 		with open(os.path.abspath(args.json), 'rb') as f, open(os.path.abspath(args.output), 'wb') as o_f:
 			screen_names = json.load(f)
 			user_api = User(apikeys=apikeys)
-			user_ids = user_api.get_user_ids(screen_names)
+			user_ids = user_api.get_user_ids_by_screen_names(screen_names)
 			json.dump(list(user_ids), o_f)
+	elif (args.command == 'GET_USERS_FROM_IDS'):
+		apikeys = config["apikeys"].values()[0]
+		if (not os.path.exists(args.json)):
+			raise Exception("doesn't exist... ")
+		with open(os.path.abspath(args.json), 'rb') as f, open(os.path.abspath(args.output), 'wb') as o_f:
+			user_ids = json.load(f)
+			user_api = User(apikeys=apikeys)
+			users = user_api.get_users(user_ids)
+			json.dump(list(users), o_f)
 	elif (args.command.startswith('BATCH_')):
 		command = args.command.replace('BATCH_', '')
 		args_dict = copy.copy(args.__dict__)
@@ -182,6 +195,9 @@ def print_avaliable_cmd():
 	}, 'BATCH_CRAWL_USER_TIMELINE': {
 		'-j/--json': dictionary['-j/--json']
 	}, 'GET_UIDS_FROM_SCREEN_NAMES': {
+		'-j/--json':  dictionary['-j/--json'],
+		'-o/--output':  dictionary['-o/--output']
+	}, 'GET_USERS_FROM_IDS': {
 		'-j/--json':  dictionary['-j/--json'],
 		'-o/--output':  dictionary['-o/--output']
 	}}

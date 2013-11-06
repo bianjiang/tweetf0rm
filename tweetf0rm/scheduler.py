@@ -181,7 +181,7 @@ class Scheduler(object):
 			try:
 				crawler_id = cmd['crawler_id']
 				del self.crawlers[crawler_id]['queue'][cmd['cmd_hash']]
-				logger.info('removed cmd: %s from [%s]'%(cmd['cmd_hash'], crawler_id))
+				logger.debug('removed cmd: %s from [%s]'%(cmd['cmd_hash'], crawler_id))
 			except Exception as exc:
 				logger.warn("the cmd doesn't exist? %s: %s"%(cmd['cmd_hash'], exc))
 		else:
