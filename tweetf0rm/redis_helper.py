@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 import redis, json
+from tweetf0rm.utils import full_stack, hash_cmd, md5, get_keys_by_min_value
 
 class RedisBase(object):
 
@@ -14,6 +15,7 @@ class RedisBase(object):
 		if (not redis_config):
 			redis_config = { 'host': 'localhost', 'port': 6379, 'db': 0}
 
+		self.redis_config = redis_config
 		self.__redis_connection = redis.StrictRedis(host=redis_config['host'], port=redis_config['port'], db=redis_config['db'])
 		self.password = redis_config['password']
 		self.namespace = namespace
@@ -82,6 +84,29 @@ class NodeCoordinator(RedisBase):
 		super(NodeCoordinator, self).__init__("coordinator", namespace="node", redis_config=redis_config)
 		self.active_nodes = '%s:active'%(self.key)
 		self.all_nodes = '%s:all'%(self.key)
+		self.nodes = {}
+
+	def get_node(self, node_id):
+		if (node_id in self.nodes):
+			node = self.nodes[node_id]
+		else:
+			node = NodeQueue(node_id, redis_config=self.redis_config)
+			self.nodes[node_id] = node
+
+		return node
+
+	def distribute_to_nodes(self, queue):
+
+		qsizes = self.node_qsizes()		
+
+		for cmd in queue.values():
+
+			node_id = get_keys_by_min_value(qsizes)[0]
+
+			node = self.get_node(node_id)			
+
+			node.put(cmd)
+			qsizes[node_id] += 1
 
 	def clear(self):
 		self.conn().delete(self.key)

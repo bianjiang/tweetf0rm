@@ -11,11 +11,12 @@ requests_log.setLevel(logging.WARNING)
 
 from nose.tools import nottest
 
-import sys, os, json, exceptions
+import sys, os, json, exceptions, time
 sys.path.append("..")
 
 from tweetf0rm.utils import full_stack, hash_cmd, md5, get_keys_by_min_value
 from tweetf0rm.proxies import proxy_checker
+from tweetf0rm.redis_helper import NodeCoordinator, NodeQueue
 
 class TestBootstrap:
 
@@ -30,7 +31,7 @@ class TestBootstrap:
 	def setup(self):
 		import sys, os, json
 		#sys.path.append("..")
-		with open(os.path.abspath('config.json'), 'rb') as config_f, open(os.path.abspath('proxy.json'), 'rb') as proxy_f:
+		with open(os.path.abspath('../../config.json'), 'rb') as config_f, open(os.path.abspath('proxies.json'), 'rb') as proxy_f:
 			self.config = json.load(config_f)
 			self.proxies = json.load(proxy_f)
 
@@ -108,7 +109,17 @@ class TestBootstrap:
 		#from tweetf0rm.handler.inmemory_handler import InMemoryHandler
 		#inmemory_handler = InMemoryHandler(verbose=False)
 
+	@nottest
+	def test_redis_connections(self):
+		nodes = {}
 
+		cnt = 0
+		while True:
+			nodes[cnt] = NodeQueue("node_id", redis_config=self.config['redis_config'])
+			cnt += 1
+			if (cnt % 5 == 0):
+				nodes.clear()
+			time.sleep(1)
 
 	@nottest
 	def test_split(self):

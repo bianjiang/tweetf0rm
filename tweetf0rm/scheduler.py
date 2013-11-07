@@ -130,29 +130,6 @@ class Scheduler(object):
 		qsizes = [len(self.crawlers[crawler_id]['queue']) for crawler_id in self.crawlers]
 		return sum(qsizes)
 
-	def distribute_to_nodes(self, queue):
-		node_queues = {}
-
-		def get_node_queue(node_id, redis_config):
-			if (node_id in node_queues):
-				node_queue = node_queues[node_id]
-			else:
-				node_queue = NodeQueue(node_id, redis_config=redis_config)
-				node_queues[node_id] = node_queue
-
-		qsizes = self.node_coordinator.node_qsizes()		
-
-		for cmd in queue.values():
-
-			node_id = get_keys_by_min_value(qsizes)[0]
-
-			node_queue = get_node_queue(self, node_id)			
-
-			node_queue.put(cmd)
-			qsizes[node_id] += 1
-
-
-
 
 	def enqueue(self, cmd):
 
@@ -168,7 +145,7 @@ class Scheduler(object):
 			if (crawler_id in self.crawlers):
 				logger.warn('%s just failed... redistributing its workload'%(crawler_id))
 				try:
-					self.distribute_to_nodes(self.crawlers[crawler_id]['queue'])
+					self.node_coordinator.distribute_to_nodes(self.crawlers[crawler_id]['queue'])
 					# wait until it dies (flushed all the data...)
 					while(self.crawlers[crawler_id]['crawler'].is_alive()):
 						time.sleep(60)

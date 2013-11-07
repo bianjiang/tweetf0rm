@@ -53,7 +53,7 @@ class FileHandler(BaseHandler):
 
 	def flush(self, bucket):
 
-		with futures.ProcessPoolExecutor(max_workers=1) as executor:
+		with futures.ProcessPoolExecutor(max_workers=3) as executor:
 			# for each bucket it's a dict, where the key needs to be the file name; and the value is a list of json encoded value
 			for bucket, items in self.buffer.iteritems():
 
@@ -63,7 +63,7 @@ class FileHandler(BaseHandler):
 					# send to a different process to operate, clear the buffer
 					self.clear(bucket)
 
-					self.futures.append(f)
+					#self.futures.append(f)
 					
 
 		return True

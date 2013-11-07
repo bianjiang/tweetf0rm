@@ -51,6 +51,11 @@ def flush_cmd(bulk, data_type, template, redis_config):
 
 			logger.debug("send [%s] to node: %s"%(json.dumps(t),node_id))
 
+		# intend to close all redis connections, but not sure yet...
+		node_queues.clear()
+
+		del node_coordinator
+
 			
 	except Exception as exc:
 		logger.error('error during flush: %s'%exc)
