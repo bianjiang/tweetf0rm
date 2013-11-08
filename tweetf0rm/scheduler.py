@@ -100,7 +100,7 @@ class Scheduler(object):
 		status = []
 		for crawler_id in self.crawlers:
 			cc = self.crawlers[crawler_id]
-			if (not cc['crawler'].is_alive()):
+			if ((not cc['crawler'].is_alive()) and time.time() - cc['retry_timer_start_ts'] > 1800): # retry 30 mins after the crawler dies... mostly the crawler died because "Twitter API returned a 503 (Service Unavailable), Over capacity"
 				self.new_crawler(cc['apikeys'], self.config, cc['crawler_proxies'])
 
 			status.append({crawler_id: cc['crawler'].is_alive(), 'qsize': len(cc['queue'])})
@@ -157,6 +157,7 @@ class Scheduler(object):
 						time.sleep(60)
 						wait_timer -= 60
 
+					self.crawlers[crawler_id]['retry_timer_start_ts'] = int(time.time())
 				except Exception as exc:
 					logger.error(full_stack())
 			else:
