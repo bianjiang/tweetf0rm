@@ -73,7 +73,12 @@ class Scheduler(object):
 			logger.debug('creating a new crawler: %s'%crawler_id)
 			if (not crawler_proxies):
 				crawler_proxies = next(self.proxy_generator) if self.proxy_generator else None
+
 			crawler = UserRelationshipCrawler(self.node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
+			
+			if (crawler_id in self.crawlers):
+				del self.crawlers[crawler_id]
+
 			self.crawlers[crawler_id] = {
 				'apikeys': apikeys,
 				'crawler': crawler,
@@ -146,9 +151,12 @@ class Scheduler(object):
 				logger.warn('%s just failed... redistributing its workload'%(crawler_id))
 				try:
 					self.node_coordinator.distribute_to_nodes(self.crawlers[crawler_id]['queue'])
+					wait_timer = 180
 					# wait until it dies (flushed all the data...)
-					while(self.crawlers[crawler_id]['crawler'].is_alive()):
+					while(self.crawlers[crawler_id]['crawler'].is_alive() && wait_timer > 0):
 						time.sleep(60)
+						wait_timer -= 60
+
 				except Exception as exc:
 					logger.error(full_stack())
 			else:

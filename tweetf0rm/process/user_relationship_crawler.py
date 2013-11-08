@@ -160,6 +160,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 								'cmd':'CRAWLER_FAILED',
 								'crawler_id': self.crawler_id
 								})
+							del self.node_queue
 							return False
 							#raise
 						else:
