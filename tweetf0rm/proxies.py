@@ -23,8 +23,8 @@ def check_proxy(proxy, timeout):
 	p = {'proxy':proxy,'proxy_dict':{proxy_type: '%s://%s'%(proxy_type, proxy_ip)}}
 
 	try:
-
-		r = requests.get(url, headers=headers, proxies=p['proxy_dict'], timeout=timeout)
+		s = requests.Session()
+		r = s.get(url,headers=headers, proxies=p['proxy_dict'], timeout=timeout, allow_redirects=True)
 
 		if (r.status_code == requests.codes.ok):
 			return True, p
@@ -40,15 +40,18 @@ def proxy_checker(proxies):
 	'''
 
 	logger.info('%d proxies to check'%(len(proxies)))
+	import multiprocessing as mp
+	
 
 	results = []
-	with futures.ProcessPoolExecutor(max_workers=100) as executor:
+	with futures.ProcessPoolExecutor(max_workers=mp.cpu_count()*10) as executor:
 
-		future_to_proxy = {executor.submit(check_proxy, proxy, 15): proxy for proxy in proxies}
+		future_to_proxy = {executor.submit(check_proxy, proxy, 30): proxy for proxy in proxies if proxy.values()[0] == 'http'}
 
 		for future in future_to_proxy:
 			future.add_done_callback(lambda f: results.append(f.result()))
 			
+		logger.info('%d http proxies to check'%(len(future_to_proxy)))
 
 		futures.wait(future_to_proxy)
 

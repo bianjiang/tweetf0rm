@@ -17,13 +17,13 @@ import copy, json
 
 class UserRelationshipCrawler(CrawlerProcess):
 
-	def __init__(self, node_id, crawler_id, apikeys, handlers = None, redis_config = None, proxies=None):
+	def __init__(self, node_id, crawler_id, apikeys, handlers, redis_config, proxies=None):
 		if (handlers == None):
 			raise MissingArgs("you need a handler to write the data to...")
-		super(UserRelationshipCrawler, self).__init__(crawler_id, handlers=handlers)
-		self.redis_config = redis_config
+
+		super(UserRelationshipCrawler, self).__init__(node_id, crawler_id, redis_config, handlers)
+
 		self.apikeys = copy.copy(apikeys)
-		self.node_id = node_id
 		self.tasks = {
 			"TERMINATE": "TERMINATE", 
 			"CRAWL_FRIENDS" : {
@@ -38,7 +38,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 			}, 
 			"CRAWL_USER_TIMELINE": "fetch_user_timeline"
 		}
-		self.node_queue = NodeQueue(self.node_id, redis_config=redis_config)		
+		self.node_queue = NodeQueue(self.node_id, redis_config=redis_config)
 		self.client_args = {"timeout": 300}
 		self.proxies = iter(proxies) if proxies else None
 		self.user_api = None
@@ -82,8 +82,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 
 			command = cmd['cmd']
 
-			if ('cmd_hash' in cmd):
-				logger.debug("new cmd: %s [%s]"%(cmd, cmd['cmd_hash']))
+			logger.debug("new cmd: %s"%(cmd))
 
 			redis_cmd_handler = None
 
@@ -93,7 +92,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 				for handler in self.handlers:
 				 	handler.flush_all()
 				break
-			if (command == 'CRAWLER_FLUSH'):
+			elif (command == 'CRAWLER_FLUSH'):
 				for handler in self.handlers:
 				 	handler.flush_all()
 			else:
@@ -142,8 +141,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 				if func:
 					try:
 						func(**args)
-						del args['cmd_handlers']
-						self.node_queue.put({'cmd':"CMD_FINISHED", "cmd_hash":cmd['cmd_hash'], "crawler_id":self.crawler_id})
+						del args['cmd_handlers']						
 					except Exception as exc:
 						logger.error("%s"%exc)
 						try:

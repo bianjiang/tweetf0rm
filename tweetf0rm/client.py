@@ -9,10 +9,12 @@ logging.basicConfig(level=logging.INFO, format='%(levelname)s-[%(module)s][%(fun
 requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.WARNING)
 
-import sys, time, argparse, random, copy
+import sys, time, argparse, random, copy, pprint
 sys.path.append(".")
-from tweetf0rm.redis_helper import NodeQueue
+from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
 from tweetf0rm.utils import node_id, public_ip, hash_cmd
+
+pp = pprint.PrettyPrinter(indent=4)
 
 avaliable_cmds = {
 	'CRAWL_FRIENDS': {
@@ -94,8 +96,12 @@ avaliable_cmds = {
 
 	}, 'GET_USERS_FROM_IDS': {
 
+	}, 'LIST_NODES':{
+
+	}, 'SHUTDOWN_NODE': {
+
 	}
-	}
+}
 
 from tweetf0rm.twitterapi.users import User
 import json, os
@@ -119,10 +125,11 @@ def cmd(config, args):
 	if (args.command not in avaliable_cmds):
 		raise Exception("not a valid command...")
 
-	nid = node_id()
-	logger.info("sending to %s"%(nid))
+	nid = args.node_id
+	
+	logger.info("node_id: %s"%(nid))
 	node_queue = NodeQueue(nid, redis_config=config['redis_config'])
-
+	node_coordinator = NodeCoordinator(config['redis_config'])
 	# this can be done locally without sending the command to the servers...
 	if (args.command == 'GET_UIDS_FROM_SCREEN_NAMES'):
 		apikeys = config["apikeys"].values()[0]
@@ -153,6 +160,11 @@ def cmd(config, args):
 				args_dict['user_id'] = user_id
 				cmd = new_cmd(command, args_dict)
 				node_queue.put(cmd)
+	elif (args.command == 'LIST_NODES'):
+		pp.pprint(node_coordinator.list_nodes())
+	elif (args.command == 'SHUTDOWN_NODE'):
+		node_coordinator.remove_node(nid)
+		pp.pprint(node_coordinator.list_nodes())
 	else:
 		args_dict = copy.copy(args.__dict__)
 		cmd = new_cmd(args.command, args_dict)
@@ -168,7 +180,8 @@ def print_avaliable_cmd():
 		'-dt/--data_type': '"ids" or "users" (default to ids) what the results are going to look like (either a list of twitter user ids or a list of user objects)',
 		'-d/--depth': 'the depth of the network; e.g., if it is 2, it will give you his/her (indicated by the -uid) friends\' friends',
 		'-j/--json': 'a json file that contains a list of screen_names or user_ids, depending on the command',
-		'-o/--output': ' the output json file (for storing user_ids from screen_names)'
+		'-o/--output': ' the output json file (for storing user_ids from screen_names)',
+		'-nid/--node_id':'the node_id that you want to interact with; default to the current machine...'
 	}
 	cmds =  {'CRAWL_FRIENDS': {
 		'-uid/--user_id': dictionary['-uid/--user_id'],
@@ -200,6 +213,9 @@ def print_avaliable_cmd():
 	}, 'GET_USERS_FROM_IDS': {
 		'-j/--json':  dictionary['-j/--json'],
 		'-o/--output':  dictionary['-o/--output']
+	}, 'LIST_NODES': {
+	}, 'SHUTDOWN_NODE': {
+		'-nid/--node_id':  dictionary['-nid/--node_id']
 	}}
 	
 
@@ -213,6 +229,7 @@ def print_avaliable_cmd():
 
 
 if __name__=="__main__":
+	nid = node_id()
 	import json, os
 	
 	parser = argparse.ArgumentParser()
@@ -223,6 +240,7 @@ if __name__=="__main__":
 	parser.add_argument('-d', '--depth', help="the depth", default=1)
 	parser.add_argument('-j', '--json', help="the location of the json file that has a list of user_ids or screen_names", required=False)
 	parser.add_argument('-o', '--output', help="the location of the output json file for storing user_ids", default='user_ids.json')
+	parser.add_argument('-nid', '--node_id', help="the node_id you want to interact with", default=nid)
 	
 	try:
 		args = parser.parse_args()
@@ -231,5 +249,6 @@ if __name__=="__main__":
 			config = json.load(config_f)
 
 			cmd(config, args)
-	except:
+	except Exception as exc:
+		logger.error(exc)
 		print_avaliable_cmd()

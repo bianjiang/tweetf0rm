@@ -24,6 +24,8 @@ class RedisBase(object):
 		if (self.password):
 			self.__auth()
 
+	def get_key(self):
+		return self.key
 
 	def __auth(self):
 		self.__redis_connection.execute_command("AUTH", self.password)
@@ -33,9 +35,12 @@ class RedisBase(object):
 		return self.__redis_connection
 
 class RedisQueue(RedisBase):
-
-	def __init__(self, name, namespace='queue', redis_config=None):
+	
+	def __init__(self, name, queue_type='lifo', namespace='queue', redis_config=None):
 		super(RedisQueue, self).__init__(name, namespace=namespace, redis_config=redis_config)
+		if (queue_type not in ['fifo', 'lifo']):
+			raise Exception("queue_type has to be either fifo or lifo")
+		self.queue_type = queue_type
 
 	def qsize(self):
 		"""Return the approximate size of the queue."""
@@ -49,15 +54,22 @@ class RedisQueue(RedisBase):
 		"""Put item into the queue."""
 		self.conn().rpush(self.key, json.dumps(item))
 
+
 	def get(self, block=True, timeout=None):
 		"""Remove and return an item from the queue. 
 
 		If optional args block is true and timeout is None (the default), block
 		if necessary until an item is available."""
 		if block:
-			item = self.conn().blpop(self.key, timeout=timeout)
+			if (self.queue_type == 'fifo'):
+				item = self.conn().blpop(self.key, timeout=timeout)
+			elif (self.queue_type == 'lifo'):
+				item = self.conn().brpop(self.key, timeout=timeout)
 		else:
-			item = self.conn().lpop(self.key)
+			if (self.queue_type == 'fifo'):
+				item = self.conn().lpop(self.key)
+			elif (self.queue_type == 'lifo'):
+				item = self.conn().rpop(self.key)
 
 		if item:
 			item = json.loads(item[1])
@@ -71,6 +83,11 @@ class RedisQueue(RedisBase):
 		"""Clear out the queue"""
 		self.conn().delete(self.key)
 
+class CrawlerQueue(RedisQueue):
+
+	def __init__(self, node_id, crawler_id, redis_config=None):
+		super(CrawlerQueue, self).__init__('%s:%s'%(node_id,crawler_id), redis_config=redis_config)
+
 class NodeQueue(RedisQueue):
 
 	def __init__(self, node_id, redis_config=None):
@@ -82,8 +99,7 @@ class NodeCoordinator(RedisBase):
 	'''
 	def __init__(self, redis_config=None):
 		super(NodeCoordinator, self).__init__("coordinator", namespace="node", redis_config=redis_config)
-		self.active_nodes = '%s:active'%(self.key)
-		self.all_nodes = '%s:all'%(self.key)
+		self.nodes_key = '%s:nodes'%(self.key)
 		self.nodes = {}
 
 	def get_node(self, node_id):
@@ -95,11 +111,11 @@ class NodeCoordinator(RedisBase):
 
 		return node
 
-	def distribute_to_nodes(self, queue):
+	def distribute_to_nodes(self, crawler_queue):
 
 		qsizes = self.node_qsizes()		
 
-		for cmd in queue.values():
+		while (crawler_queue.get(timeout=60)):
 
 			node_id = get_keys_by_min_value(qsizes)[0]
 
@@ -109,26 +125,33 @@ class NodeCoordinator(RedisBase):
 			qsizes[node_id] += 1
 
 	def clear(self):
-		self.conn().delete(self.key)
+		self.conn().delete('%s:*'%self.key)
 
 	def add_node(self, node_id):
-		self.conn().sadd(self.active_nodes, node_id)
-		self.conn().sadd(self.all_nodes, node_id)
+		self.conn().sadd(self.nodes_key, node_id)
 
 	def remove_node(self, node_id):
 		''' Only remove the node from the active list;'''
-		self.conn().srem(self.active_nodes, node_id)
+		self.conn().srem(self.nodes_key, node_id)
 
-	def node_queue_key(self, node_id):
-		return 'queue:%s'%(node_id)
+	def list_nodes(self):
+		node_ids = self.conn().smembers(self.nodes_key)
+		return node_ids
+
 
 	def node_qsizes(self):
 		'''
 		List the size of all active nodes' queues
 		'''
-		node_ids = self.conn().smembers(self.active_nodes)
+		node_ids = self.conn().smembers(self.nodes_key)
 
-		qsizes = {node_id:self.conn().llen(self.node_queue_key(node_id)) for node_id in node_ids}
+		qsizes = {}
+		for node_id in node_ids:
+			qsize = 0
+			for crawler_queue_key in self.conn().keys('queue:%s:*'%node_id):
+				qsize += self.conn().llen(crawler_queue_key)	
+
+			qsizes[node_id] = node_qsize
 
 		return qsizes
 

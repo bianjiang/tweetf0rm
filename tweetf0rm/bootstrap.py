@@ -67,7 +67,8 @@ def tarball_results(data_folder, bucket, output_tarball_foldler, timestamp):
 				return True, gz_file
 
 	return False, gz_file
-			#tar.add()
+
+
 def start_server(config, proxies):
 	import copy
 	
@@ -104,25 +105,32 @@ def start_server(config, proxies):
 	logger.info('starting node_id: %s'%this_node_id)
 
 	node_coordinator = NodeCoordinator(config['redis_config'])
-	#time.sleep(5)
-	# the main event loop, actually we don't need one, since we can just join on the crawlers and don't stop until a terminate command to each crawler, but we need one to check on redis command queue ...
+	#node_coordinator.clear()
+	
+	#the main event loop, actually we don't need one, since we can just join on the crawlers and don't stop until a terminate command is issued to each crawler;
+	#but we need one to report the status of each crawler and perform the tarball tashs...
 	
 	last_archive_ts = time.time() + 3600 # the first archive event starts 2 hrs later... 
 	pre_time = time.time()
+	last_load_balancing_task_ts = time.time()
 	while True:
 		# block, the main process...for a command
 		if(not scheduler.is_alive()):
 			logger.info("no crawler is alive... i'm done too...")
-			break;
+			break
 
 		cmd = node_queue.get(block=True, timeout=360)
 
 		if cmd:
 			scheduler.enqueue(cmd)
+
+		if (time.time() - last_load_balancing_task_ts > 1800): # try to balance the local queues every 30 mins
+			last_load_balancing_task_ts = time.time()
+			cmd = {'cmd': 'BALANCING_LOAD'}
+			scheduler.enqueue(cmd)
 		
 		if (time.time() - pre_time > 120):
 			logger.info(pprint.pformat(scheduler.crawler_status()))
-			#logger.info('local queue_sizes: %s'%scheduler.check_local_qsizes())
 			pre_time = time.time()
 			cmd = {'cmd': 'CRAWLER_FLUSH'}
 			scheduler.enqueue(cmd)
@@ -139,27 +147,6 @@ def start_server(config, proxies):
 
 			last_archive_ts = time.time()
 				
-
-	# cmd = {
-	# 	"cmd": "CRAWL_FRIENDS",
-	# 	"user_id": 1948122342,
-	# 	"data_type": "ids",
-	# 	"depth": 2,
-	# 	"bucket":"friend_ids"
-	# }
-	# cmd = {
-	# 	"cmd": "CRAWL_FRIENDS",
-	# 	"user_id": 1948122342,
-	# 	"data_type": "users",
-	# 	"depth": 2,
-	# 	"bucket":"friends"
-	# }
-	# # cmd = {
-	# # 	"cmd": "CRAWL_USER_TIMELINE",
-	# # 	"user_id": 1948122342#53039176,
-	##	"bucket": "timelines"
-	# # }
-
 
 if __name__=="__main__":
 	parser = argparse.ArgumentParser()
