@@ -39,11 +39,14 @@ def tarball_results(data_folder, bucket, output_tarball_foldler, timestamp):
 	gz_file = os.path.join(output_tarball_foldler, '%s.tar.gz'%timestamp) 
 	ll = []
 	
+	ignores = ['.DS_Store']
 	for root, dirs, files in os.walk(data_folder):
 		if (len(files) > 0):
 			with tarfile.open(gz_file, "w:gz") as tar:
 				cnt = 0
 				for f in files:
+					if (f in ignores):
+						continue
 					f_abspath = os.path.join(root, f)
 					(mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(f_abspath)
 
@@ -114,26 +117,13 @@ def start_server(config, proxies):
 	pre_time = time.time()
 	last_load_balancing_task_ts = time.time()
 	while True:
-		# block, the main process...for a command
-		if(not scheduler.is_alive()):
-			logger.info("no crawler is alive... i'm done too...")
-			break
-
-		cmd = node_queue.get(block=True, timeout=360)
-
-		if cmd:
-			scheduler.enqueue(cmd)
-
-		if (time.time() - last_load_balancing_task_ts > 1800): # try to balance the local queues every 30 mins
-			last_load_balancing_task_ts = time.time()
-			cmd = {'cmd': 'BALANCING_LOAD'}
-			scheduler.enqueue(cmd)
 		
 		if (time.time() - pre_time > 120):
 			logger.info(pprint.pformat(scheduler.crawler_status()))
 			pre_time = time.time()
-			cmd = {'cmd': 'CRAWLER_FLUSH'}
-			scheduler.enqueue(cmd)
+			if (scheduler.is_alive()):
+				cmd = {'cmd': 'CRAWLER_FLUSH'}
+				scheduler.enqueue(cmd)
 
 		if (time.time() - last_archive_ts > 3600):
 
@@ -146,6 +136,22 @@ def start_server(config, proxies):
 					future.add_done_callback(lambda f: logger.info("archive created? %s: [%s]"%f.result()))
 
 			last_archive_ts = time.time()
+
+		# block, the main process...for a command
+		if(not scheduler.is_alive()):
+			logger.info("no crawler is alive... i'm done too...")
+			time.sleep(120) # sleep for a minute and retry
+			continue
+
+		if (time.time() - last_load_balancing_task_ts > 1800): # try to balance the local queues every 30 mins
+			last_load_balancing_task_ts = time.time()
+			cmd = {'cmd': 'BALANCING_LOAD'}
+			scheduler.enqueue(cmd)
+
+		cmd = node_queue.get(block=True, timeout=360)
+
+		if cmd:
+			scheduler.enqueue(cmd)
 				
 
 if __name__=="__main__":

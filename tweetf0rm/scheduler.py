@@ -106,10 +106,14 @@ class Scheduler(object):
 		status = []
 		for crawler_id in self.crawlers:
 			cc = self.crawlers[crawler_id]
-			if ((not cc['crawler'].is_alive()) and time.time() - cc['retry_timer_start_ts'] > 1800): # retry 30 mins after the crawler dies... mostly the crawler died because "Twitter API returned a 503 (Service Unavailable), Over capacity"
-				self.new_crawler(self.node_id, cc['apikeys'], self.config, cc['crawler_proxies'])
+			if ((not cc['crawler'].is_alive())): 
+				if ('retry_timer_start_ts' in cc and (time.time() - cc['retry_timer_start_ts'] > 1800)):
+					# retry 30 mins after the crawler dies... mostly the crawler died because "Twitter API returned a 503 (Service Unavailable), Over capacity"
+					self.new_crawler(self.node_id, cc['apikeys'], self.config, cc['crawler_proxies'])
+				else:
+					cc['retry_timer_start_ts'] = int(time.time())
 
-			status.append({crawler_id: cc['crawler'].is_alive(), 'qsize': cc['crawler_queue'].qsize(), 'crawler_queue_key': cc['crawler_queue'].get_key()})
+			status.append({'crawler_id':crawler_id, 'alive?': cc['crawler'].is_alive(), 'qsize': cc['crawler_queue'].qsize(), 'crawler_queue_key': cc['crawler_queue'].get_key()})
 
 		return status
 
@@ -118,10 +122,15 @@ class Scheduler(object):
 		Find the crawler that has the most load at this moment, and redistribut its item;
 		Crawler is on a different subprocess, so we have to use redis to coordinate the redistribution...
 		'''
+
 		sorted_queues = self.sorted_local_queue(False)
 		max_crawler_id, max_qsize = sorted_queues[-1]
 		min_crawler_id, min_qsize = sorted_queues[0]
+		logger.info("crawler with max_qsize: %s (%d)"%(max_crawler_id, max_qsize))
+		logger.info("crawler with min_qsize: %s (%d)"%(min_crawler_id, min_qsize))
+		logger.info("max_qsize - min_qsize > 0.5 * min_qsize ?: %r"%((max_qsize - min_qsize > 0.5 * min_qsize)))
 		if (max_qsize - min_qsize > 0.5 * min_qsize):
+			logger.info("load balancing process started...")
 			cmds = []
 			controls = []
 			for i in range(int(0.3 * min_qsize)):
@@ -139,6 +148,22 @@ class Scheduler(object):
 			for cmd in cmds:
 				self.enqueue(cmd)
 
+	def redistribute_crawler_queue(self, crawler_id):
+		if (crawler_id in self.crawlers):
+			logger.warn('%s just failed... redistributing its workload'%(crawler_id))
+			try:
+				self.node_coordinator.distribute_to_nodes(self.crawlers[crawler_id]['crawler_queue'])
+				wait_timer = 180
+				# wait until it dies (flushed all the data...)
+				while(self.crawlers[crawler_id]['crawler'].is_alive() and wait_timer > 0):
+					time.sleep(60)
+					wait_timer -= 60
+
+				self.crawlers[crawler_id]['retry_timer_start_ts'] = int(time.time())
+			except Exception as exc:
+				logger.error(full_stack())
+		else:
+			logger.warn("whatever are you trying to do? crawler_id: [%s] is not valid..."%(crawler_id))
 
 	def enqueue(self, cmd):
 		
@@ -150,28 +175,15 @@ class Scheduler(object):
 			self.balancing_load()
 		elif(cmd['cmd'] == 'CRAWLER_FAILED'):
 			crawler_id = cmd['crawler_id']
-			if (crawler_id in self.crawlers):
-				logger.warn('%s just failed... redistributing its workload'%(crawler_id))
-				try:
-					self.node_coordinator.distribute_to_nodes(self.crawlers[crawler_id]['crawler_queue'])
-					wait_timer = 180
-					# wait until it dies (flushed all the data...)
-					while(self.crawlers[crawler_id]['crawler'].is_alive() and wait_timer > 0):
-						time.sleep(60)
-						wait_timer -= 60
-
-					self.crawlers[crawler_id]['retry_timer_start_ts'] = int(time.time())
-				except Exception as exc:
-					logger.error(full_stack())
-			else:
-				logger.warn("whatever are you trying to do? crawler_id: [%s] is not valid..."%(crawler_id))
+			self.redistribute_crawler_queue(crawler_id)
 		else:
 			'''distribute item to the local crawler that has the least tasks in queue'''
-			crawler_id, qsize = self.sorted_local_queue(False)[0]
+			for crawler_id, qsize in self.sorted_local_queue(False):
+				if self.crawlers[crawler_id]['crawler'].is_alive():
+					self.crawlers[crawler_id]['crawler_queue'].put(cmd)
 
-			self.crawlers[crawler_id]['crawler_queue'].put(cmd)
-
-			logger.debug("pushed %s to crawler: %s"%(cmd, crawler_id))
+					logger.debug("pushed %s to crawler: %s"%(cmd, crawler_id))
+					break
 
 	def check_crawler_qsizes(self):
 		return {crawler_id:self.crawlers[crawler_id]['crawler_queue'].qsize() for crawler_id in self.crawlers}

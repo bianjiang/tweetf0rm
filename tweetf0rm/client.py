@@ -13,6 +13,7 @@ import sys, time, argparse, random, copy, pprint
 sys.path.append(".")
 from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
 from tweetf0rm.utils import node_id, public_ip, hash_cmd
+from tweetf0rm.exceptions import NotImplemented
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -100,6 +101,8 @@ avaliable_cmds = {
 
 	}, 'SHUTDOWN_NODE': {
 
+	}, 'NODE_QSIZES': {
+
 	}
 }
 
@@ -162,9 +165,13 @@ def cmd(config, args):
 				node_queue.put(cmd)
 	elif (args.command == 'LIST_NODES'):
 		pp.pprint(node_coordinator.list_nodes())
+	elif (args.command == 'NODE_QSIZES'):
+		raise NotImplemented("NotImplemented yet...")
+		#pp.pprint(node_coordinator.list_nodes())
 	elif (args.command == 'SHUTDOWN_NODE'):
-		node_coordinator.remove_node(nid)
-		pp.pprint(node_coordinator.list_nodes())
+		#node_coordinator.remove_node(nid)
+		#pp.pprint(node_coordinator.list_nodes())
+		raise NotImplemented("NotImplemented yet...")
 	else:
 		args_dict = copy.copy(args.__dict__)
 		cmd = new_cmd(args.command, args_dict)
@@ -215,6 +222,8 @@ def print_avaliable_cmd():
 		'-o/--output':  dictionary['-o/--output']
 	}, 'LIST_NODES': {
 	}, 'SHUTDOWN_NODE': {
+		'-nid/--node_id':  dictionary['-nid/--node_id']
+	}, 'NODE_QSIZES':{
 		'-nid/--node_id':  dictionary['-nid/--node_id']
 	}}
 	
