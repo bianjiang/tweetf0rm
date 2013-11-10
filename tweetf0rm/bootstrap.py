@@ -139,7 +139,7 @@ def start_server(config, proxies):
 
 		# block, the main process...for a command
 		if(not scheduler.is_alive()):
-			logger.info("no crawler is alive... i'm done too...")
+			logger.info("no crawler is alive... waiting to recreate all crawlers...")
 			time.sleep(120) # sleep for a minute and retry
 			continue
 

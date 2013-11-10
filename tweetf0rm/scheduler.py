@@ -81,7 +81,7 @@ class Scheduler(object):
 		crawler = UserRelationshipCrawler(node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
 		
 		if (crawler_id in self.crawlers):
-			self.crawlers[crawler_id].clear()
+			#self.crawlers[crawler_id].clear()
 			del self.crawlers[crawler_id]
 
 		self.crawlers[crawler_id] = {
