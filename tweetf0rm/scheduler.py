@@ -139,9 +139,9 @@ class Scheduler(object):
 			logger.info("load balancing process started...")
 			cmds = []
 			controls = []
-			for i in range(int(0.3 * min_qsize)):
+			for i in range(int(0.3 * (max_qsize - min_qsize))):
 				cmd = self.crawlers[max_crawler_id]['crawler_queue'].get()
-				if (cmd in control_cmds):
+				if (cmd['cmd'] in control_cmds):
 					controls.append(cmd)
 				else:
 					cmds.append(cmd)
