@@ -76,7 +76,7 @@ def crawl_spys_ru(page):
 				if cnt > 3:
 					break
 
-			if (proxy):
+			if (proxy and proxy_type == 'http'):
 				#proxies.append((proxy, proxy_type, country))
 				proxies.append({proxy: proxy_type})
 
@@ -95,9 +95,26 @@ if __name__=="__main__":
 	for i in range(5):
 		proxies.extend(crawl_spys_ru(i))
 
-	proxies = [p['proxy'] for p in proxy_checker(proxies)]
+	# check if there is a proxies.json locally, merge the check results rather than overwrite it
+	if (os.path.exists(os.path.abspath(args.output))):
+		with open(os.path.abspath(args.output), 'rb') as proxy_f:
+			proxies.extend(json.load(proxy_f)['proxies'])
 
-	logger.info(len(proxies))
+
+	ips = []
+	proxy_list = []
+	for proxy in proxies:
+		ip = proxy.keys()[0]
+		proxy_type = proxy.values()[0]
+
+		if (ip not in ips):
+			ips.append(ip)
+			proxy_list.append({ip: proxy_type})
+
+
+	proxies = [p['proxy'] for p in proxy_checker(proxy_list)]
+
+	logger.info("number of proxies that are still alive: %d"%len(proxies))
 	with open(os.path.abspath(args.output), 'wb') as proxy_f:
 		json.dump({'proxies':proxies}, proxy_f)
 	
