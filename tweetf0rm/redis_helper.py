@@ -92,6 +92,15 @@ class NodeQueue(RedisQueue):
 
 	def __init__(self, node_id, redis_config=None):
 		super(NodeQueue, self).__init__(node_id, redis_config=redis_config)
+		self.node_id = node_id
+
+	def clear_all_queues(self):
+		'''This will not only clear the node queue (mostly for control cmds); but also the crawlers' cmd queues to give you a fresh start'''
+		#self.conn().delete('queue:%s*'%(self.node_id))
+		for key in self.conn().keys('queue:%s:*'%self.node_id):
+			self.conn().delete(key)
+
+		self.conn().delete('queue:%s'%self.node_id)
 
 class NodeCoordinator(RedisBase):
 	'''

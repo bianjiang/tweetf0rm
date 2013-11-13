@@ -103,6 +103,8 @@ avaliable_cmds = {
 
 	}, 'NODE_QSIZES': {
 
+	}, 'CLEAR_NODE_QUEUES': {
+
 	}
 }
 
@@ -172,6 +174,8 @@ def cmd(config, args):
 		#node_coordinator.remove_node(nid)
 		#pp.pprint(node_coordinator.list_nodes())
 		raise NotImplemented("NotImplemented yet...")
+	elif (args.command == 'CLEAR_NODE_QUEUES'):
+		node_queue.clear_all_queues()
 	else:
 		args_dict = copy.copy(args.__dict__)
 		cmd = new_cmd(args.command, args_dict)
@@ -224,6 +228,8 @@ def print_avaliable_cmd():
 	}, 'SHUTDOWN_NODE': {
 		'-nid/--node_id':  dictionary['-nid/--node_id']
 	}, 'NODE_QSIZES':{
+		'-nid/--node_id':  dictionary['-nid/--node_id']
+	}, 'CLEAR_NODE_QUEUES':{
 		'-nid/--node_id':  dictionary['-nid/--node_id']
 	}}
 	
