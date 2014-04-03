@@ -124,7 +124,8 @@ class NodeCoordinator(RedisBase):
 
 		qsizes = self.node_qsizes()		
 
-		while (crawler_queue.get(timeout=60)):
+		cmd = crawler_queue.get(timeout=60)
+		while (cmd):
 
 			node_id = get_keys_by_min_value(qsizes)[0]
 
@@ -132,6 +133,8 @@ class NodeCoordinator(RedisBase):
 
 			node.put(cmd)
 			qsizes[node_id] += 1
+
+			cmd = crawler_queue.get(timeout=60)
 
 	def clear(self):
 		self.conn().delete('%s:*'%self.key)
@@ -160,7 +163,7 @@ class NodeCoordinator(RedisBase):
 			for crawler_queue_key in self.conn().keys('queue:%s:*'%node_id):
 				qsize += self.conn().llen(crawler_queue_key)	
 
-			qsizes[node_id] = node_qsize
+			qsizes[node_id] = qsize
 
 		return qsizes
 
