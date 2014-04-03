@@ -89,6 +89,17 @@ avaliable_cmds = {
 		'bucket': {
 			'value': 'timelines'
 		}
+	},'CRAWL_TWEET': {
+		'tweet_id' : {
+			'value':0
+		},
+		'bucket': {
+			'value': 'tweets'
+		}
+	}, 'BATCH_CRAWL_TWEET': {
+		'bucket': {
+			'value': 'tweets'
+		}
 	}, 'BATCH_CRAWL_USER_TIMELINE': {
 		'bucket': {
 			'value': 'timelines'
@@ -155,16 +166,24 @@ def cmd(config, args):
 			users = user_api.get_users(user_ids)
 			json.dump(list(users), o_f)
 	elif (args.command.startswith('BATCH_')):
-		command = args.command.replace('BATCH_', '')
+		new_command = args.command.replace('BATCH_', '')
 		args_dict = copy.copy(args.__dict__)
 		if (not os.path.exists(args.json)):
 			raise Exception("doesn't exist... ")
 		with open(os.path.abspath(args.json), 'rb') as f:
-			user_ids = json.load(f)
-			for user_id in user_ids:
-				args_dict['user_id'] = user_id
-				cmd = new_cmd(command, args_dict)
-				node_queue.put(cmd)
+			if ( args.command == 'BATCH_CRAWL_TWEET' ):
+				tweet_ids = json.load(f)
+				for tweet_id in tweet_ids:
+					print "Loading Tweet ID: ", tweet_id
+					args_dict['tweet_id'] = tweet_id
+					cmd = new_cmd(new_command, args_dict)
+					node_queue.put(cmd)
+			else:
+				user_ids = json.load(f)
+				for user_id in user_ids:
+					args_dict['user_id'] = user_id
+					cmd = new_cmd(new_command, args_dict)
+					node_queue.put(cmd)
 	elif (args.command == 'LIST_NODES'):
 		pp.pprint(node_coordinator.list_nodes())
 	elif (args.command == 'NODE_QSIZES'):
@@ -187,6 +206,7 @@ def cmd(config, args):
 def print_avaliable_cmd():
 	dictionary = {
 		'-uid/--user_id': 'the user id that you want to crawl his/her friends (who he/she is following) or followers',
+		'-tid/--tweet_id': 'the tweet id that you want to fetch',
 		#'-nt/--network_type': 'whether you want to crawl his/her friends or followers',
 		'-dt/--data_type': '"ids" or "users" (default to ids) what the results are going to look like (either a list of twitter user ids or a list of user objects)',
 		'-d/--depth': 'the depth of the network; e.g., if it is 2, it will give you his/her (indicated by the -uid) friends\' friends',
@@ -216,6 +236,10 @@ def print_avaliable_cmd():
 		'-d/--depth': dictionary['-d/--depth']
 	}, 'CRAWL_USER_TIMELINE': {
 		'-uid/--user_id': dictionary['-uid/--user_id']
+	}, 'CRAWL_TWEET': {
+		'-tid/--tweet_id': dictionary['-tid/--tweet_id']
+	}, 'BATCH_CRAWL_TWEET': {
+		'-j/--json': dictionary['-j/--json']
 	}, 'BATCH_CRAWL_USER_TIMELINE': {
 		'-j/--json': dictionary['-j/--json']
 	}, 'GET_UIDS_FROM_SCREEN_NAMES': {
@@ -251,6 +275,7 @@ if __name__=="__main__":
 	parser.add_argument('-c', '--config', help="config.json that contains a) twitter api keys; b) redis connection string;", required = True)
 	parser.add_argument('-cmd', '--command', help="the cmd you want to run, e.g., \"CRAWL_FRIENDS\"", required=True)
 	parser.add_argument('-uid', '--user_id', help="the user_id", default=0)
+	parser.add_argument('-tid', '--tweet_id', help="the tweet_id", default=0)
 	parser.add_argument('-dt', '--data_type', help="the data_type (e.g., 'ids' or 'users'", default='ids')
 	parser.add_argument('-d', '--depth', help="the depth", default=1)
 	parser.add_argument('-j', '--json', help="the location of the json file that has a list of user_ids or screen_names", required=False)

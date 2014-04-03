@@ -36,7 +36,8 @@ class UserRelationshipCrawler(CrawlerProcess):
 				"ids": "find_all_follower_ids",
 				"network_type": "followers"
 			}, 
-			"CRAWL_USER_TIMELINE": "fetch_user_timeline"
+			"CRAWL_USER_TIMELINE": "fetch_user_timeline",
+			"CRAWL_TWEET": "fetch_tweet_by_id"
 		}
 		self.node_queue = NodeQueue(self.node_id, redis_config=redis_config)
 		self.client_args = {"timeout": 300}
@@ -97,11 +98,19 @@ class UserRelationshipCrawler(CrawlerProcess):
 				 	handler.flush_all()
 			else:
 
-				args = {
-					"user_id": cmd['user_id'],
-					"write_to_handlers": self.handlers,
-					"cmd_handlers" : []
-				}
+				args = {}
+				if (command == 'CRAWL_TWEET'):
+					args = {
+						"tweet_id": cmd['tweet_id'],
+						"write_to_handlers": self.handlers,
+						"cmd_handlers" : []
+					}
+				else:
+					args = {
+						"user_id": cmd['user_id'],
+						"write_to_handlers": self.handlers,
+						"cmd_handlers" : []
+					}
 
 				bucket = cmd["bucket"] if "bucket" in cmd else None
 
@@ -109,7 +118,7 @@ class UserRelationshipCrawler(CrawlerProcess):
 					args["bucket"] = bucket
 				
 				func = None
-				if  (command == 'CRAWL_USER_TIMELINE'):
+				if  (command in ['CRAWL_USER_TIMELINE', 'CRAWL_TWEET']):
 					func = getattr(self.user_api, self.tasks[command])
 				elif (command in ['CRAWL_FRIENDS', 'CRAWL_FOLLOWERS']):
 					data_type = cmd['data_type']
