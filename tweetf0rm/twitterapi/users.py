@@ -257,7 +257,52 @@ class User(twython.Twython):
 			for handler in write_to_handlers:
 				handler.append(json.dumps({}), bucket=bucket, key=user_id)
 
-		logger.debug("[%s] total tweets: %d "%(user_id, cnt))				
+		logger.debug("[%s] total tweets: %d "%(user_id, cnt))		
+
+	def fetch_tweet_by_id(self, tweet_id = None, write_to_handlers=[], cmd_handlers=[], bucket="tweets"):
+
+		if not tweet_id:
+			raise Exception("show_status: tweet_id cannot be None")
+
+		tweet = None
+		retry_cnt = MAX_RETRY_CNT
+		while retry_cnt > 1:
+			try:
+				tweet = self.show_status(id=tweet_id)
+
+				# logger.debug('%d > %d ? %s'%(prev_max_id, current_max_id, bool(prev_max_id > current_max_id)))
+				logger.info("Fetched tweet [%s]" % (tweet_id))
+
+				break
+
+			except twython.exceptions.TwythonRateLimitError:
+				self.rate_limit_error_occured('statuses', '/statuses/show')
+			except twython.exceptions.TwythonError as te:
+				if ( te.error_code == 404 or te.error_code == 403 ):
+					logger.info("Tweet [%s] unavailable. Error code: %d" % (tweet_id, te.error_code))
+
+					break
+				else:
+					time.sleep(10)
+					logger.error("exception: %s"%(te))
+					retry_cnt -= 1
+					if (retry_cnt == 0):
+						raise MaxRetryReached("max retry reached due to %s"%(te))
+			except Exception as exc:
+				time.sleep(10)
+				logger.error("exception: %s, %s"%(exc, type(exc)))
+				retry_cnt -= 1
+				if (retry_cnt == 0):
+					raise MaxRetryReached("max retry reached due to %s"%(exc))
+
+		if (tweet != None):
+			for handler in write_to_handlers:
+				handler.append(json.dumps(tweet), bucket=bucket, key="tweetList")
+		else:
+			for handler in write_to_handlers:
+				handler.append(json.dumps({"id":tweet_id}), bucket=bucket, key="tweetList")
+
+		logger.debug("[%s] tweet fetched..." % tweet_id)
 
 
 	def get_user_ids_by_screen_names(self, seeds):
