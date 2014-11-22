@@ -11,11 +11,11 @@ requests_log.setLevel(logging.WARNING)
 import argparse, pickle, os, json, sys, time
 sys.path.append("..")
 
-def crawl_spys_ru(page):
+def crawl_spys_ru(p):
 
 	import requests, re, lxml.html, cStringIO
 	from lxml import etree
-	url = 'http://spys.ru/en/http-proxy-list/%d/'%page
+	url = 'http://spys.ru%s'%p
 
 	# payload = {
 	# 	'sto': 'View+150+per+page'
@@ -70,6 +70,8 @@ def crawl_spys_ru(page):
 				if cnt == 3:
 					hh = lxml.html.tostring(td)
 					country = re.findall(r'<font class="spy14">(.*?)<\/font>', hh)[0]
+					# if (country == 'China'):
+					# 	break
 
 				cnt += 1
 
@@ -91,9 +93,25 @@ if __name__=="__main__":
 	parser.add_argument('-o', '--output', help="define the location of the output;", default="proxies.json")
 	args = parser.parse_args()
 	
+	# get a list of valid urls... 
+	import requests, re, lxml.html, cStringIO
+	from lxml import etree
+	url = 'http://spys.ru/en/http-proxy-list/'
+
+	r = requests.get(url)
+
+	html = r.text.encode('utf8')
+
+	# the port numbers are coded...
+	urls = re.findall(r'<a href=\'(/en/http-proxy-list/\d+/.*?)\'>', html)
+	
+	urls = set(urls)
+
+	urls.add('/en/http-proxy-list/')
+
 	proxies = []
-	for i in range(5):
-		proxies.extend(crawl_spys_ru(i))
+	for url in urls:
+		proxies.extend(crawl_spys_ru(url))
 
 	# check if there is a proxies.json locally, merge the check results rather than overwrite it
 	if (os.path.exists(os.path.abspath(args.output))):
@@ -110,7 +128,6 @@ if __name__=="__main__":
 		if (ip not in ips):
 			ips.append(ip)
 			proxy_list.append({ip: proxy_type})
-
 
 	proxies = [p['proxy'] for p in proxy_checker(proxy_list)]
 
