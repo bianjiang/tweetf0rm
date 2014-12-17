@@ -19,7 +19,7 @@ from tweetf0rm.proxies import proxy_checker
 
 import multiprocessing as mp
 
-from tweetf0rm.twitterapi.users import User
+from tweetf0rm.twitterapi.twitter_api import TwitterAPI
 
 class Handler(object):
 
@@ -29,8 +29,8 @@ class Handler(object):
 
 def call_user_api(apikeys, client_args):
 
-	user_api = User(apikeys=apikeys, client_args=client_args)
-	user_api.find_all_friend_ids(53039176, [Handler()])
+	twitter_api = TwitterAPI(apikeys=apikeys, client_args=client_args)
+	twitter_api.find_all_friend_ids(53039176, [Handler()])
 
 			
 class TestTwitterRateLimit:

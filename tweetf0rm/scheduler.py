@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 import json, copy, time
 from tweetf0rm.utils import full_stack, hash_cmd, md5, get_keys_by_min_value
 from tweetf0rm.proxies import proxy_checker
-from process.user_relationship_crawler import UserRelationshipCrawler
+from process.twitter_crawler import TwitterCrawler
 #from handler.inmemory_handler import InMemoryHandler
 from handler import create_handler
 from tweetf0rm.redis_helper import NodeCoordinator, NodeQueue, CrawlerQueue
@@ -78,7 +78,7 @@ class Scheduler(object):
 		if (not crawler_proxies):
 			crawler_proxies = next(self.proxy_generator) if self.proxy_generator else None
 
-		crawler = UserRelationshipCrawler(node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
+		crawler = TwitterCrawler(node_id, crawler_id, copy.copy(apikeys), handlers=[create_handler(file_handler_config)], redis_config=copy.copy(config['redis_config']), proxies=crawler_proxies)
 		
 		if (crawler_id in self.crawlers):
 			#self.crawlers[crawler_id].clear()

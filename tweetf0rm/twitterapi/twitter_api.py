@@ -12,9 +12,10 @@ logger = logging.getLogger(__name__)
 import twython
 import json, os, time
 from tweetf0rm.exceptions import NotImplemented, MissingArgs, WrongArgs
+from tweetf0rm.utils import md5
 
 MAX_RETRY_CNT = 5
-class User(twython.Twython):
+class TwitterAPI(twython.Twython):
 
 	def __init__(self, *args, **kwargs):
 		"""
@@ -45,7 +46,7 @@ class User(twython.Twython):
 		
 		kwargs.update(apikeys)
 
-		super(User, self).__init__(*args, **kwargs)
+		super(TwitterAPI, self).__init__(*args, **kwargs)
 
 		
 
@@ -215,7 +216,7 @@ class User(twython.Twython):
 		while current_max_id != prev_max_id and retry_cnt > 1:
 			try:
 				if current_max_id > 0:
-					tweets = self.get_user_timeline(user_id=user_id, max_id=current_max_id, count=200)
+					tweets = self.get_user_timeline(user_id=user_id, max_id=current_max_id - 1, count=200)
 				else:
 					tweets = self.get_user_timeline(user_id=user_id, count=200)
 
@@ -257,7 +258,7 @@ class User(twython.Twython):
 			for handler in write_to_handlers:
 				handler.append(json.dumps({}), bucket=bucket, key=user_id)
 
-		logger.debug("[%s] total tweets: %d "%(user_id, cnt))		
+		logger.debug("[%s] total tweets: %d "%(user_id, cnt))	
 
 	def fetch_tweet_by_id(self, tweet_id = None, write_to_handlers=[], cmd_handlers=[], bucket="tweets"):
 
@@ -328,6 +329,73 @@ class User(twython.Twython):
 			users = self.lookup_user(user_id=user_ids)
 
 		return users
+
+	def search_by_query(self, query = None, geocode=None, lang=None, key=None, write_to_handlers=[], cmd_handlers=[], bucket="tweets"):
+
+		if not query:
+			raise Exception("search: query cannot be None")
+
+		if not key:
+			key = md5(query)
+
+		logger.info("received query: %s "%(query))
+
+		prev_max_id = -1
+		current_max_id = 0
+		last_lowest_id = current_max_id # used to workaround users who has less than 200 tweets, 1 loop is enough...
+		cnt = 0
+		
+		retry_cnt = MAX_RETRY_CNT
+		result_tweets = []
+		while current_max_id != prev_max_id and retry_cnt > 1:
+			try:
+				if current_max_id > 0:
+					tweets = self.search(q=query, geocode=geocode, lang=lang, max_id=current_max_id-1, count=100)
+				else:
+					tweets = self.search(q=query, geocode=geocode, lang=lang, count=100)
+
+
+				prev_max_id = current_max_id # if no new tweets are found, the prev_max_id will be the same as current_max_id
+
+				for tweet in tweets['statuses']:
+					if current_max_id == 0 or current_max_id > long(tweet['id']):
+						current_max_id = long(tweet['id'])
+
+				#no new tweets found
+				if (prev_max_id == current_max_id):
+					break;
+
+				result_tweets.extend(tweets['statuses'])
+
+				cnt += len(tweets['statuses'])
+
+				#logger.info(cnt)
+
+				logger.debug('%d > %d ? %s'%(prev_max_id, current_max_id, bool(prev_max_id > current_max_id)))
+
+				time.sleep(1)
+
+			except twython.exceptions.TwythonRateLimitError:
+				self.rate_limit_error_occured('search', '/search/tweets')
+			except Exception as exc:
+				time.sleep(10)
+				logger.debug("exception: %s"%exc)
+				retry_cnt -= 1
+				if (retry_cnt == 0):
+					raise MaxRetryReached("max retry reached due to %s"%(exc))
+
+		if (len(result_tweets) > 0):
+			for tweet in result_tweets:
+				for handler in write_to_handlers:
+					handler.append(json.dumps(tweet), bucket=bucket, key=key)
+
+				for handler in cmd_handlers:
+					handler.append(json.dumps(tweet), bucket=bucket, key=key)
+		else:
+			for handler in write_to_handlers:
+				handler.append(json.dumps({}), bucket=bucket, key=key)
+
+		logger.info("[%s] total tweets: %d "%(query, cnt))
 
 
 		

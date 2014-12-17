@@ -158,6 +158,7 @@ if __name__=="__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-c', '--config', help="config.json that contains a) twitter api keys; b) redis connection string;", required = True)
 	parser.add_argument('-p', '--proxies', help="the proxies.json file")
+	parser.add_argument('-m', '--mode', help="mode of the cralwer (streaming or normal crawler)", default='crawler')
 
 	args = parser.parse_args()
 

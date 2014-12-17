@@ -116,10 +116,18 @@ avaliable_cmds = {
 
 	}, 'CLEAR_NODE_QUEUES': {
 
+	}, 'SEARCH': {
+		'query' : {
+			'value': None,
+			'validation': lambda x: x != None
+		},
+		'bucket': {
+			'value': 'tweets'
+		}
 	}
 }
 
-from tweetf0rm.twitterapi.users import User
+from tweetf0rm.twitterapi.twitter_api import TwitterAPI
 import json, os
 
 def new_cmd(command, args_dict):
@@ -153,8 +161,8 @@ def cmd(config, args):
 			raise Exception("doesn't exist... ")
 		with open(os.path.abspath(args.json), 'rb') as f, open(os.path.abspath(args.output), 'wb') as o_f:
 			screen_names = json.load(f)
-			user_api = User(apikeys=apikeys)
-			user_ids = user_api.get_user_ids_by_screen_names(screen_names)
+			twitter_api = TwitterAPI(apikeys=apikeys)
+			user_ids = twitter_api.get_user_ids_by_screen_names(screen_names)
 			json.dump(list(user_ids), o_f)
 	elif (args.command == 'GET_USERS_FROM_IDS'):
 		apikeys = config["apikeys"].values()[0]
@@ -162,8 +170,8 @@ def cmd(config, args):
 			raise Exception("doesn't exist... ")
 		with open(os.path.abspath(args.json), 'rb') as f, open(os.path.abspath(args.output), 'wb') as o_f:
 			user_ids = json.load(f)
-			user_api = User(apikeys=apikeys)
-			users = user_api.get_users(user_ids)
+			twitter_api = TwitterAPI(apikeys=apikeys)
+			users = twitter_api.get_users(user_ids)
 			json.dump(list(users), o_f)
 	elif (args.command.startswith('BATCH_')):
 		new_command = args.command.replace('BATCH_', '')
@@ -212,7 +220,8 @@ def print_avaliable_cmd():
 		'-d/--depth': 'the depth of the network; e.g., if it is 2, it will give you his/her (indicated by the -uid) friends\' friends',
 		'-j/--json': 'a json file that contains a list of screen_names or user_ids, depending on the command',
 		'-o/--output': ' the output json file (for storing user_ids from screen_names)',
-		'-nid/--node_id':'the node_id that you want to interact with; default to the current machine...'
+		'-nid/--node_id':'the node_id that you want to interact with; default to the current machine...',
+		'-q/--query': 'the query to search'
 	}
 	cmds =  {'CRAWL_FRIENDS': {
 		'-uid/--user_id': dictionary['-uid/--user_id'],
@@ -255,6 +264,8 @@ def print_avaliable_cmd():
 		'-nid/--node_id':  dictionary['-nid/--node_id']
 	}, 'CLEAR_NODE_QUEUES':{
 		'-nid/--node_id':  dictionary['-nid/--node_id']
+	}, 'SEARCH':{
+		'-q/--query': dictionary['-q/--query']
 	}}
 	
 
@@ -271,7 +282,7 @@ if __name__=="__main__":
 	nid = node_id()
 	import json, os
 	
-	parser = argparse.ArgumentParser()
+	parser = argparse.ArgumentParser(add_help=False)
 	parser.add_argument('-c', '--config', help="config.json that contains a) twitter api keys; b) redis connection string;", required = True)
 	parser.add_argument('-cmd', '--command', help="the cmd you want to run, e.g., \"CRAWL_FRIENDS\"", required=True)
 	parser.add_argument('-uid', '--user_id', help="the user_id", default=0)
@@ -281,9 +292,14 @@ if __name__=="__main__":
 	parser.add_argument('-j', '--json', help="the location of the json file that has a list of user_ids or screen_names", required=False)
 	parser.add_argument('-o', '--output', help="the location of the output json file for storing user_ids", default='user_ids.json')
 	parser.add_argument('-nid', '--node_id', help="the node_id you want to interact with", default=nid)
+	parser.add_argument('-q', '--query', help="the search query", default=None)
 	
 	try:
 		args = parser.parse_args()
+
+		if args.command == 'HELP':
+			print_avaliable_cmd()
+			quit()
 
 		with open(os.path.abspath(args.config), 'rb') as config_f:
 			config = json.load(config_f)

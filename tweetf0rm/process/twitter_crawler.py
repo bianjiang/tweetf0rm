@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 from .crawler_process import CrawlerProcess
-from tweetf0rm.twitterapi.users import User
+from tweetf0rm.twitterapi.twitter_api import TwitterAPI
 from tweetf0rm.handler import create_handler
 from tweetf0rm.handler.crawl_user_relationship_command_handler import CrawlUserRelationshipCommandHandler
 from tweetf0rm.utils import full_stack, hash_cmd
@@ -15,13 +15,13 @@ from tweetf0rm.redis_helper import NodeQueue
 import copy, json
 
 
-class UserRelationshipCrawler(CrawlerProcess):
+class TwitterCrawler(CrawlerProcess):
 
 	def __init__(self, node_id, crawler_id, apikeys, handlers, redis_config, proxies=None):
 		if (handlers == None):
 			raise MissingArgs("you need a handler to write the data to...")
 
-		super(UserRelationshipCrawler, self).__init__(node_id, crawler_id, redis_config, handlers)
+		super(TwitterCrawler, self).__init__(node_id, crawler_id, redis_config, handlers)
 
 		self.apikeys = copy.copy(apikeys)
 		self.tasks = {
@@ -37,18 +37,18 @@ class UserRelationshipCrawler(CrawlerProcess):
 				"network_type": "followers"
 			}, 
 			"CRAWL_USER_TIMELINE": "fetch_user_timeline",
-			"CRAWL_TWEET": "fetch_tweet_by_id"
+			"CRAWL_TWEET": "fetch_tweet_by_id",
+			"SEARCH": "search_by_query"
 		}
 		self.node_queue = NodeQueue(self.node_id, redis_config=redis_config)
 		self.client_args = {"timeout": 300}
 		self.proxies = iter(proxies) if proxies else None
-		self.user_api = None
+		self.twitter_api = None
 
-		self.init_user_api()
+		self.init_twitter_api()
 
-		#self.init_user_api()
 
-	def init_user_api(self): # this will throw StopIteration if all proxies have been tried...
+	def init_twitter_api(self): # this will throw StopIteration if all proxies have been tried...
 		if (self.proxies):
 			try:
 				self.client_args['proxies'] = next(self.proxies)['proxy_dict'] # this will throw out 
@@ -56,13 +56,13 @@ class UserRelationshipCrawler(CrawlerProcess):
 			except StopIteration as exc:
 				raise
 			except Exception as exc:
-				self.init_user_api()
+				self.init_twitter_api()
 
-		if (self.user_api):
-			del self.user_api
+		if (self.twitter_api):
+			del self.twitter_api
 
 		#crawler_id=self.crawler_id, 
-		self.user_api = User(apikeys=self.apikeys, client_args=self.client_args)
+		self.twitter_api = TwitterAPI(apikeys=self.apikeys, client_args=self.client_args)
 
 
 	def get_handlers(self):
@@ -98,10 +98,16 @@ class UserRelationshipCrawler(CrawlerProcess):
 				 	handler.flush_all()
 			else:
 
+				# figure out args first...
 				args = {}
 				if (command == 'CRAWL_TWEET'):
 					args = {
 						"tweet_id": cmd['tweet_id'],
+						"write_to_handlers": self.handlers,
+						"cmd_handlers" : []
+					}
+				elif (command == 'SEARCH'):
+					args = {
 						"write_to_handlers": self.handlers,
 						"cmd_handlers" : []
 					}
@@ -119,7 +125,25 @@ class UserRelationshipCrawler(CrawlerProcess):
 				
 				func = None
 				if  (command in ['CRAWL_USER_TIMELINE', 'CRAWL_TWEET']):
-					func = getattr(self.user_api, self.tasks[command])
+					func = getattr(self.twitter_api, self.tasks[command])
+				elif (command in ['SEARCH']):
+
+					if "lang" in cmd:
+						args['lang'] = cmd['lang']
+
+					if "geocode" in cmd:
+						args['geocode'] = cmd['geocode']
+
+					if "key" in cmd:
+						args['key'] = cmd['key']
+
+					#logger.info("new cmd: %s"%(cmd))
+					# q is required, otherwise let it fail...
+					if "query" in cmd:
+						args['query'] = cmd['query']
+						func = getattr(self.twitter_api, self.tasks[command])
+
+
 				elif (command in ['CRAWL_FRIENDS', 'CRAWL_FOLLOWERS']):
 					data_type = cmd['data_type']
 					
@@ -145,17 +169,20 @@ class UserRelationshipCrawler(CrawlerProcess):
 					except Exception as exc:
 						logger.warn(exc)
 					
-					func = getattr(self.user_api, self.tasks[command][data_type])
+					func = getattr(self.twitter_api, self.tasks[command][data_type])
 				
 				if func:
 					try:
+						#logger.info(args)
 						func(**args)
-						del args['cmd_handlers']						
+						del args['cmd_handlers']
+						for handler in self.handlers:
+				 			handler.flush_all()						
 					except Exception as exc:
 						logger.error("%s"%exc)
 						try:
-							self.init_user_api()
-						except StopIteration as init_user_api_exc:
+							self.init_twitter_api()
+						except StopIteration as init_twitter_api_exc:
 							# import exceptions
 							# if (isinstance(init_user_api_exc, exceptions.StopIteration)): # no more proxy to try... so kill myself...
 							for handler in self.handlers:

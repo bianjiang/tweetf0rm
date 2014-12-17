@@ -31,12 +31,26 @@ class TestBootstrap:
 	def setup(self):
 		import sys, os, json
 		#sys.path.append("..")
-		with open(os.path.abspath('../../config.json'), 'rb') as config_f, open(os.path.abspath('proxies.json'), 'rb') as proxy_f:
+		with open(os.path.abspath('../config.json'), 'rb') as config_f, open(os.path.abspath('proxies.json'), 'rb') as proxy_f:
 			self.config = json.load(config_f)
 			self.proxies = json.load(proxy_f)
 
 	def teardown(self):
 		pass
+
+	#@nottest
+	def test_search(self):
+		from tweetf0rm.twitterapi.twitter_api import TwitterAPI
+		from tweetf0rm.handler.inmemory_handler import InMemoryHandler
+
+		apikeys = self.config["apikeys"]["i0mf0rmer03"]
+		
+		#inmemoryhandler = InMemoryHandler()
+		twitter_api = TwitterAPI(apikeys=apikeys)
+		tweets = twitter_api.search_by_query(query="transmasculine OR transman OR transmale")
+		#tweets = twitter_api.search(q="twitter", geocode=None, lang=None, count=100)
+		logger.info(tweets)
+
 
 	@nottest
 	def test_distribute_to_local(self):
@@ -90,14 +104,14 @@ class TestBootstrap:
 
 	@nottest
 	def test_get_user_id(self):
-		from tweetf0rm.twitterapi.users import User
+		from tweetf0rm.twitterapi.twitter_api import TwitterAPI
 		from tweetf0rm.handler.inmemory_handler import InMemoryHandler
 
 		apikeys = self.config["apikeys"]["i0mf0rmer03"]
 		
 		#inmemoryhandler = InMemoryHandler()
-		user_api = User(apikeys=apikeys)
-		userIds = user_api.get_user_ids_by_screen_names(["AmericanCance"])
+		twitter_api = TwitterAPI(apikeys=apikeys)
+		userIds = twitter_api.get_user_ids_by_screen_names(["AmericanCance"])
 		logger.info(userIds)
 
 	@nottest
