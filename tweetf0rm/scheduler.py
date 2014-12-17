@@ -26,7 +26,7 @@ class Scheduler(object):
 	def __init__(self, node_id, config={}, proxies=[]):
 		self.node_id = node_id
 		self.config = config
-		if (len(proxies) > 0):
+		if (proxies and len(proxies) > 0):
 			
 			self.proxy_list = proxy_checker(proxies)
 
@@ -70,9 +70,6 @@ class Scheduler(object):
 			}
 		}
 
-		# try:
-			#crawler_id = md5('%s:%s'%(self.node_id, idx))
-			#apikeys = self.config['apikeys'][apikey_list[idx]]
 		crawler_id = apikeys['app_key']
 		logger.debug('creating a new crawler: %s'%crawler_id)
 		if (not crawler_proxies):
@@ -91,11 +88,7 @@ class Scheduler(object):
 			'crawler_proxies': crawler_proxies
 		}
 		crawler.start()
-		# except twython.exceptions.TwythonAuthError as exc:
-		# 	logger.error('%s: %s'%(exc, apikeys))
-		# except Exception as exc:
-		# 	logger.error(exc)
-		# 	raise
+
 
 
 	def is_alive(self):
