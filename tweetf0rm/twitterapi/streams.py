@@ -14,30 +14,27 @@ logger = logging.getLogger(__name__)
 from twython import TwythonStreamer
 import os, copy, datetime, json
 
-class KeywordsStreamer(TwythonStreamer):
+class Streamer(TwythonStreamer):
 
 	def __init__(self, *args, **kwargs):
 		"""
-		Constructor with some extra params:
+		Constructor with apikeys, and output folder
 
-
-		For other params see: TwythonStreamer
+		* apikeys: apikeys
 		"""
-		from write_to_handler import WriteToHandler
+		logger.info(kwargs)
 		import copy
 
-		self.write_to_handler = WriteToHandler(kwargs.pop('output', '.'))
-		self.counter = 0
 		apikeys = copy.copy(kwargs.pop('apikeys', None))
-
+		
 		if not apikeys:
-			raise Exception('apikeys is missing')
-		#print(kwargs)
-		self.apikeys = copy.copy(apikeys) # keep a copy
+			raise MissingArgs('apikeys is missing')
 
+		self.apikeys = copy.copy(apikeys) # keep a copy
+		
 		kwargs.update(apikeys)
 
-		super(KeywordsStreamer, self).__init__(*args, **kwargs)
+		super(Streamer, self).__init__(*args, **kwargs)
 
 
 	def on_success(self, data):
