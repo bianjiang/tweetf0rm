@@ -17,18 +17,18 @@ class RedisBase(object):
 
 		self.redis_config = redis_config
 		self.__redis_connection = redis.StrictRedis(host=redis_config['host'], port=redis_config['port'], db=redis_config['db'])
-		self.password = redis_config['password']
+		self.password = redis_config.get('password', None)
 		self.namespace = namespace
 		self.name = name
 		self.key = '%s:%s'%(self.namespace, self.name)
-		if (self.password):
-			self.__auth()
+		self.__auth()
 
 	def get_key(self):
 		return self.key
 
 	def __auth(self):
-		self.__redis_connection.execute_command("AUTH", self.password)
+		if self.password:
+			self.__redis_connection.execute_command("AUTH", self.password)
 
 	def conn(self):
 		self.__auth()
