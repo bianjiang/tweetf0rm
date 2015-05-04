@@ -13,7 +13,7 @@ It's quite stable for the things that I want to do. I have collected billions of
 
 Dataset
 ------------
-Twitter license (or at least the company's position on this) does not allow me redistribute the crawled data (e.g., someone asked the question a while back: https://dev.twitter.com/discussions/8232). But, here is what I have:
+**Twitter license (or at least the company's position on this) does not allow me redistribute the crawled data (e.g., someone asked the question a while back: https://dev.twitter.com/discussions/8232).** But, here is what I have:
 
 * **Health topics followers**: I crawled **2,686,823** users' tweets (i.e., as of 11/12/2013; maximum of 3,200 per user, limitted by Twitter apis) in a matter of two weeks. All thhese twitter users follow one of the following, what I call, health-related information centers (i.e., person or organization who share health-related information, such as the [CNNHealth](https://twitter.com/cnnhealth). Note that, some of the users either haven't posted anything or have set the privacy setting to private, so it will show zero tweets for these users. Anyway, I haven't done anything to this dataset yet besides doing some pre-processing (indexing, calculate common statistics), although I have some research ideas that I am planning to try. If you want to get a hand on this dataset (either collaborate with me or just want the data), contact me at <ji0ng.bi0n@gmail.com> :). The detailed stats such as how many tweets will be posted as soon as my code gets them calculated (**821,449,519** unique tweets). 
   
