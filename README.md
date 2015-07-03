@@ -1,5 +1,9 @@
 
-*I haven't been updating this for a while, but I just setup a EC2 instance and tested this. Looks like most of the things are still working fine. I have some new research needs myself, so I might update this more frequently in the next few months. But, in general, I would be happy to take requests to add specific functionalities, merge pull requests, and even requests for specific datasets. Just make a ticket ;)*
+#### Updates
+
+* 7/2/2015: If you need `geocode` Twitter users (e.g., figure out where the user is from based on the `location` string in their profile), you can take a look at this [TwitterUserGeocoder](https://github.com/bianjiang/twitter-user-geocoder)
+* 7/2/2015: I've developed another set of scripts (without using `redis`) with different but similar use cases. Specifically, my use case requires me to 1) track a set of keywords; and 2) track a set of users. The new scripts, for example, will keep pulling in new tweets if you provide a set of seed user ids. It's not in the state that can be released yet, but email me if you are interested in that.   
+* Older: I haven't been updating this for a while, but I just setup a EC2 instance and tested this. Looks like most of the things are still working fine. I have some new research needs myself, so I might update this more frequently in the next few months. But, in general, I would be happy to take requests to add specific functionalities, merge pull requests, and even requests for specific datasets. Just make a ticket ;)*
 
 
 tweetf0rm
