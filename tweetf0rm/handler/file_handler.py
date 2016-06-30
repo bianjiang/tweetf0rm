@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 from .base_handler import BaseHandler
-import futures, os
+import concurrent.futures, os
 from tweetf0rm.utils import full_stack
 
 def flush_file(output_folder, bucket, items):
@@ -53,7 +53,7 @@ class FileHandler(BaseHandler):
 
 	def flush(self, bucket):
 
-		with futures.ProcessPoolExecutor(max_workers=3) as executor:
+		with concurrent.futures.ProcessPoolExecutor(max_workers=3) as executor:
 			# for each bucket it's a dict, where the key needs to be the file name; and the value is a list of json encoded value
 			for bucket, items in self.buffer.iteritems():
 

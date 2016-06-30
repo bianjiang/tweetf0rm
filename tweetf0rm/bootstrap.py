@@ -17,7 +17,7 @@ from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
 from tweetf0rm.utils import full_stack, node_id, public_ip
 from tweetf0rm.proxies import proxy_checker
 from tweetf0rm.scheduler import Scheduler
-import time, os, tarfile, futures
+import time, os, tarfile, concurrent.futures
 
 def check_config(config):
 	if ('apikeys' not in config or 'redis_config' not in config):
@@ -128,7 +128,7 @@ def start_server(config, proxies):
 		if (time.time() - last_archive_ts > 3600):
 
 			logger.info("start archive procedure...")
-			with futures.ProcessPoolExecutor(max_workers=len(buckets)) as executor:
+			with concurrent.futures.ProcessPoolExecutor(max_workers=len(buckets)) as executor:
 
 				future_proxies = {executor.submit(tarball_results, ouput_folder, bucket, archive_output, int(time.time()) - 3600): bucket for bucket in buckets}
 		

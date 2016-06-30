@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 from .base_handler import BaseHandler
 import multiprocessing as mp
-import futures, json, copy, time
+import concurrent.futures, json, copy, time
 from tweetf0rm.redis_helper import NodeQueue, NodeCoordinator
 from tweetf0rm.utils import full_stack, get_keys_by_min_value, hash_cmd
 import json
@@ -84,7 +84,7 @@ class CrawlUserRelationshipCommandHandler(BaseHandler):
 	def flush(self, bucket):
 		logger.debug("i'm getting flushed...")
 
-		with futures.ProcessPoolExecutor(max_workers=1) as executor:
+		with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
 			for k, v in self.buffer[bucket].iteritems():
 				for s in v:
 					o = json.loads(s)

@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 from tweetf0rm.utils import full_stack
-import requests, futures
+import requests, concurrent.futures
 
 def check_proxy(proxy, timeout):
 	url = "http://twitter.com"
@@ -44,7 +44,7 @@ def proxy_checker(proxies):
 	
 
 	results = []
-	with futures.ProcessPoolExecutor(max_workers=mp.cpu_count()*10) as executor:
+	with concurrent.futures.ProcessPoolExecutor(max_workers=mp.cpu_count()*10) as executor:
 
 		future_to_proxy = {executor.submit(check_proxy, proxy, 30): proxy for proxy in proxies if proxy.values()[0] == 'http'}
 
@@ -53,7 +53,7 @@ def proxy_checker(proxies):
 			
 		logger.info('%d http proxies to check'%(len(future_to_proxy)))
 
-		futures.wait(future_to_proxy)
+		concurrent.futures.wait(future_to_proxy)
 
 		# for future in futures.as_completed(future_to_proxy):
 
