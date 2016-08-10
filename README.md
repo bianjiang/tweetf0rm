@@ -137,7 +137,7 @@ Even you only wants to run on one node with multiple crawler processes, you will
 				"host": "localhost",
 				"port": 6379,
 				"db": 0,
-				"password": "iloveusm"
+				"password": "PASSWORD"
 			},
 			"verbose": "True",
 			"output": "./data",
