@@ -1,6 +1,7 @@
 
 #### Updates
 
+* 2/18/2017: Update the list of datasets that I have.  Please note the Twitter policy on sharing raw datasets (see below).
 * 7/2/2015: If you need `geocode` Twitter users (e.g., figure out where the user is from based on the `location` string in their profile), you can take a look at this [TwitterUserGeocoder](https://github.com/bianjiang/twitter-user-geocoder)
 * 7/2/2015: I've developed another set of scripts (without using `redis`) with different but similar use cases. Specifically, my use case requires me to 1) track a set of keywords; and 2) track a set of users. The new scripts, for example, will keep pulling in new tweets if you provide a set of seed user ids. It's not in the state that can be released yet, but email me if you are interested in that.   
 * Older: I haven't been updating this for a while, but I just setup a EC2 instance and tested this. Looks like most of the things are still working fine. I have some new research needs myself, so I might update this more frequently in the next few months. But, in general, I would be happy to take requests to add specific functionalities, merge pull requests, and even requests for specific datasets. Just make a ticket ;)*
@@ -15,66 +16,15 @@ To workaround Twitter's rate limits, ``tweetf0rm`` can spawn multiple crawlers e
 
 It's quite stable for the things that I want to do. I have collected billions of tweets from **2.6 millions** twitter users in about 2 weeks with a single machine.
 
-Dataset
+Datasets
 ------------
-**Twitter license (or at least the company's position on this) does not allow me redistribute the crawled data (e.g., someone asked the question a while back: https://dev.twitter.com/discussions/8232).** But, here is what I have:
+**Twitter license (or at least the company's position on this) does not allow me redistribute the crawled data (e.g., someone asked the question a while back: https://dev.twitter.com/discussions/8232).**   If you want to get a hand on this dataset (e.g., through collaboration), contact me at <ji0ng.bi0n@gmail.com>.  But, here is what I have:
 
-* **Health topics followers**: I crawled **2,686,823** users' tweets (i.e., as of 11/12/2013; maximum of 3,200 per user, limitted by Twitter apis) in a matter of two weeks. All thhese twitter users follow one of the following, what I call, health-related information centers (i.e., person or organization who share health-related information, such as the [CNNHealth](https://twitter.com/cnnhealth). Note that, some of the users either haven't posted anything or have set the privacy setting to private, so it will show zero tweets for these users. Anyway, I haven't done anything to this dataset yet besides doing some pre-processing (indexing, calculate common statistics), although I have some research ideas that I am planning to try. If you want to get a hand on this dataset (either collaborate with me or just want the data), contact me at <ji0ng.bi0n@gmail.com> :). The detailed stats such as how many tweets will be posted as soon as my code gets them calculated (**821,449,519** unique tweets). 
-  
-  * https://twitter.com/RWJF
-  * https://twitter.com/samhsagov
-  * https://twitter.com/PublicHealth
-  * https://twitter.com/WebMD
-  * https://twitter.com/NIMHgov
-  * https://twitter.com/HHSGov
-  * https://twitter.com/drsanjaygupta
-  * https://twitter.com/womenshealth
-  * https://twitter.com/HealthHabits
-  * https://twitter.com/medlineplus
-  * https://twitter.com/KHNews
-  * https://twitter.com/NIH
-  * https://twitter.com/cnnhealth
-  * https://twitter.com/DrOz
-  * https://twitter.com/projecthopeorg
-  * https://twitter.com/NBCNewsHealth
-  * https://twitter.com/LIVESTRONG
-  * https://twitter.com/JohnsHopkinsSPH
-  * https://twitter.com/CDC_eHealth
-  * https://twitter.com/healthfinder
-  * https://twitter.com/FamHealthGuide
-  * https://twitter.com/AmericanCancer
-  * https://twitter.com/HealthCareGov
-  * https://twitter.com/goodhealth
-  * https://twitter.com/CDCemergency
-  * https://twitter.com/Disc_Health
-  * https://twitter.com/HarvardHealth
-  * https://twitter.com/Health_Affairs
-  * https://twitter.com/WomensHealthMag
-  * https://twitter.com/latimeshealth
-  * https://twitter.com/FDA_Drug_Info
-  * https://twitter.com/nytimeshealth
-  * https://twitter.com/MayoClinic
-  * https://twitter.com/AIDSgov
-  * https://twitter.com/NPRHealth
-  * https://twitter.com/USDAFoodSafety
-  * https://twitter.com/DailyHealthTips
-  * https://twitter.com/MinorityHealth
-  * https://twitter.com/RedCross
-  * https://twitter.com/FDAWomen
-  * https://twitter.com/WSJhealth
-  * https://twitter.com/runnersworld
-  * https://twitter.com/bbchealth
-  * https://twitter.com/CMSGov
-  * https://twitter.com/AmerMedicalAssn
-  * https://twitter.com/KatherineHobson
-  * https://twitter.com/MensHealthMag
-  * https://twitter.com/FDArecalls
-  * https://twitter.com/WSJhealthblog
-  * https://twitter.com/CDCgov
-  * https://twitter.com/WHO
-  * https://twitter.com/GoHealthyPeople
-  * https://twitter.com/CDCFlu
-  * https://twitter.com/girlshealth
+* **Random sample since 2014**: I have been crawling tweets using [GET statuses/sample](https://dev.twitter.com/streaming/reference/get/statuses/sample) since 2014, nonstop... except a few days the server went down...
+* **Tweets within US by states**: Using [POST statuses/filter](https://dev.twitter.com/streaming/reference/post/statuses/filter) with a `locations` filter by US states, since 10/16/2016.
+* **Tweets related to HPV**: HPV related tweets using keywords such as “Human Papillomavirus”, “HPV”, “Gardasil” and “Cervarix” with the Twitter [Search API](https://dev.twitter.com/rest/public/search), since 02/2016 (as of today, 2/18/2017, it is still running).  I do have a similar dataset from 11/2/2015 till 02/2016, but that's from a friend.
+* **Tweets related to transgender**: Tweets collected using keywords related to transgender (e.g., trans*, transmale, etc.) between 01/17/2015 and 05/12/2015; and then user timelines of whom are self-identified as trans.  This is published here, *"Hicks A, Hogan WR, Rutherford M, Malin B, Xie M, Fellbaum C, Yin Z, Fabbri D, Hanna J, Bian J. Mining Twitter as a First Step toward Assessing the Adequacy of Gender Identification Terms on Intake Forms. AMIA Annu Symp Proc. 2015;2015:611-620. PMID: [26958196](https://www.ncbi.nlm.nih.gov/pubmed/26958196)."*
+
 
 Installation
 ------------
