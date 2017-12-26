@@ -1,6 +1,6 @@
 
 #### Updates
-
+* 12/25/2017: This version hasn't been updated for several reasons.  Primarily because I have another version that does not use proxies (which doesn't work well unless you have massive private premium proxy servers).  I am still collecting massive Twitter data (e.g., random data from 2009 till today with a few missing days).  People keep asking for the raw data, which I can't share directly.  I can share the other tool, email please.
 * 2/18/2017: Update the list of datasets that I have.  Please note the Twitter policy on sharing raw datasets (see below).
 * 7/2/2015: If you need `geocode` Twitter users (e.g., figure out where the user is from based on the `location` string in their profile), you can take a look at this [TwitterUserGeocoder](https://github.com/bianjiang/twitter-user-geocoder)
 * 7/2/2015: I've developed another set of scripts (without using `redis`) with different but similar use cases. Specifically, my use case requires me to 1) track a set of keywords; and 2) track a set of users. The new scripts, for example, will keep pulling in new tweets if you provide a set of seed user ids. It's not in the state that can be released yet, but email me if you are interested in that.   
@@ -20,11 +20,12 @@ Datasets
 ------------
 **Twitter license (or at least the company's position on this) does not allow me redistribute the crawled data (e.g., someone asked the question a while back: https://dev.twitter.com/discussions/8232).**   If you want to get a hand on this dataset (e.g., through collaboration), contact me at <ji0ng.bi0n@gmail.com>.  But, here is what I have:
 
-* **Random sample since 2014**: I have been crawling tweets using [GET statuses/sample](https://dev.twitter.com/streaming/reference/get/statuses/sample) since 2014, nonstop... except a few days the server went down...
+* **Random sample since 2014 (update: since 2009)**: I have been crawling tweets using [GET statuses/sample](https://dev.twitter.com/streaming/reference/get/statuses/sample) since 2014, nonstop... except a few days the server went down...
 * **Tweets within US by states**: Using [POST statuses/filter](https://dev.twitter.com/streaming/reference/post/statuses/filter) with a `locations` filter by US states, since 10/16/2016.
 * **Tweets related to HPV**: HPV related tweets using keywords such as “Human Papillomavirus”, “HPV”, “Gardasil” and “Cervarix” with the Twitter [Search API](https://dev.twitter.com/rest/public/search), since 02/2016 (as of today, 2/18/2017, it is still running).  I do have a similar dataset from 11/2/2015 till 02/2016, but that's from a friend.
 * **Tweets related to transgender**: Tweets collected using keywords related to transgender (e.g., trans*, transmale, etc.) between 01/17/2015 and 05/12/2015; and then user timelines of whom are self-identified as trans.  This is published here, *"Hicks A, Hogan WR, Rutherford M, Malin B, Xie M, Fellbaum C, Yin Z, Fabbri D, Hanna J, Bian J. Mining Twitter as a First Step toward Assessing the Adequacy of Gender Identification Terms on Intake Forms. AMIA Annu Symp Proc. 2015;2015:611-620. PMID: [26958196](https://www.ncbi.nlm.nih.gov/pubmed/26958196)."*
-
+* **Tweets related to lynch syndrome**: *Bian J, Zhao Y, Salloum RG, Guo Y, Wang M, Prosperi M, Zhang H, Du X, Ramirez-Diaz LJ, He Z, Sun Y. Using Social Media Data to Understand the Impact of Promotional Information on Laypeople’s Discussions: A Case Study of Lynch Syndrome. J Med Internet Res 2017;19(12):e414"* 
+* **A few other MISC data sets**
 
 Installation
 ------------
