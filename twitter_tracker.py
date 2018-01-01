@@ -77,9 +77,9 @@ def collect_tweets_by_ids(tweet_ids_config_filepath, output_folder, config):
         tweet_ids_config = json.load(tweet_ids_config_rf)
 
     max_range = 100
-    total = len(tweet_ids_config['tweet_ids'][current_ix:])
+    
     current_ix = tweet_ids_config['current_ix'] if ('current_ix' in tweet_ids_config) else 0
-
+    total = len(tweet_ids_config['tweet_ids'][current_ix:])
     tweet_id_chuncks = util.chunks(tweet_ids_config['tweet_ids'][current_ix:], max_range)
 
     for tweet_ids in tweet_id_chuncks:
@@ -150,7 +150,6 @@ def collect_users(call, users_config_filepath, output_folder, config):
 
     max_range = 100
     current_ix = users_config['current_ix'] if ('current_ix' in users_config) else 0
-
     total = len(users_config['users'][current_ix:])
     user_chuncks = util.chunks(users_config['users'][current_ix:], max_range)
 
@@ -227,7 +226,6 @@ def collect_user_relatinoships_by_user_ids(call, user_ids_config_filepath, outpu
         user_ids_config = json.load(user_ids_config_rf)
 
     current_ix = user_ids_config['current_ix'] if ('current_ix' in user_ids_config) else 0
-
     user_ids = user_ids_config['users'][current_ix:]
 
     total = len(user_ids)
