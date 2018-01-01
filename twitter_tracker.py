@@ -6,8 +6,8 @@ import logging.handlers
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='(%(asctime)s) [%(process)d] %(levelname)s: %(message)s')
-requests_log = logging.getLogger("requests")
-requests_log.setLevel(logging.WARNING)
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 import sys
 import os
