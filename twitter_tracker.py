@@ -289,14 +289,6 @@ if __name__=="__main__":
     if (not os.path.exists('logs')):
         os.makedirs('logs')
 
-    formatter = logging.Formatter('(%(asctime)s) [%(process)d] %(levelname)s: %(message)s')
-    handler = logging.handlers.RotatingFileHandler(
-        'logs/twitter_tracker.log', maxBytes=50 * 1024 * 1024, backupCount=10)
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-
-    logger.info(sys.version)
-
     import argparse
     
     parser = argparse.ArgumentParser()
@@ -310,6 +302,14 @@ if __name__=="__main__":
 
     if not args.command:
         sys.exit('ERROR: COMMAND is required')
+
+    formatter = logging.Formatter('(%(asctime)s) [%(process)d] %(levelname)s: %(message)s')
+    handler = logging.handlers.RotatingFileHandler(
+        'logs/twitter_tracker_%s.log'%(args.command), maxBytes=50 * 1024 * 1024, backupCount=10)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    logger.info(sys.version)
 
     WAIT_TIME = args.wait_time
 
