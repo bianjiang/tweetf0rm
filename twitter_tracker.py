@@ -77,6 +77,7 @@ def collect_tweets_by_ids(tweet_ids_config_filepath, output_folder, config):
         tweet_ids_config = json.load(tweet_ids_config_rf)
 
     max_range = 100
+    total = len(tweet_ids_config['tweet_ids'][current_ix:])
     current_ix = tweet_ids_config['current_ix'] if ('current_ix' in tweet_ids_config) else 0
 
     tweet_id_chuncks = util.chunks(tweet_ids_config['tweet_ids'][current_ix:], max_range)
@@ -97,7 +98,7 @@ def collect_tweets_by_ids(tweet_ids_config_filepath, output_folder, config):
         
         flash_cmd_config(tweet_ids_config, tweet_ids_config_filepath, output_folder)
 
-        logger.info('COMPLETED -> (current_ix: [%d])'%(current_ix))
+        logger.info('COMPLETED -> (current_ix: [%d/%d])'%(current_ix, total))
         logger.info('PAUSE %ds to CONTINUE...'%WAIT_TIME)
         time.sleep(WAIT_TIME)
     else:
@@ -150,6 +151,7 @@ def collect_users(call, users_config_filepath, output_folder, config):
     max_range = 100
     current_ix = users_config['current_ix'] if ('current_ix' in users_config) else 0
 
+    total = len(users_config['users'][current_ix:])
     user_chuncks = util.chunks(users_config['users'][current_ix:], max_range)
 
     for users in user_chuncks:
@@ -168,7 +170,7 @@ def collect_users(call, users_config_filepath, output_folder, config):
         
         flash_cmd_config(users_config, users_config_filepath, output_folder)
 
-        logger.info('COMPLETED -> (current_ix: [%d])'%(current_ix))
+        logger.info('COMPLETED -> (current_ix: [%d/%d])'%(current_ix, total))
         logger.info('PAUSE %ds to CONTINUE...'%WAIT_TIME)
         time.sleep(WAIT_TIME)
     else:
@@ -228,6 +230,8 @@ def collect_user_relatinoships_by_user_ids(call, user_ids_config_filepath, outpu
 
     user_ids = user_ids_config['users'][current_ix:]
 
+    total = len(user_ids)
+
     for user_id in user_ids:
         try:
             twitterCralwer = TwitterCrawler(apikeys=apikeys, client_args=CLIENT_ARGS, output_folder = output_folder)
@@ -242,7 +246,7 @@ def collect_user_relatinoships_by_user_ids(call, user_ids_config_filepath, outpu
         
         flash_cmd_config(user_ids_config, user_ids_config_filepath, output_folder)
 
-        logger.info('COMPLETED -> (current_ix: [%d])'%(current_ix))
+        logger.info('COMPLETED -> (current_ix: [%d/%d])'%(current_ix, total))
         logger.info('PAUSE %ds to CONTINUE...'%WAIT_TIME)
         time.sleep(WAIT_TIME)
     else:
@@ -263,6 +267,7 @@ def collect_places(call, places_config_filepath, output_folder, config):
     current_ix = places_config['current_ix'] if ('current_ix' in places_config) else 0
 
     places = places_config['places'][current_ix:]
+    total = len(places)
 
     for place in places:
         try:
@@ -278,7 +283,7 @@ def collect_places(call, places_config_filepath, output_folder, config):
         
         flash_cmd_config(places_config, places_config_filepath, output_folder)
 
-        logger.info('COMPLETED -> (current_ix: [%d])'%(current_ix))
+        logger.info('COMPLETED -> (current_ix: [%d/%d])'%(current_ix, total))
         logger.info('PAUSE %ds to CONTINUE...'%WAIT_TIME)
         time.sleep(WAIT_TIME)
     else:
