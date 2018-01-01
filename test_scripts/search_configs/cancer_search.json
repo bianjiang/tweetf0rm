@@ -1,0 +1,58 @@
+{
+  "0200c80f97047f347be8ee4d4938e65f": {
+    "geocode": null,
+    "querystring": "(\"in situ\") OR (\"leukemia\") OR (\"#leukemia\") OR (\"lymph nodes\") OR (\"lymphatic system\") OR (\"lymphoma\") OR (\"#lymphoma\") OR (\"malignant\") OR (\"#malignant\") OR (\"metastasis\") OR (\"#metastasis\") OR (\"oncologist\")",
+    "since_id": 0,
+    "terms": [
+      "in situ",
+      "leukemia",
+      "#leukemia",
+      "lymph nodes",
+      "lymphatic system",
+      "lymphoma",
+      "#lymphoma",
+      "malignant",
+      "#malignant",
+      "metastasis",
+      "#metastasis",
+      "oncologist"
+    ]
+  },
+  "0682a111dd2742b6afc1765bb59e0643": {
+    "geocode": null,
+    "querystring": "(\"tumor\") OR (\"#tumor\") OR (\"cancerous\") OR (\"#cancerous\") OR (\"cancer\") OR (\"#cancer\") OR (\"carcinoma\") OR (\"#carcinoma\") OR (\"chemoprevention\") OR (\"#chemoprevention\") OR (\"chemotherapy\") OR (\"#chemotherapy\")",
+    "since_id": 0,
+    "terms": [
+      "tumor",
+      "#tumor",
+      "cancerous",
+      "#cancerous",
+      "cancer",
+      "#cancer",
+      "carcinoma",
+      "#carcinoma",
+      "chemoprevention",
+      "#chemoprevention",
+      "chemotherapy",
+      "#chemotherapy"
+    ]
+  },
+  "9704fab283871305d144a8c812e5c759": {
+    "geocode": null,
+    "querystring": "(\"#oncologist\") OR (\"oncology\") OR (\"#oncology\") OR (\"precancerous\") OR (\"#precancerous\") OR (\"pre-malignant\") OR (\"#pre-malignant\") OR (\"premalignant\") OR (\"#premalignant\") OR (\"sarcoma\") OR (\"#sarcoma\")",
+    "since_id": 0,
+    "terms": [
+      "#oncologist",
+      "oncology",
+      "#oncology",
+      "precancerous",
+      "#precancerous",
+      "pre-malignant",
+      "#pre-malignant",
+      "premalignant",
+      "#premalignant",
+      "sarcoma",
+      "#sarcoma"
+    ]
+  }
+}

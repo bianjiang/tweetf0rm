@@ -1,0 +1,24 @@
+{
+    "geocodes": [],
+    "search_terms": [
+        "tumor", "#tumor",
+        "cancerous", "#cancerous",
+        "cancer", "#cancer",
+        "carcinoma", "#carcinoma",
+        "Chemoprevention", "#Chemoprevention",
+        "Chemotherapy", "#Chemotherapy",
+        "In situ",
+        "Leukemia","#Leukemia",
+        "Lymph nodes",
+        "Lymphatic system",
+        "Lymphoma","#Lymphoma",
+        "Malignant","#Malignant",
+        "Metastasis", "#Metastasis",
+        "Oncologist", "#Oncologist",
+        "Oncology", "#Oncology",
+        "Precancerous", "#Precancerous",
+        "pre-malignant", "#pre-malignant", "premalignant", "#premalignant",
+        "Sarcoma", "#Sarcoma"
+    ],
+    "search_json_filename": "cancer_search.json"
+}

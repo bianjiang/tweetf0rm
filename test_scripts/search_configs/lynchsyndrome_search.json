@@ -1,0 +1,13 @@
+{
+  "cc093fe0eb1effbe46f80c8a59f88a4c": {
+    "geocode": null,
+    "querystring": "(\"lynch syndrome\") OR (\"#lynchsyndrome\") OR (\"lynchsyndrome\") OR (\"#lynch_syndrome\")",
+    "since_id": 0,
+    "terms": [
+      "lynch syndrome",
+      "#lynchsyndrome",
+      "lynchsyndrome",
+      "#lynch_syndrome"
+    ]
+  }
+}

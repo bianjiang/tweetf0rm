@@ -1,23 +1,232 @@
 
-#### Updates
-* 12/25/2017: This version hasn't been updated for several reasons.  Primarily because I have another version that does not use proxies (which doesn't work well unless you have massive private premium proxy servers).  I am still collecting massive Twitter data (e.g., random data from 2009 till today with a few missing days).  People keep asking for the raw data, which I can't share directly.  I can share the other tool, email please.
-* 2/18/2017: Update the list of datasets that I have.  Please note the Twitter policy on sharing raw datasets (see below).
-* 7/2/2015: If you need `geocode` Twitter users (e.g., figure out where the user is from based on the `location` string in their profile), you can take a look at this [TwitterUserGeocoder](https://github.com/bianjiang/twitter-user-geocoder)
-* 7/2/2015: I've developed another set of scripts (without using `redis`) with different but similar use cases. Specifically, my use case requires me to 1) track a set of keywords; and 2) track a set of users. The new scripts, for example, will keep pulling in new tweets if you provide a set of seed user ids. It's not in the state that can be released yet, but email me if you are interested in that.   
-* Older: I haven't been updating this for a while, but I just setup a EC2 instance and tested this. Looks like most of the things are still working fine. I have some new research needs myself, so I might update this more frequently in the next few months. But, in general, I would be happy to take requests to add specific functionalities, merge pull requests, and even requests for specific datasets. Just make a ticket ;)*
+#### The old version is in the `tweetf0rm_1_0` branch
+* The old version hasn't been updated for several reasons. Primarily because (1) it's too tedious to setup `redis` for this; and (2) using proxies don't work well unless you have massive private premium proxy servers.  
+* If you want to see the old version, you can go [old](https://github.com/bianjiang/tweetf0rm/tree/tweetf0rm_1_0).
+
+## Note
+* These are based on my use cases, which primarily for batch processing (e.g., continuously monitoring a set of public users and fetch their timelines).
+* If there are missing functions, you are welcome to contribute and make pull requests.
+* I do have a huge collection of tweets, see below **[Datasets](#datasets)** section, but **Twitter license (or at least the company's position on this) does not allow me redistribute the crawled data (e.g., someone asked the question a while back: https://dev.twitter.com/discussions/8232).**   If you want to get a hand on this dataset (e.g., through **collaboration**), contact me at <ji0ng.bi0n@gmail.com>.
+* If you need `geocode` Twitter users (e.g., figure out where the user is from based on the `location` string in their profile), you can take a look at this [TwitterUserGeocoder](https://github.com/bianjiang/twitter-user-geocoder)
+* * Post collect process * [tweeta](https://github.com/bianjiang/tweeta) is a set of convenience functions that might help you parse raw json tweets (and give you a `TweetaTweet` object so that you can access the tweet through functions (e.g., `tweet.tweet_id()` and `tweet.created_at()`)).
+* Please cite any of these:
+   * *Bian J, Zhao Y, Salloum RG, Guo Y, Wang M, Prosperi M, Zhang H, Du X, Ramirez-Diaz LJ, He Z, Sun Y. [Using Social Media Data to Understand the Impact of Promotional Information on Laypeople’s Discussions: A Case Study of Lynch Syndrome](https://www.jmir.org/2017/12/e414). J Med Internet Res 2017;19(12):e414. DOI: 10.2196/jmir.9266. PMID: 29237586*
+   * *Bian J, Yoshigoe K, Hicks A, Yuan J, He Z, Xie M, Guo Y, Prosperi M, Salluom R, Modave F. [Mining Twitter to assess the public perception of the "Internet of things"](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0158450). PLoS One. 2016 Jul 8;11(7):e0158450. doi: 10.1371/journal.pone.0158450. eCollection 2016. PMID: 27391760*
+   * *Hicks A, Hogan WR, Rutherford M, Malin B, Xie M, Fellbaum C, Yin Z, Fabbri D, Hanna J, Bian J*. [Mining Twitter as a First Step toward Assessing the Adequacy of Gender Identification Terms on Intake Forms](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4765681/). AMIA Annu Symp Proc. 2015;2015:611-620. PMID: 26958196*
+
+# Installation
+None... just clone this and start using it.
+
+    git clone git://github.com/bianjiang/tweetf0rm.git
+    
+## Dependencies
+- [Twython](https://github.com/ryanmcgrath/twython)
+
+Just do:
+
+    pip install -r requirements.txt
+
+# Usage
+
+* First, you'll want to login the twitter dev site and create an applciation at https://dev.twitter.com/apps to have access to the Twitter API!
+* After you register, create an access token and grab your applications ``Consumer Key``, ``Consumer Secret``, ``Access token`` and ``Access token secret`` from the OAuth tool tab. Put these information into a ``config.json`` under ``apikeys`` (see an example below).
+
+```json
+{
+        "apikeys": {
+                "i0mf0rmer01": {
+                        "app_key": "APP_KEY",
+                        "app_secret": "APP_SECRET",
+                        "oauth_token": "OAUTH_TOKEN",
+                        "oauth_token_secret": "OAUTH_TOKEN_SECRET"
+                }
+        }
+}
+
+```
+
+## Command line options
+
+In general,
+* `-c`: the config file for Twitter API keys
+* `-o`: the output folder (where you want to hold your data)
+* `-cmd`: the command you want to run
+* `-cc`: the config file for the command (each command often needs different config files, see examples below)
+* `-wait`: wait `x` secs between calls (only in REST API access)
+
+## Streaming API access
+
+### Public sample 
+- [statuses/sample](https://developer.twitter.com/en/docs/tweets/sample-realtime/overview/GET_statuse_sample)
+- `-cmd`: `sample` (this is default)
+```bash
+# Get public tweets using streaming API
+python twitter_streamer.py -c ../twittertracker-config/config_i0mf0rmer01.json -o /mnt/data2/twitter/sample/ -cmd sample
+```
+### Filter by `geo`
+- [statuses/filter](https://developer.twitter.com/en/docs/tweets/filter-realtime/api-reference/post-statuses-filter)
+- `-cmd`: `locations`
+- `-cc`: e.g., `test_data/geo/US_BY_STATE_1.json` 
+```bash
+# Streaming API: get tweets within geo boundries defined in -cc test_data/geo/US_BY_STATE_1.json
+python twitter_streamer.py -c ../twittertracker-config/config_i0mf0rmer02.json -o /mnt/data2/twitter/US_BY_STATE -cmd locations -cc test_data/geo/US_BY_STATE_1.json
+
+```
+
+## REST APIs
 
 
-tweetf0rm
-=========
+### Search and monitor a list of keywords
+- [search/tweets](https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets.html)
+- `-cmd`: `search`
+- `-cc`: `test_data/search.json` 
 
-A crawler that helps you collect data from Twitter for research. Most of the heavy works are already done by [Twython](https://github.com/ryanmcgrath/twython). ``tweetf0rm`` is just a collection of python scripts help to deal with parallelization, proxies, and errors such as connection failures. In most use cases, it will auto-restart when an exception occurs. And, when a crawler exceeds the Twitter API's [rate limit](https://dev.twitter.com/docs/rate-limiting/1.1/limits), the crawler will pause itself and auto-restart later.
+```json
+{  
+   "keyword_list_0":{  
+      "geocode":null,
+      "terms":[  
+         "\"cervarix\"",
+         "\"cervical cancer\"",
+         "\"cervical #cancer\"",
+         "\"#cervical cancer\"",
+         "\"cervicalcancer\"",
+         "\"#cervicalcancer\""
+      ],
+      "since_id":1,
+      "querystring":"(\"cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\")"
+   }, 
+   "keyword_list_1": {
+      "geocode": [
+      "dona_ana_nm",
+      "32.41906196127472,-106.82334114385034,51.93959956432837mi"
+      ],
+      "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+      "since_id": 0,
+       "terms": [
+         "cancer #cervical",
+         "cancercervical",
+         "#cancercervical"
+       ]
+   }
+}
+```
+```bash
+# Search using a search config file
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -cmd search -o data/search_query -cc test_data/search.json -wait 5
+```
+* It will output the file into a folder with the current timestamp ('YYYYYMMDD') with a filename derived from md5(querystring).
+* This one has no end, it will continuously query Twitter for any new tweets matching the query.
+* The reason that I'm using `search/tweets` rather than the streaming API `statuses/filters` (with the `track` option) is that often time I want to get old tweets as well (even through it's just a few days old.  Twitter only provide roughly a week old tweets when you do your search; while `statues/filters` does not provide any `old` tweets at all).
+* The other caveat is that you can only track a limited number of keywords with `statues/filter`.  So, if you have a lot to track, you will need to have a lot of separate instances, each tracking different part of the keywords.
+* With `search/tweets`, you can just search a portion of the keyword list at a time (when this happens take a look at the `test_scripts/generate_search_json.py`, which break a long list of keywords down into small portions, and generate the necessary config file for this).
+* Note that you can also set the `geocode` field to constrain the search within that areas. 
 
-To workaround Twitter's rate limits, ``tweetf0rm`` can spawn multiple crawlers each with different proxy and twitter dev account on a single computer (or on multiple computers) and collaboratively ``farm`` user tweets and twitter relationship networks (i.e., friends and followers). The communication channel for coordinating among multiple crawlers is built on top of [redis](http://redis.io/) -- a high performance in-memory key-value store. It has its own scheduler that can balance the load of each worker (or worker machines).
+### Monitor and fetch users' timelines
+* [statuses/user_timelines](https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-user_timeline)
+* `-cmd`: `user_timelines`
+* `-cc`: `test_data/user_timelines.json`
+```json
+{  
+   "2969995619":{  
+      "remove":false,
+      "user_id":2969995619,
+      "since_id":1
+   }
+}
+```
+* `remove` is used to track users whose timelines cannot be pulled (e.g., private, etc.), and it will not crawl `removed` user ids.
 
-It's quite stable for the things that I want to do. I have collected billions of tweets from **2.6 millions** twitter users in about 2 weeks with a single machine.
+```bash
+# Monitor and fetch users' timelines
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -cmd user_timelines -o data/timelines -cc test_data/user_timelines.json -wait 5
+```
 
-Datasets
-------------
+### Get tweets by a list of ids
+* [statues/lookup](https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-statuses-lookup)
+* `-cmd`: `tweets_by_ids`
+* `-cc`: see below
+
+```json
+{"current_ix": 0, "tweet_ids": ["911333326765441025", "890608763698200577"]}
+```
+* It grabs upto 100 (per Twitter API limit) number of tweets from the `tweet_ids` list.
+* It assumes the `tweet_ids` is unique, and if it stops (e.g., 'CTRL+C', it will remember it `current_ix`, when you restart, it starts from there)
+```bash
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -o data/tweets_by_ids -cmd tweets_by_ids -cc test_data/tweet_ids.json
+```
+
+### Get tweets by an id range
+* [statues/lookup](https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-statuses-lookup)
+* `-cmd`: `tweets_by_id_range`
+* `-cc`: see below
+
+```json
+{"end_id": 299, "current_id": 0}
+```
+* We can use this to fetch historical data, e.g,. `search_history.json` as shown above, which starts at tweet_id = 0, and fetch 100 tweets in each iteratation and move the current_id to += 100, until it reaches `end_id`.
+Note, it does NOT fetch `tweet_id == end_id` (up to end_id - 1)
+```bash
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -o data/tweets_id_range -cmd tweets_by_id_range -cc test_data/tweets_id_range.json
+```
+
+### Get user objects by user ids
+* [users/lookup](https://developer.twitter.com/en/docs/accounts-and-users/follow-search-get-users/api-reference/get-users-lookup)
+* `-cmd`: `users_by_ids`
+* `-cc`: see blow
+```json
+{"current_ix": 0, "users": ["2969995619"]}
+```
+```bash
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -o data/users_by_ids -cmd users_by_ids -cc test_data/user_ids.json
+```
+
+### Get user objects by screen names
+* [users/lookup](https://developer.twitter.com/en/docs/accounts-and-users/follow-search-get-users/api-reference/get-users-lookup)
+* `-cmd`: `users_by_screen_names`
+* `-cc`: see blow
+```json
+{"current_ix": 0, "users": ["meetpacific"]}
+```
+```bash
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -o data/users_by_screen_names -cmd users_by_screen_names -cc test_data/user_screen_names.json
+```
+
+### Collect ['/friends/ids', '/friends/list', '/followers/ids', '/followers/list']
+```json
+{"current_ix": 0, "users": ["2969995619"]}
+```
+```bash
+# /friends/ids
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -o data/friends_ids -cmd '/friends/ids' -cc test_data/user_ids.json
+
+# /followers/ids
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -o data/followers_ids -cmd '/followers/ids' -cc test_data/user_ids.json
+```
+* `*/ids` only fetches `ids` (5,000 at a time), while `*/list` fetches the actual `user` objects (100 at a time).
+* Note the differences between this and fetching user timelines.
+   * In `timeline`, we want to keep tracking the users and get their latest tweets; while in this case, we only care about a snapshot of their relations.  So, this will stop when it has looped through the entire list.
+
+### Search for `place` by either a `query` or `ip`
+* [geo/search](https://developer.twitter.com/en/docs/geo/places-near-location/api-reference/get-geo-search)
+* `-cmd`: `collect_places_by_[query/ip]`
+* `-cc`: see blow
+```json
+{"current_ix": 0, "places": ["Gainesville, FL", "Shanghai, China"]}
+{"current_ix": 0, "places": ["74.125.19.104"]}
+```
+```bash
+# Search for `place` objects based on place names (query)
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -o data/places_by_queries -cmd places_by_queries -cc test_data/place_names.json
+
+# Search for `place` based on `ip` addresses
+python twitter_tracker.py -c ../twittertracker-config/config_i0mf0rmer08.json -o data/places_by_ips -cmd places_by_ips -cc test_data/ips.json
+```
+* Note, you will need a user context for these API endpoints (which means you have to provide `OAUTH_TOKEN` and `OAUTH_TOKEN_SECRET` in your config).
+
+
+## </a>Datasets
+
 **Twitter license (or at least the company's position on this) does not allow me redistribute the crawled data (e.g., someone asked the question a while back: https://dev.twitter.com/discussions/8232).**   If you want to get a hand on this dataset (e.g., through collaboration), contact me at <ji0ng.bi0n@gmail.com>.  But, here is what I have:
 
 * **Random sample since 2014 (update: since 2009)**: I have been crawling tweets using [GET statuses/sample](https://dev.twitter.com/streaming/reference/get/statuses/sample) since 2014, nonstop... except a few days the server went down...
@@ -27,141 +236,11 @@ Datasets
 * **Tweets related to lynch syndrome**: *Bian J, Zhao Y, Salloum RG, Guo Y, Wang M, Prosperi M, Zhang H, Du X, Ramirez-Diaz LJ, He Z, Sun Y. Using Social Media Data to Understand the Impact of Promotional Information on Laypeople’s Discussions: A Case Study of Lynch Syndrome. J Med Internet Res 2017;19(12):e414"* 
 * **A few other MISC data sets**
 
-Installation
-------------
 
-None... just clone this and start using it. It's not that complicated yet to have a setup.py..
-
-    git clone git://github.com/bianjiang/tweetf0rm.git
-
-Dependencies
-------------
-To run this, you will need:
-- [Twython](https://github.com/ryanmcgrath/twython)
-- [futures](https://pypi.python.org/pypi/futures) if you are on Python 2.7
-- [redis server](http://redis.io/) and [redis python library](https://pypi.python.org/pypi/redis)
-- [requests](http://www.python-requests.org/en/latest/)
-- (optional) [lxml](http://lxml.de/) if you want to use the ``crawl_proxies.py`` script to get a list of free proxies from http://spys.ru/en/http-proxy-list/.
-
-##### I haven't tested Python 3 yet... 
-
-Features
-------------
-
-- Support running multiple crawler processes (through python ``multiprocessing``) with different proxies on single node;
-- Support a cluster of nodes to collaboratively ``f0rm`` tweets.
-
-
-How to use
-------------
-
-First, you'll want to login the twitter dev site and create an applciation at https://dev.twitter.com/apps to have access to the Twitter API!
-
-After you register, create an access token and grab your applications ``Consumer Key``, ``Consumer Secret``, ``Access token`` and ``Access token secret`` from the OAuth tool tab. Put these information into a ``config.json`` under ``apikeys`` (see an example below).
-
-You have to have a redis server setup ([redis quick start](http://redis.io/topics/quickstart)). Note that if you want to run multiple nodes, you will only need to have one redis instance, and that instance has to be reachable from other nodes. The ``redis_config`` needs to be specified in the ``config.json`` as well.
-
-Even you only wants to run on one node with multiple crawler processes, you will still need a local redis server for coordinating the tasks.
-
-		{
-			"apikeys": {
-				"i0mf0rmer01" :{
-					"app_key":"CONSUMER_KEY",
-					"app_secret":"CONSUMER_SECRET",
-					"oauth_token":"ACCESS_TOKEN",
-					"oauth_token_secret":"ACCESS_TOKEN_SECRET"
-				},
-				"i0mf0rmer02" :{
-					"app_key":"CONSUMER_KEY",
-					"app_secret":"CONSUMER_SECRET",
-					"oauth_token":"ACCESS_TOKEN",
-					"oauth_token_secret":"ACCESS_TOKEN_SECRET"
-				},
-				"i0mf0rmer03" :{
-					"app_key":"CONSUMER_KEY",
-					"app_secret":"CONSUMER_SECRET",
-					"oauth_token":"ACCESS_TOKEN",
-					"oauth_token_secret":"ACCESS_TOKEN_SECRET"
-				}
-			},
-			"redis_config": {
-				"host": "localhost",
-				"port": 6379,
-				"db": 0,
-				"password": "PASSWORD"
-			},
-			"verbose": "True",
-			"output": "./data",
-			"archive_output": "./data"
-		}
-
-Most of these options are straightforward. ``output`` defines where the crawled data will be stored; ``archive_output`` defines where the gzipped files will be stored (without compression, it takes a lot of space to store the raw tweets; about 100G per 100,000 users tweets).
-
-The proxies need to be listed in ``proxy.json`` file like:
-
-		{
-			"proxies": [{"66.35.68.146:8089": "http"}, {"69.197.132.80:7808": "http"}, {"198.56.208.37:8089": "http"}]
-		}
-
-The proxy will be verified upon bootstrap, and only the valid ones will be kept and used (currently it's not switching to a different proxy when a proxy server goes down, but will be added soon). There are a lot free proxy servers available.
-
-Remember that Twitter's rate limit is per account as as well as per IP. So, you should have at least one twitter API account per proxy. Ideally, you should more proxies than twitter accounts, so that ``tweetf0rm`` can switch to a different proxy, if one failed (haven't implemented yet, but higher on the list).
-
-To start the ``f0rm", you can simply run:
-
-	
-	$ ./bootstrap.sh -c config.json -p proxies.json
-
-
-To issue a command to the ``f0rm``, you are basically pushing commands to redis. This is how the commands should look like, e.g.,
-	
-	cmd = {
-	 	"cmd": "CRAWL_FRIENDS",
-	 	"user_id": 1948122342,
-	 	"data_type": "ids",
-	 	"depth": 2,
-	 	"bucket":"friend_ids"
-	}
-	
-	cmd = {
-		"cmd": "CRAWL_FRIENDS",
-		"user_id": 1948122342,
-		"data_type": "users",
-		"depth": 2,
-		"bucket":"friends"
-	}
-	
-	cmd = {
-		"cmd": "CRAWL_USER_TIMELINE",
-		"user_id": 53039176,
-		"bucket": "timelines"
-	} 
-
-bucket determine where the results will be saved in the ``output`` folder (specified in ``config.json``). All twitter data are json encoded strings, and output files are normally named with the twitter user id, e.g., if you are crawling a user's timeline, all his/her tweets will be organized in the "timelines" sub-folder with his/her twitter id (numerical and unique identifier for each twitter user).
-
-There is a ``client.py`` script that helps you generate these commands and push to the local redis node queue. e.g., 
-
-	$ client.sh -c tests/config.json -cmd CRAWL_FRIENDS -d 1 -dt "ids" -uid 1948122342
-
-means you want to crawl all friends of ``uid=1948122342`` with ``depth`` as ``1`` and the results are just the twitter user ids of his/her friends. There are also commands you can use to crawl a list of users, e.g., 
-	
-	$ client.sh -c tests/config.json -cmd BATCH_CRAWL_FRIENDS -d 1 -dt "ids" -j user_ids.json
-
-instead of providing a specific ``user_id``, you provide a ``json`` file that contains a list of ``user_ids``.
-
-MISC
-------------
-
-There is also a script (``scripts/crawl_proxies.py``) for crawling proxies server list from spy.ru. It will crawl the http proxies listed in spy.ru, test each one and produce the ``proxies.json`` with valid proxies.
-
-Note that, if you don't use proxies, you can only have one crawler active, since Twitter's rate limit applies to both the account as well as the IP.
-
-
-### License
-------------
+## License
 
 The MIT License (MIT)
-Copyright (c) 2013 Jiang Bian (ji0ng.bi0n@gmail.com)
+Copyright (c) 2018 Jiang Bian (ji0ng.bi0n@gmail.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -180,6 +259,4 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/bianjiang/tweetf0rm/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 

@@ -1,0 +1,35 @@
+{
+  "945883b7e6108d1554847839679b5c6a": {
+    "geocode": null,
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "bac766a69fe16d71af20dc6db2612c99": {
+    "geocode": null,
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer"
+    ]
+  }
+}

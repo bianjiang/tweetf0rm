@@ -1,0 +1,1681 @@
+{
+  "0349fc398c7876b27a32ed8708185fa5": {
+    "geocode": [
+      "dona_ana_nm",
+      "32.41906196127472,-106.82334114385034,51.93959956432837mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "03e854cccab05f0371369b42b2e7fac6": {
+    "geocode": [
+      "kinney_tx",
+      "29.354367391377842,-100.45343798847033,27.737542948833962mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "075a3b1fcff5499bd97ad358ac93ac63": {
+    "geocode": [
+      "maverick_tx",
+      "28.6418766839092,-100.39106155970319,34.98876630916757mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "07e59a9342462629719c45f5948f988d": {
+    "geocode": [
+      "san_diego_ca",
+      "33.02187484500974,-116.84265566973069,55.24883155189012mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "0be3e2096caa0ec1c3f71c4258f2255d": {
+    "geocode": [
+      "yuma_az",
+      "32.75376341318896,-114.07933889710172,65.36135351845566mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "15326d337d3672cfc2f54d3098452a7c": {
+    "geocode": [
+      "jeffdavis_tx",
+      "30.760986418542448,-104.21545181087042,51.796749098745266mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "155beb147959ab6bfb7567e1b1bed9a2": {
+    "geocode": [
+      "val_verde_tx",
+      "29.766272774689806,-101.23326432293436,48.14071357592185mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "172bbbc51e599e0a83f2472b5bee2aaf": {
+    "geocode": [
+      "zapata_tx",
+      "26.945237068429957,-99.20491891311715,30.021569916528225mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "17c096c31f44dc9911ad80e891918e34": {
+    "geocode": [
+      "jeffdavis_tx",
+      "30.760986418542448,-104.21545181087042,51.796749098745266mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "19a8c709168a450e1c268d3a33b07eb6": {
+    "geocode": [
+      "cochise_az",
+      "31.88187941076444,-109.75824543276532,56.08862590170022mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "1b818b4029bb26ba40a2ad75ec017e05": {
+    "geocode": [
+      "santa_cruz_az",
+      "31.53272752269616,-110.91016210178388,30.28789444140191mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "1bc3bb85294d8bd89db6395e6f44b89d": {
+    "geocode": [
+      "hidalgo_nm",
+      "32.05563012865423,-108.63254286591285,55.57785334065308mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "204cba482cc13d9564b9cbb511f36c98": {
+    "geocode": [
+      "imperial_ca",
+      "33.02863311995613,-115.28832454648432,55.353165830561416mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "20ecd9809e587a68b58a212ee701d6a9": {
+    "geocode": [
+      "hudspeth_tx",
+      "31.31421173053295,-105.45678768595083,57.40059197269535mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "23174c29a569e8bc6ac46b65bcee2f78": {
+    "geocode": [
+      "el_paso_tx",
+      "31.69479577023928,-106.31377858272373,28.188316540742175mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "2864284a0d51338e9877759a30373693": {
+    "geocode": [
+      "cochise_az",
+      "31.88187941076444,-109.75824543276532,56.08862590170022mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "298051d20bcfb2c38a4fc065c953f588": {
+    "geocode": [
+      "cameron_tx",
+      "26.13433662091788,-97.50516378236739,29.35485722420209mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "2cf23a4205fcbc97dc622a3fa4323186": {
+    "geocode": [
+      "el_paso_tx",
+      "31.69479577023928,-106.31377858272373,28.188316540742175mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "2d983148512e9b3bbb9deac0134982b1": {
+    "geocode": [
+      "luna_nm",
+      "32.195421724199115,-107.76514700356664,39.34474044833963mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "2ec81ad40b9439d365ada1007a53479f": {
+    "geocode": [
+      "imperial_ca",
+      "33.02863311995613,-115.28832454648432,55.353165830561416mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "2f642e0abd9346a76c12edaee94539ea": {
+    "geocode": [
+      "terrell_tx",
+      "30.217388953656553,-102.10870342309578,40.92253295162357mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "2f69e504a12dd5269eefddcd441b89cb": {
+    "geocode": [
+      "santa_cruz_az",
+      "31.53272752269616,-110.91016210178388,30.28789444140191mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "311996729ced73a7e8a934ca904fe1d7": {
+    "geocode": [
+      "hudspeth_tx",
+      "31.31421173053295,-105.45678768595083,57.40059197269535mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "320e4dfe17ece27703d1da31873eb101": {
+    "geocode": [
+      "starr_tx",
+      "26.518652788944046,-98.74735635911306,32.16693558200124mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "33ab4687191b518da1a6e5e3f277ad48": {
+    "geocode": [
+      "kinney_tx",
+      "29.354367391377842,-100.45343798847033,27.737542948833962mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "3adb99ab1e3e07661a71ecdec14c0e34": {
+    "geocode": [
+      "cochise_az",
+      "31.88187941076444,-109.75824543276532,56.08862590170022mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "3e6ed9b21584e8931c65cc684e711af2": {
+    "geocode": [
+      "jeffdavis_tx",
+      "30.760986418542448,-104.21545181087042,51.796749098745266mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "42a3d587bf6e358cedeab1390cba46eb": {
+    "geocode": [
+      "cameron_tx",
+      "26.13433662091788,-97.50516378236739,29.35485722420209mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "456c34257a89f1b329b7c361466ce7ec": {
+    "geocode": [
+      "presidio_tx",
+      "29.947431275579614,-104.39313153430696,59.107777736166476mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "48e066501f551561de90da60d2c9835a": {
+    "geocode": [
+      "terrell_tx",
+      "30.217388953656553,-102.10870342309578,40.92253295162357mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "494c79a0316863cd1b0e78a42a762d46": {
+    "geocode": [
+      "san_diego_ca",
+      "33.02187484500974,-116.84265566973069,55.24883155189012mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "499f824ab7bf40c10721c764ffe4641c": {
+    "geocode": [
+      "maverick_tx",
+      "28.6418766839092,-100.39106155970319,34.98876630916757mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "4afe3fa6d063ec86b5fd1c2bbdc5788c": {
+    "geocode": [
+      "yuma_az",
+      "32.75376341318896,-114.07933889710172,65.36135351845566mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "4c91848dd4bfc7f74d8588ddd2554161": {
+    "geocode": [
+      "san_diego_ca",
+      "33.02187484500974,-116.84265566973069,55.24883155189012mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "4d64a9a227d0af54d970db2fed28f293": {
+    "geocode": [
+      "webb_tx",
+      "27.736440149847414,-99.50681922640004,54.005019300303424mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "52156663e7404c3692472a350bde336a": {
+    "geocode": [
+      "kinney_tx",
+      "29.354367391377842,-100.45343798847033,27.737542948833962mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "524a14e9ec6dea102ed3daf343663bac": {
+    "geocode": [
+      "hidalgo_nm",
+      "32.05563012865423,-108.63254286591285,55.57785334065308mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "53b9222ce928920d65986d1192b5b4d1": {
+    "geocode": [
+      "webb_tx",
+      "27.736440149847414,-99.50681922640004,54.005019300303424mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "54e1ac2d5ecd49ab6b1843058c256909": {
+    "geocode": [
+      "kinney_tx",
+      "29.354367391377842,-100.45343798847033,27.737542948833962mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "59e80fb1734aec890c955fd2bc73e9bc": {
+    "geocode": [
+      "pima_az",
+      "31.977987667592142,-111.9011017576389,92.57723137311442mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "5c834ec1b5c52e1a1c535532ac06ea73": {
+    "geocode": [
+      "hudspeth_tx",
+      "31.31421173053295,-105.45678768595083,57.40059197269535mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "5ca18c179f3cd61089d1721fd908a846": {
+    "geocode": [
+      "cameron_tx",
+      "26.13433662091788,-97.50516378236739,29.35485722420209mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "5d98b1008ec4e265f486dddd8ca00ee7": {
+    "geocode": [
+      "yuma_az",
+      "32.75376341318896,-114.07933889710172,65.36135351845566mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "5daa71786ddfabbd2d7c90662e1d16b6": {
+    "geocode": [
+      "cochise_az",
+      "31.88187941076444,-109.75824543276532,56.08862590170022mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "6110484a607b2c6932ee4936c9c02e56": {
+    "geocode": [
+      "santa_cruz_az",
+      "31.53272752269616,-110.91016210178388,30.28789444140191mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "656c79c856f0a2769fa1b5d799a24d4d": {
+    "geocode": [
+      "val_verde_tx",
+      "29.766272774689806,-101.23326432293436,48.14071357592185mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "658ad606b1dd7896e69e934ff06e87d4": {
+    "geocode": [
+      "brewster_tx",
+      "29.82108021975194,-103.06701898626915,73.33286325065248mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "6667c411cbbcaa337816056ead8c692a": {
+    "geocode": [
+      "el_paso_tx",
+      "31.69479577023928,-106.31377858272373,28.188316540742175mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "67491403f94b489fcc157058110fbe21": {
+    "geocode": [
+      "presidio_tx",
+      "29.947431275579614,-104.39313153430696,59.107777736166476mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "735e2bec6e3db450e88fc746ac06b646": {
+    "geocode": [
+      "hidalgo_tx",
+      "26.413870239544636,-98.22543255064708,33.948510255991465mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "76623da9e30d2537494a26e62cba039e": {
+    "geocode": [
+      "val_verde_tx",
+      "29.766272774689806,-101.23326432293436,48.14071357592185mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "78d874991377118dda802652cde6b581": {
+    "geocode": [
+      "zapata_tx",
+      "26.945237068429957,-99.20491891311715,30.021569916528225mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "7b889733c6f61084924f276c9ce11356": {
+    "geocode": [
+      "luna_nm",
+      "32.195421724199115,-107.76514700356664,39.34474044833963mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "7f8d67520adbcfcbba92f2c8aade1c85": {
+    "geocode": [
+      "presidio_tx",
+      "29.947431275579614,-104.39313153430696,59.107777736166476mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "81a4947819e5ed997c15ef6212f8f086": {
+    "geocode": [
+      "terrell_tx",
+      "30.217388953656553,-102.10870342309578,40.92253295162357mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "85f0f8fde71d4287f7ac10255c142457": {
+    "geocode": [
+      "hudspeth_tx",
+      "31.31421173053295,-105.45678768595083,57.40059197269535mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "8700ca66c7342f9fb24b27b95baed76f": {
+    "geocode": [
+      "yuma_az",
+      "32.75376341318896,-114.07933889710172,65.36135351845566mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "87b639180733d4323fcd71ae66f13704": {
+    "geocode": [
+      "webb_tx",
+      "27.736440149847414,-99.50681922640004,54.005019300303424mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "8bde205811b17ebf8685e53183d0f375": {
+    "geocode": [
+      "luna_nm",
+      "32.195421724199115,-107.76514700356664,39.34474044833963mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "91ddb3e24c5406bd751aecc9ecdf275c": {
+    "geocode": [
+      "hidalgo_nm",
+      "32.05563012865423,-108.63254286591285,55.57785334065308mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "92a7684de791748b02e7ff2cfc906ef4": {
+    "geocode": [
+      "jeffdavis_tx",
+      "30.760986418542448,-104.21545181087042,51.796749098745266mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "961119e9d903b97824ebfe5c08b7803e": {
+    "geocode": [
+      "starr_tx",
+      "26.518652788944046,-98.74735635911306,32.16693558200124mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "9fb6fe94016735edb52d3e38042e20ac": {
+    "geocode": [
+      "imperial_ca",
+      "33.02863311995613,-115.28832454648432,55.353165830561416mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "9fba42fd75b93212d0151ccaedffe26d": {
+    "geocode": [
+      "zapata_tx",
+      "26.945237068429957,-99.20491891311715,30.021569916528225mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "a108ea94308706c7132206a0cbc9388c": {
+    "geocode": [
+      "zapata_tx",
+      "26.945237068429957,-99.20491891311715,30.021569916528225mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "a3516d41e9f5d65428037ca06fa272b3": {
+    "geocode": [
+      "pima_az",
+      "31.977987667592142,-111.9011017576389,92.57723137311442mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "a36d5e5752b2cb7cf21641c27854c1fe": {
+    "geocode": [
+      "luna_nm",
+      "32.195421724199115,-107.76514700356664,39.34474044833963mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "a77883cd339841ae5eab9ef92f6a60ad": {
+    "geocode": [
+      "starr_tx",
+      "26.518652788944046,-98.74735635911306,32.16693558200124mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "a8222cbd45d6e0bf7cd3429f8880390a": {
+    "geocode": [
+      "santa_cruz_az",
+      "31.53272752269616,-110.91016210178388,30.28789444140191mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "aae6528b9a5a7fa290f61fd3707755e4": {
+    "geocode": [
+      "hidalgo_nm",
+      "32.05563012865423,-108.63254286591285,55.57785334065308mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "aedfb522f0da3e5f6cb7fdf8ac6b63f5": {
+    "geocode": [
+      "el_paso_tx",
+      "31.69479577023928,-106.31377858272373,28.188316540742175mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "bf710418ba17e6ea9577eb0e3685f018": {
+    "geocode": [
+      "brewster_tx",
+      "29.82108021975194,-103.06701898626915,73.33286325065248mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "c061222386ec6915dcead9c77d7b042d": {
+    "geocode": [
+      "san_diego_ca",
+      "33.02187484500974,-116.84265566973069,55.24883155189012mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "c289c3995e7f1d29d5ed832430c9928b": {
+    "geocode": [
+      "pima_az",
+      "31.977987667592142,-111.9011017576389,92.57723137311442mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "c35664c47ccb976769ba9b5476700c8e": {
+    "geocode": [
+      "terrell_tx",
+      "30.217388953656553,-102.10870342309578,40.92253295162357mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "c9393cc831ea8244be18f829a81fce57": {
+    "geocode": [
+      "cameron_tx",
+      "26.13433662091788,-97.50516378236739,29.35485722420209mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "cdf728ea3ec15db83629e60f2f25bce0": {
+    "geocode": [
+      "maverick_tx",
+      "28.6418766839092,-100.39106155970319,34.98876630916757mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "ce638a4e9fcc1c15f0d410ff493faf46": {
+    "geocode": [
+      "val_verde_tx",
+      "29.766272774689806,-101.23326432293436,48.14071357592185mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "cfb0b775b72aaf297804c8ffe4754d56": {
+    "geocode": [
+      "starr_tx",
+      "26.518652788944046,-98.74735635911306,32.16693558200124mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "d1c650817d8c9e7bff7a74187b801309": {
+    "geocode": [
+      "brewster_tx",
+      "29.82108021975194,-103.06701898626915,73.33286325065248mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "d359afc84b896a65549735c906b85327": {
+    "geocode": [
+      "hidalgo_tx",
+      "26.413870239544636,-98.22543255064708,33.948510255991465mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "dd2d04bb7597860f1c90e34b7711eb81": {
+    "geocode": [
+      "hidalgo_tx",
+      "26.413870239544636,-98.22543255064708,33.948510255991465mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "dd5f763794d41d19483ae58e757e192e": {
+    "geocode": [
+      "maverick_tx",
+      "28.6418766839092,-100.39106155970319,34.98876630916757mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "deac8a089e4a67bef8bfc0348b622860": {
+    "geocode": [
+      "brewster_tx",
+      "29.82108021975194,-103.06701898626915,73.33286325065248mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "e9f502815bb3781d0e9e48b3421075ca": {
+    "geocode": [
+      "imperial_ca",
+      "33.02863311995613,-115.28832454648432,55.353165830561416mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "eaf5675ad217da64a9e36f8337947557": {
+    "geocode": [
+      "webb_tx",
+      "27.736440149847414,-99.50681922640004,54.005019300303424mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "ecbef0156834ddb52736f9fb42478b84": {
+    "geocode": [
+      "dona_ana_nm",
+      "32.41906196127472,-106.82334114385034,51.93959956432837mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "ece2a69c6fc11ec473c85e19b7183e9a": {
+    "geocode": [
+      "presidio_tx",
+      "29.947431275579614,-104.39313153430696,59.107777736166476mi"
+    ],
+    "querystring": "(\"cancer #cervical\") OR (\"cancercervical\") OR (\"#cancercervical\")",
+    "since_id": 0,
+    "terms": [
+      "cancer #cervical",
+      "cancercervical",
+      "#cancercervical"
+    ]
+  },
+  "efbca031c4d2ae8788b8c60427cd8ff5": {
+    "geocode": [
+      "hidalgo_tx",
+      "26.413870239544636,-98.22543255064708,33.948510255991465mi"
+    ],
+    "querystring": "(\"papillomavirus\") OR (\"#papillomavirus\") OR (\"cervarix\") OR (\"#cervarix\") OR (\"cervical cancer\") OR (\"cervical #cancer\") OR (\"#cervical cancer\") OR (\"cervicalcancer\") OR (\"#cervicalcancer\") OR (\"vph\") OR (\"#vph\")",
+    "since_id": 0,
+    "terms": [
+      "papillomavirus",
+      "#papillomavirus",
+      "cervarix",
+      "#cervarix",
+      "cervical cancer",
+      "cervical #cancer",
+      "#cervical cancer",
+      "cervicalcancer",
+      "#cervicalcancer",
+      "vph",
+      "#vph"
+    ]
+  },
+  "f1f19ce4c688867080119193f2cf60f6": {
+    "geocode": [
+      "pima_az",
+      "31.977987667592142,-111.9011017576389,92.57723137311442mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  },
+  "f757ce4e8a5ea2c9f3bee58d6f3ae7a1": {
+    "geocode": [
+      "dona_ana_nm",
+      "32.41906196127472,-106.82334114385034,51.93959956432837mi"
+    ],
+    "querystring": "(\"#vphvacuna\") OR (\"vphvacuna\") OR (\"viruspapilomahumano\") OR (\"#viruspapilomahumano\") OR (\"viruspapilomahumanovacuna\") OR (\"#viruspapilomahumanovacuna\") OR (\"viruspapiloma\") OR (\"#viruspapiloma\") OR (\"cancer cervical\")",
+    "since_id": 0,
+    "terms": [
+      "#vphvacuna",
+      "vphvacuna",
+      "viruspapilomahumano",
+      "#viruspapilomahumano",
+      "viruspapilomahumanovacuna",
+      "#viruspapilomahumanovacuna",
+      "viruspapiloma",
+      "#viruspapiloma",
+      "cancer cervical"
+    ]
+  },
+  "fe37586cc21c77c06e809f672d7a1a87": {
+    "geocode": [
+      "dona_ana_nm",
+      "32.41906196127472,-106.82334114385034,51.93959956432837mi"
+    ],
+    "querystring": "(\"hpv\") OR (\"#hpv\") OR (\"#hpvvaccine\") OR (\"hpvvaccine\") OR (\"humanpapillomavirus\") OR (\"#humanpapillomavirus\") OR (\"humanpapillomavirusvaccine\") OR (\"#humanpapillomavirusvaccine\") OR (\"gardasil\") OR (\"#gardasil\")",
+    "since_id": 0,
+    "terms": [
+      "hpv",
+      "#hpv",
+      "#hpvvaccine",
+      "hpvvaccine",
+      "humanpapillomavirus",
+      "#humanpapillomavirus",
+      "humanpapillomavirusvaccine",
+      "#humanpapillomavirusvaccine",
+      "gardasil",
+      "#gardasil"
+    ]
+  }
+}
